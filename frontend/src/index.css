@@ -1,0 +1,61 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* กำหนด font-family หลักให้กับทั้งเว็บไซต์ */
+/* กำหนดฟอนต์ให้กับทุก element ใน MUI */
+.MuiTypography-root,
+.MuiButton-root,
+.MuiInputBase-root,
+.MuiOutlinedInput-root,
+.MuiTableCell-root,
+.MuiTableHead-root,
+.MuiTableBody-root,
+.MuiTablePagination-root,
+.MuiInputLabel-root,
+.MuiTextField-root,
+.MuiBox-root,
+.MuiPaper-root,
+.MuiTableContainer-root {
+  font-family: 'Mitr', sans-serif !important;
+}
+
+/* กำหนดฟอนต์ให้กับ body และ html */
+body, html {
+  font-family: 'Mitr', sans-serif !important;
+}
+
+/* กำหนดฟอนต์เฉพาะให้กับ input */
+input, textarea, select, button {
+  font-family: 'Mitr', sans-serif !important;
+}
+
+/* ถ้ามีการสร้าง custom components ก็กำหนดให้ด้วย */
+.user-card,
+.header-container,
+.header-title {
+  font-family: 'Mitr', sans-serif !important;
+}
+
+/* สไตล์ media queries ที่คุณมีอยู่เดิม */
+@media (max-width: 500px) {
+  .user-card {
+    display: none;
+  }
+}
+
+@media (max-width: 500px) {
+  .header-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 40px;
+  }
+  
+  .header-title {
+    text-align: center;
+    width: 100%;
+    font-size: 15px;
+    margin: 10px 0px;
+  }
+}

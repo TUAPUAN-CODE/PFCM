@@ -1,0 +1,5 @@
+{
+    "watch": ["server", "config","Routes",".env"], 
+    "ext": "js,json"            
+  }
+  
