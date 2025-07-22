@@ -1,0 +1,43 @@
+{
+  "dependencies": {
+    "axios": "^1.8.4",
+    "chart.js": "^4.4.8",
+    "date-fns": "^4.1.0",
+    "lodash": "^4.17.21",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-to-print": "^3.0.5",
+    "recharts": "^2.15.1",
+    "redis": "^5.1.0",
+    "socket.io": "^4.8.1",
+    "socket.io-client": "^4.8.1",
+    "xlsx": "^0.18.5"
+  },
+  "scripts": {
+    "start": "npm run dev",
+    "dev": "concurrently \"npm run server\" \"npm run client\" \"npm run open\"",
+    "server": "cd backend && npm run dev",
+    "client": "cd frontend && npm run dev",
+    "open": "start http://localhost:5173 || open http://localhost:5173",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "nodemon": "^3.1.9"
+  },
+  "name": "pfcmv2",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TUAPUAN-CODE/PFCMv2.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/TUAPUAN-CODE/PFCMv2/issues"
+  },
+  "homepage": "https://github.com/TUAPUAN-CODE/PFCMv2#readme",
+  "description": ""
+}
