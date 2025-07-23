@@ -94,7 +94,7 @@ router.get("/checkTrolley", async (req, res) => {
     if (troStatus === true) {
       return res.status(200).json({ success: true, message: "รถเข็นพร้อมใช้งาน" })
     } else if (troStatus === false) {
-      return res.status(201).json({ success: true, message: "มีวัตถุดิบในรถเข็นคันนี้" })
+      return res.status(201).json({ success: true, message: "รถเข็นไม่พร้อมใช้งาน" })
     } else {
       return res.status(400).json({ success: false, message: "ไม่มีรถเข็นคันนี้ในระบบ" })
     }

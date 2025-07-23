@@ -142,68 +142,68 @@ module.exports = (io) => {
         }
     });
 
-    // router.get("/coldstorage/main/fetchSlotRawMat", async (req, res) => {
-    //     try {
-    //         const pool = await connectToDatabase();
-    //         const result = await pool
-    //             .request()
-    //             .query(`
-    //             SELECT
-    //                 rmf.rmfp_id,
-    //                 rmm.tro_id,
-    //                 rmf.batch,
-    //                 rm.mat,
-    //                 rm.mat_name,
-    //                 CONCAT(p.doc_no, ' (', rmm.rmm_line_name, ')') AS production,
-    //                 rmm.level_eu,
-    //                 FORMAT(rmm.prep_to_cold_time, 'N2') AS remaining_time,
-    //                 FORMAT(rmg.prep_to_cold, 'N2') AS standard_time,
-    //                 FORMAT(rmm.rework_time, 'N2') AS remaining_rework_time,
-    //                 FORMAT(rmg.rework, 'N2') AS standard_rework_time,
-    //                 rmm.rm_status,
-    //                 rmm.dest,
-    //                 rmm.weight_RM,
-    //                 rmm.tray_count,
-    //                 FORMAT(htr.cooked_date, 'yyyy-MM-dd HH:mm:ss') AS cooked_date,
-    //                 FORMAT(htr.rmit_date, 'yyyy-MM-dd HH:mm:ss') AS rmit_date,
-    //                 FORMAT(htr.qc_date, 'yyyy-MM-dd HH:mm:ss') AS qc_date,
-    //                 FORMAT(htr.out_cold_date, 'yyyy-MM-dd HH:mm:ss') AS out_cold_date,
-    //                 FORMAT(htr.out_cold_date_two, 'yyyy-MM-dd HH:mm:ss') AS out_cold_date_two,
-    //                 FORMAT(htr.out_cold_date_three, 'yyyy-MM-dd HH:mm:ss') AS out_cold_date_three
+    router.get("/coldstorage/main/fetchSlotRawMat", async (req, res) => {
+        try {
+            const pool = await connectToDatabase();
+            const result = await pool
+                .request()
+                .query(`
+                SELECT
+                    rmf.rmfp_id,
+                    rmm.tro_id,
+                    rmf.batch,
+                    rm.mat,
+                    rm.mat_name,
+                    CONCAT(p.doc_no, ' (', rmm.rmm_line_name, ')') AS production,
+                    rmm.level_eu,
+                    FORMAT(rmm.prep_to_cold_time, 'N2') AS remaining_time,
+                    FORMAT(rmg.prep_to_cold, 'N2') AS standard_time,
+                    FORMAT(rmm.rework_time, 'N2') AS remaining_rework_time,
+                    FORMAT(rmg.rework, 'N2') AS standard_rework_time,
+                    rmm.rm_status,
+                    rmm.dest,
+                    rmm.weight_RM,
+                    rmm.tray_count,
+                    FORMAT(htr.cooked_date, 'yyyy-MM-dd HH:mm:ss') AS cooked_date,
+                    FORMAT(htr.rmit_date, 'yyyy-MM-dd HH:mm:ss') AS rmit_date,
+                    FORMAT(htr.qc_date, 'yyyy-MM-dd HH:mm:ss') AS qc_date,
+                    FORMAT(htr.out_cold_date, 'yyyy-MM-dd HH:mm:ss') AS out_cold_date,
+                    FORMAT(htr.out_cold_date_two, 'yyyy-MM-dd HH:mm:ss') AS out_cold_date_two,
+                    FORMAT(htr.out_cold_date_three, 'yyyy-MM-dd HH:mm:ss') AS out_cold_date_three
 
-    //             FROM
-    //                 TrolleyRMMapping rmm
-    //             JOIN  
-    //                 RMForProd rmf ON rmm.rmfp_id = rmf.rmfp_id  
-    //             JOIN
-    //                 ProdRawMat pr ON rmm.tro_production_id = pr.prod_rm_id
-    //             JOIN
-    //                 RawMat rm ON pr.mat = rm.mat
-    //             JOIN
-    //                 Production p ON pr.prod_id = p.prod_id
-    //             JOIN
-    //                 RawMatGroup rmg ON rmf.rm_group_id = rmg.rm_group_id
-    //             JOIN
-    //                 History htr ON rmm.mapping_id = htr.mapping_id
-    //             WHERE 
-    //                 rmm.dest = 'เข้าห้องเย็น'
-    //                 AND rmm.rm_status IN ('รอกลับมาเตรียม','รอ Qc','QcCheck รอ MD','QcCheck รอกลับมาเตรียม')
-    //                 AND rmf.rm_group_id = rmg.rm_group_id;
+                FROM
+                    TrolleyRMMapping rmm
+                JOIN  
+                    RMForProd rmf ON rmm.rmfp_id = rmf.rmfp_id  
+                JOIN
+                    ProdRawMat pr ON rmm.tro_production_id = pr.prod_rm_id
+                JOIN
+                    RawMat rm ON pr.mat = rm.mat
+                JOIN
+                    Production p ON pr.prod_id = p.prod_id
+                JOIN
+                    RawMatGroup rmg ON rmf.rm_group_id = rmg.rm_group_id
+                JOIN
+                    History htr ON rmm.mapping_id = htr.mapping_id
+                WHERE 
+                    rmm.dest = 'เข้าห้องเย็น'
+                    AND rmm.rm_status IN ('รอกลับมาเตรียม','รอ Qc','QcCheck รอ MD','QcCheck รอกลับมาเตรียม')
+                    AND rmf.rm_group_id = rmg.rm_group_id;
 
-    //       `);
+          `);
 
-    //         const formattedData = result.recordset.map(item => {
-    //             console.log("item :", item);
-    //             return item;
-    //         });
+            const formattedData = result.recordset.map(item => {
+                console.log("item :", item);
+                return item;
+            });
 
 
-    //         res.json({ success: true, data: formattedData });
-    //     } catch (err) {
-    //         console.error("SQL error", err);
-    //         res.status(500).json({ success: false, error: err.message });
-    //     }
-    // });
+            res.json({ success: true, data: formattedData });
+        } catch (err) {
+            console.error("SQL error", err);
+            res.status(500).json({ success: false, error: err.message });
+        }
+    });
 
 
     /**

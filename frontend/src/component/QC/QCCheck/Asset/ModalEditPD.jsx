@@ -381,11 +381,7 @@ const QcCheck = ({
                   })} น.
                 </Typography>
               )}
-              {/* {qc_cold_time && (
-                <Typography color="rgba(0, 0, 0, 0.6)">
-                 เวลาที่เข้าห้องเย็น: {new Date(qc_cold_time).getHours()}:{String(new Date(qc_cold_time).getMinutes()).padStart(2, '0')} น.
-    </Typography>
-              )} */}
+
             </Stack>
 
             <Typography color="rgba(0, 0, 0, 0.6)">ผู้ดำเนินการ: {operator}</Typography>
@@ -429,7 +425,6 @@ const QcCheck = ({
 };
 
 const ModalEditPD = ({ open, onClose, data, onSuccess }) => {
-  const [mdTime, setMdTime] = useState("");
   const [mdTimeError, setMdTimeError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [selectedPlan, setSelectedPlan] = useState(null);
@@ -455,7 +450,7 @@ const ModalEditPD = ({ open, onClose, data, onSuccess }) => {
   const [selectedWorkArea, setSelectedWorkArea] = useState(null);
   const [selectedMdNo, setSelectedMdNo] = useState(null);
   const [mdSummary, setMdSummary] = useState("");
-  const [md_time, setMdStartTime] = useState('');
+  const [md_time, setMdStartTime] = useState(null);
 
   const [Moisture, setMoisture] = useState("");
   const [Temp, setTemp] = useState("");
@@ -1307,16 +1302,18 @@ const ModalEditPD = ({ open, onClose, data, onSuccess }) => {
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DateTimePicker
                 label="วัน/เวลา ที่เริ่มผ่านเครื่อง MD"
-                value={mdTime ? dayjs(mdTime) : null}
+                value={md_time ? dayjs(md_time) : null}
                 onChange={(newValue) => {
                   if (newValue && newValue.isAfter(dayjs())) {
                     setMdTimeError(true);
                     setErrorMessage("ไม่สามารถเลือกเวลาในอนาคตได้");
                     return;
                   }
-                  setMdTime(newValue?.toISOString() || "");
+                  setMdStartTime(newValue); // เก็บเป็น dayjs object
                   setMdTimeError(false);
+                  setErrorMessage("");
                 }}
+
                 maxDateTime={dayjs()}
                 ampm={false}
                 slotProps={{
@@ -1327,7 +1324,7 @@ const ModalEditPD = ({ open, onClose, data, onSuccess }) => {
                     sx: { marginBottom: 2 },
                     error: mdTimeError,
                     helperText: mdTimeError ? errorMessage : "",
-                  },
+                  }
                 }}
               />
             </LocalizationProvider>

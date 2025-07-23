@@ -8,13 +8,19 @@ import {
 	TextField,
 	Snackbar,
 	Alert,
-	InputAdornment,
 	IconButton,
 	FormControl,
 	InputLabel
 } from '@mui/material';
 import { CalendarToday, AccessTime } from '@mui/icons-material';
 import axios from 'axios';
+import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import dayjs from "dayjs";
+import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import InputAdornment from "@mui/material/InputAdornment";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -484,18 +490,18 @@ const Modal3 = ({ open, onClose, data, onEdit, dataForModal3 }) => {
 							ข้อมูลการตรวจสอบคุณภาพ
 						</Typography>
 						{qcData?.prepare_mor_night && qcData?.prepare_mor_night !== "-" && (
-						<Typography variant="h6"  sx={{
-							color: "#000",
-							textAlign: 'center',
-							fontSize: "24px",
-							margin: "10px",
-							'@media print': {	
-								fontSize: '15px',
-								margin: '2px 0',
-							},
-						}}>
-							เตรียมงานให้กะ : {qcData?.prepare_mor_night || "ไม่ได้ส่งกะ"}
-						</Typography>
+							<Typography variant="h6" sx={{
+								color: "#000",
+								textAlign: 'center',
+								fontSize: "24px",
+								margin: "10px",
+								'@media print': {
+									fontSize: '15px',
+									margin: '2px 0',
+								},
+							}}>
+								เตรียมงานให้กะ : {qcData?.prepare_mor_night || "ไม่ได้ส่งกะ"}
+							</Typography>
 						)}
 						<Box
 							sx={{
@@ -807,17 +813,17 @@ const Modal3 = ({ open, onClose, data, onEdit, dataForModal3 }) => {
 						)}
 
 						{edit_rework && (
-						<Typography variant="h6" className="print-text" sx={{
-							color: "#464646",
-							fontSize: "22px",
-							margin: "10px",
-							'@media print': {
-								fontSize: '10px',
-								margin: '2px 0',
-							},
-						}}>
-							วิธีการที่ใช้แก้ไข : {edit_rework}
-						</Typography>
+							<Typography variant="h6" className="print-text" sx={{
+								color: "#464646",
+								fontSize: "22px",
+								margin: "10px",
+								'@media print': {
+									fontSize: '10px',
+									margin: '2px 0',
+								},
+							}}>
+								วิธีการที่ใช้แก้ไข : {edit_rework}
+							</Typography>
 						)}
 
 						{qcData?.name_edit_prod_two && qcData?.name_edit_prod_two !== "-" && (
@@ -1122,45 +1128,39 @@ const Modal3 = ({ open, onClose, data, onEdit, dataForModal3 }) => {
 											},
 										}}
 									>
-										<Box sx={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
-											{/* วันที่ */}
-											<TextField
-												type="date"
-												value={qcDate}
-												onChange={handleDateChange}
-												size="small"
-												sx={{ width: "160px", mr: 1 }}
-												inputProps={{
-													max: maxDate
-												}}
-												InputProps={{
-													startAdornment: (
-														<InputAdornment position="start">
-															<CalendarToday fontSize="small" />
-														</InputAdornment>
-													),
-												}}
-											/>
+										<LocalizationProvider dateAdapter={AdapterDayjs}>
+											<DateTimePicker
+												label="วัน/เวลา ตรวจสอบคุณภาพ"
+												value={qcDate && qcTime ? dayjs(`${qcDate}T${qcTime}`) : null}
+												onChange={(newValue) => {
+													if (!newValue) return;
 
-											{/* เวลา */}
-											<TextField
-												type="time"
-												value={qcTime}
-												onChange={handleTimeChange}
-												size="small"
-												sx={{ width: "120px" }}
-												inputProps={{
-													max: qcDate === maxDate ? maxTime : undefined, // จำกัดเวลาอนาคต ถ้าเลือกวันนี้
+													const newDate = newValue.format("YYYY-MM-DD");
+													const newTime = newValue.format("HH:mm");
+
+													// ใช้ฟังก์ชันเดิมของคุณ
+													handleDateChange({ target: { value: newDate } });
+													handleTimeChange({ target: { value: newTime } });
 												}}
-												InputProps={{
-													startAdornment: (
-														<InputAdornment position="start">
-															<AccessTime fontSize="small" />
-														</InputAdornment>
-													),
+												maxDateTime={dayjs()}
+												ampm={false}
+												slotProps={{
+													textField: {
+														fullWidth: false,
+														size: "small",
+														sx: { width: 280, mr: 1 },
+														InputProps: {
+															startAdornment: (
+																<InputAdornment position="start">
+																	<CalendarTodayIcon fontSize="small" />
+																	<AccessTimeIcon fontSize="small" sx={{ ml: 0.5 }} />
+																</InputAdornment>
+															),
+														},
+													},
 												}}
 											/>
-										</Box>
+										</LocalizationProvider>
 
 										<Box sx={{
 											mt: { xs: 2, sm: 0 },
