@@ -75,35 +75,43 @@ const sql = require("mssql");
 router.get("/checkTrolley", async (req, res) => {
   const tro = req.query.tro;
 
+  if (!tro) {
+    return res.status(400).json({ success: false, message: "กรุณาระบุหมายเลขรถเข็น (tro)" });
+  }
+
   try {
     const pool = await connectToDatabase();
     const result = await pool
       .request()
       .input("tro_id", tro)
       .query(`
-            SELECT
-              tro_status
-            FROM
-              Trolley
-            WHERE 
-              tro_id = @tro_id
+        SELECT tro_status
+        FROM Trolley
+        WHERE tro_id = @tro_id
       `);
 
-    const troStatus = result.recordset[0]?.tro_status;
+    if (result.recordset.length === 0) {
+      return res.status(404).json({ success: false, message: "ไม่มีรถเข็นคันนี้ในระบบ" });
+    }
 
-    if (troStatus === true) {
-      return res.status(200).json({ success: true, message: "รถเข็นพร้อมใช้งาน" })
-    } else if (troStatus === false) {
-      return res.status(201).json({ success: true, message: "รถเข็นไม่พร้อมใช้งาน" })
+    const troStatus = result.recordset[0].tro_status;
+
+    if (troStatus === '1') {
+      return res.status(200).json({ success: true, message: "รถเข็นพร้อมใช้งาน" });
+    } else if (troStatus === '0') {
+      return res.status(200).json({ success: true, message: "รถเข็นไม่พร้อมใช้งาน" });
+    } else if (troStatus === 'rsrv') {
+      return res.status(200).json({ success: true, message: "รถเข็นถูกจองใช้งาน" });
     } else {
-      return res.status(400).json({ success: false, message: "ไม่มีรถเข็นคันนี้ในระบบ" })
+      return res.status(200).json({ success: true, message: `รถเข็นอยู่ในสถานะพิเศษ: ${troStatus}` });
     }
 
   } catch (err) {
-    console.error("SQL error", err);
-    res.status(500).json({ success: false, error: err.message });
+    console.error("SQL error:", err);
+    res.status(500).json({ success: false, error: "เกิดข้อผิดพลาดในระบบฐานข้อมูล" });
   }
 });
+
 
 router.get("/cold/checkin/check/Trolley", async (req, res) => {
   const { tro_id, cs_id, slot_id, selectedOption } = req.query;
