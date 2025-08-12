@@ -116,6 +116,7 @@ const Modal2 = ({ open, onClose, onNext, data, rmfp_id, CookedDateTime, dest, rm
   const [preparedTimeError, setPreparedTimeError] = useState(false);
   const [preparedTime, setPreparedTime] = useState('');
   const [timeValid, setTimeValid] = useState(true);
+  const [errorDialogOpen, setErrorDialogOpen] = useState(false); // สำหรับแจ้ง error
 
   useEffect(() => {
     console.log("rm_type_id updated:", rm_type_id);
@@ -394,10 +395,32 @@ const Modal2 = ({ open, onClose, onNext, data, rmfp_id, CookedDateTime, dest, rm
     onNext(updatedData);
   };
 
-  const handleClose = () => {
+  const handleClose = async () => {
+    const troId = data?.inputValues?.[0];
+
+    if (troId) {
+      const success = await returnreserveTrolley(troId);
+      if (!success) {
+        setErrorDialogOpen(true);
+        return;
+      }
+    }
     clearData();
     onClose();
   };
+
+    const returnreserveTrolley = async (tro_id) => {
+    try {
+      const response = await axios.post(`${API_URL}/api/re/reserveTrolley`, {
+        tro_id: tro_id,
+      });
+      return response.data.success;
+    } catch (error) {
+      console.error(error);
+      return false;
+    }
+  };
+
 
   const handleDeliveryLocationChange = (event) => {
     setDeliveryLocation(event.target.value);
@@ -435,6 +458,8 @@ const Modal2 = ({ open, onClose, onNext, data, rmfp_id, CookedDateTime, dest, rm
 
   // Check if rm_type_id is 3 or 7 to show EU Level select
   const shouldShowEuSelect = rmTypeId === 3 || rmTypeId === 7 || rm_type_id === 8 || rm_type_id === 6;
+
+
 
   return (
     <Dialog open={open} onClose={(e, reason) => {
@@ -513,6 +538,8 @@ const Modal2 = ({ open, onClose, onNext, data, rmfp_id, CookedDateTime, dest, rm
               }}
               maxDateTime={dayjs()}
               ampm={false}
+               // ✅ ใช้ timeSteps แทน minutesStep
+              timeSteps={{ minutes: 1 }}
               slotProps={{
                 textField: {
                   fullWidth: true,
@@ -523,6 +550,7 @@ const Modal2 = ({ open, onClose, onNext, data, rmfp_id, CookedDateTime, dest, rm
               }}
             />
           </LocalizationProvider>
+
 
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DateTimePicker
@@ -542,6 +570,8 @@ const Modal2 = ({ open, onClose, onNext, data, rmfp_id, CookedDateTime, dest, rm
               }}
               maxDateTime={dayjs()}
               ampm={false}
+              // ✅ ใช้ timeSteps แทน minutesStep
+              timeSteps={{ minutes: 1 }}
               slotProps={{
                 textField: {
                   fullWidth: true,
@@ -553,6 +583,8 @@ const Modal2 = ({ open, onClose, onNext, data, rmfp_id, CookedDateTime, dest, rm
                 }
               }}
             />
+
+
           </LocalizationProvider>
 
           <TextField

@@ -5,6 +5,11 @@ import { BarChart2, Menu } from "lucide-react";
 import { VscHistory } from "react-icons/vsc";
 import { TbLogout2 } from "react-icons/tb";
 import { BsFillClipboardCheckFill } from "react-icons/bs";
+import { FaPeopleCarry } from 'react-icons/fa';
+
+const pos_id = localStorage.getItem("pos_id");
+const allowedPositions = ["3", "4", "5", "6"];
+const showWorkplaceSelector = allowedPositions.includes(pos_id);
 
 
 const SIDEBAR_ITEMS = [
@@ -19,6 +24,10 @@ const SIDEBAR_ITEMS = [
     icon: VscHistory,
     href: "/qualitycontrol/HisCheck/HisCheckPage",
   },
+
+   ...(showWorkplaceSelector
+      ? [{ name: "เปลี่ยนที่ทำงาน", icon: FaPeopleCarry, href: "/qualitycontrol/WorkplaceSelector" }]
+      : []),
   // { name: "เปลี่ยนสถานที่ทำงาน", icon: BarChart2, href: "/qualitycontrol/User/SelectWP" },
   { name: "ออกจากระบบ", icon: TbLogout2, href: "/logout" },
 ];

@@ -11,7 +11,7 @@ import {
   Typography,
 } from "@mui/material";
 import axios from "axios";
-axios.defaults.withCredentials = true; 
+axios.defaults.withCredentials = true;
 import ModalAlert from "../../../../Popup/AlertSuccess";
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -20,6 +20,32 @@ const Modal3 = ({ open, onClose, data, CookedDateTime }) => {
   const [showAlert, setShowAlert] = useState(false);
   console.log("Data passed to Modal3:", data); // Debugging line to check data
   const { inputValues = {}, input2 = {}, rmfp_id } = data || {};
+
+  const handleClose = async () => {
+    const troId = data?.inputValues?.[0];
+
+    if (troId) {
+      const success = await returnreserveTrolley(troId);
+      if (!success) {
+        setErrorDialogOpen(true);
+        return;
+      }
+    }
+    // clearData();
+    onClose();
+  };
+
+  const returnreserveTrolley = async (tro_id) => {
+    try {
+      const response = await axios.post(`${API_URL}/api/re/reserveTrolley`, {
+        tro_id: tro_id,
+      });
+      return response.data.success;
+    } catch (error) {
+      console.error(error);
+      return false;
+    }
+  };
 
   const handleConfirm = async () => {
     console.log("Input Values:", inputValues);
@@ -35,7 +61,7 @@ const Modal3 = ({ open, onClose, data, CookedDateTime }) => {
         tro_id: inputValues.length > 0 ? inputValues[0] : "",
         line_id: LineIdFromLocalStorage,
       };
-      
+
       console.log("Payload before sending:", requestData);
 
       const response = await axios.post(`${API_URL}/api/pack/Add/Trolley`, requestData, {
@@ -43,7 +69,7 @@ const Modal3 = ({ open, onClose, data, CookedDateTime }) => {
           "Content-Type": "application/json",
         }
       });
-      
+
       // Handle the API response
       console.log(response.data); // Log the received data
     } catch (error) {
@@ -64,13 +90,13 @@ const Modal3 = ({ open, onClose, data, CookedDateTime }) => {
 
   return (
     <div>
-      <Dialog 
-        open={open} 
+      <Dialog
+        open={open}
         onClose={(e, reason) => {
           if (reason === 'backdropClick') return; // Don't close when clicking outside
           onClose(); // Close for other cases
-        }} 
-        maxWidth="xs" 
+        }}
+        maxWidth="xs"
         fullWidth
       >
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, fontSize: "15px", color: "#555" }}>
@@ -86,22 +112,22 @@ const Modal3 = ({ open, onClose, data, CookedDateTime }) => {
             <Divider sx={{ mt: 2, mb: 0 }} />
           </DialogContent>
         </Box>
-        <Stack 
+        <Stack
           sx={{
             paddingTop: "20px",
             paddingRight: "10px",
             paddingBottom: "20px",
             paddingLeft: "10px"
           }}
-          direction="row" 
-          spacing={20} 
+          direction="row"
+          spacing={20}
           justifyContent="center"
         >
           <Button
             sx={{ backgroundColor: "#E74A3B", color: "#fff" }}
             variant="contained"
             startIcon={<CancelIcon />}
-            onClick={onClose}
+            onClick={handleClose}
           >
             ยกเลิก
           </Button>

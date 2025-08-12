@@ -1316,6 +1316,7 @@ const ModalEditPD = ({ open, onClose, data, onSuccess }) => {
 
                 maxDateTime={dayjs()}
                 ampm={false}
+                timeSteps={{ minutes: 1 }}
                 slotProps={{
                   textField: {
                     fullWidth: true,

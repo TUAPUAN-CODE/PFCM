@@ -95,43 +95,110 @@ const Modal1 = ({ open, onClose, onNext, mat, mat_name, batch, production, rmfp_
   }, [open]);
 
   const checkTrolleyStatus = async (value) => {
-    try {
-      const response = await axios.get(`${API_URL}/api/checkTrolley`, {
-        params: { tro: value },
-      });
-
-      if (response.data.success === false) {
-        setApiError(response.data.message || "ไม่มีรถเข็นคันนี้ในระบบ");
-        return false;
-      } else if (response.data.success === true && response.data.message === "รถเข็นไม่พร้อมใช้งาน") {
+  try {
+    const response = await axios.get(`${API_URL}/api/checkTrolley`, {
+      params: { tro: value },
+    });
+    
+    if (response.data.success === false) {
+      setApiError(response.data.message || "ไม่มีรถเข็นคันนี้ในระบบ");
+      return false;
+    } 
+    
+    if (response.data.success === true) {
+      const message = response.data.message;
+      
+      if (message === " " || message === "รถเข็นไม่พร้อมใช้งาน") {
         setApiError("รถเข็นไม่พร้อมใช้งาน");
         return false;
       }
+      
+      if (message === "รถเข็นถูกจองใช้งาน") {
+        setApiError("รถเข็นถูกจองใช้งาน");
+        return false;
+      }
+      
+      if (message.includes("รถเข็นอยู่ในสถานะพิเศษ")) {
+        setApiError(message);
+        return false;
+      }
+      
+      // กรณีพร้อมใช้งาน
+      if (message === "รถเข็นพร้อมใช้งาน") {
+        setApiError(""); // ล้างข้อความ error
+        return true;
+      }
+    }
+    
+    setApiError("สถานะรถเข็นไม่ชัดเจน");
+    return false;
+    
+  } catch (error) {
+    console.error("Error checking trolley status:", error);
+    
+    // จัดการ error response
+    if (error.response) {
+      const status = error.response.status;
+      const errorMessage = error.response.data?.message || error.response.data?.error;
+      
+      if (status === 404) {
+        setApiError("ไม่มีรถเข็นคันนี้ในระบบ");
+      } else if (status === 400) {
+        setApiError(errorMessage || "กรุณาระบุหมายเลขรถเข็น");
+      } else if (status === 500) {
+        setApiError("เกิดข้อผิดพลาดในระบบฐานข้อมูล");
+      } else {
+        setApiError(errorMessage || "เกิดข้อผิดพลาดในระบบ");
+      }
+    } else if (error.request) {
+      setApiError("ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ได้");
+    } else {
+      setApiError("เกิดข้อผิดพลาดที่ไม่ทราบสาเหตุ");
+    }
+    
+    return false;
+  }
+};
 
-      return true; // รถเข็นพร้อมใช้งาน
+
+  const reserveTrolley = async (tro_id) => {
+    try {
+      const response = await axios.post(`${API_URL}/api/reserveTrolley`, {
+        tro_id: tro_id,
+      });
+      return response.data.success;
     } catch (error) {
-      setApiError("ไม่มีรถเข็นคันนี้ในระบบ");
+      setApiError("รถเข็นถูกจองแล้ว");
       return false;
     }
   };
 
+const handleNextModal2 = async () => {
+  // ตรวจสอบ input ว่าง
+  if (inputValue.trim() === '') {
+    setInputError(true);
+    return;
+  }
+  
+  setInputError(false);
+  setApiError(""); 
+  
+  const isValid = await checkTrolleyStatus(inputValue);
+  
+  if (!isValid) {
+    return;
+  }
+  
+const isReserved = await reserveTrolley(inputValue);
+    if (!isReserved) return;
 
-  const handleNextModal2 = async () => {
-    if (inputValue.trim() === '') {
-      setInputError(true);
-      return;
-    }
-    setInputError(false);
 
-    const isValid = await checkTrolleyStatus(inputValue);
-    if (!isValid) return; // ถ้าไม่ผ่าน ไม่ให้ไปต่อ
-
-    onNext({
-      inputValues: [inputValue],
-      cookedDateTime: CookedDateTime,
-      rmfp_id: rmfp_id
-    });
-  };
+  onNext({
+    inputValues: [inputValue],
+    cookedDateTime: CookedDateTime,
+    rmfp_id: rmfp_id
+  });
+};
 
 
 

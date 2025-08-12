@@ -1,9 +1,9 @@
 module.exports = {
   apps: [
     {
-      name: 'PFCMv2',
+      name: 'PFCMv2-backend',
       script: './server.js',
-      instances: '3',
+      instances: 'max',
       exec_mode: 'cluster',
       autorestart: true,
       watch: true,

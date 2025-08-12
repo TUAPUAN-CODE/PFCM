@@ -8,8 +8,9 @@ import { PiFishLight } from "react-icons/pi";
 import { VscHistory } from "react-icons/vsc";
 import { TbLogout2 } from "react-icons/tb";
 import { PiFishFill } from "react-icons/pi";
+import { FaPeopleCarry } from 'react-icons/fa';
 import axios from "axios";
-axios.defaults.withCredentials = true; 
+axios.defaults.withCredentials = true;
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -42,7 +43,7 @@ const Toast = ({ message, type, onClose }) => {
 // Custom Hook สำหรับดึงข้อมูลวัตถุดิบ
 const useRawMatFetcher = () => {
   const isFetchingRef = useRef(false);
-  
+
   // กำหนด array ของ line_id ทั้งหมด
   const allLineIds = [
     1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
@@ -165,7 +166,7 @@ const Sidebar = () => {
   const { fetchAllData } = useRawMatFetcher();
   const sidebarRef = useRef(null);
   const lastScrollPosition = useRef(0);
-  
+
   // State สำหรับ toast
   const [toast, setToast] = useState(null);
 
@@ -196,7 +197,7 @@ const Sidebar = () => {
   const handleRefresh = () => {
     // แสดง toast กำลังโหลด
     showToast("กำลังรีเฟรชข้อมูลรถเข็น...", "info");
-    
+
     fetchAllData(
       (count) => {
         // แสดง toast สำเร็จ
@@ -208,15 +209,21 @@ const Sidebar = () => {
       }
     );
   };
+  const pos_id = localStorage.getItem("pos_id");
+  const allowedPositions = ["3", "4", "5", "6"];
+  const showWorkplaceSelector = allowedPositions.includes(pos_id);
 
   // กำหนดรายการเมนู - รวมทั้งสองไฟล์
-const SIDEBAR_ITEMS = [
+  const SIDEBAR_ITEMS = [
     { name: "หน้าหลัก", icon: GoHomeFill, href: "/prep" },
     { name: "Scan SAP", icon: LuScanBarcode, href: "/prep/ScanSAP/ScanSAPPage" },
     { name: "จัดการวัตถุดิบ", icon: PiFishSimple, href: "/prep/MatManage/MatManagePage" },
     { name: "วัตถุดิบรอแก้ไข", icon: PiFishLight, href: "/prep/MatRework/MatReworkPage" },
     { name: "กลับมาเตรียม", icon: PiFishFill, href: "/prep/MatImport/MatImportPage" },
     { name: "ประวัติ", icon: PiFishFill, href: "/prep/history" },
+    ...(showWorkplaceSelector
+      ? [{ name: "เปลี่ยนที่ทำงาน", icon: FaPeopleCarry, href: "/prep/WorkplaceSelector" }]
+      : []),
     // {
     //   name: "รีเฟรชข้อมูลรถเข็น",
     //   icon: VscHistory,
@@ -226,10 +233,10 @@ const SIDEBAR_ITEMS = [
     // },
     { name: "ออกจากระบบ", icon: TbLogout2, href: "/logout" },
   ];
-  
+
   const handleClick = (href, itemName) => {
     const clickedMenuItem = SIDEBAR_ITEMS.find((item) => item.name === itemName);
-    
+
     if (clickedMenuItem?.type === "action" && clickedMenuItem?.action) {
       clickedMenuItem.action();
       return;
@@ -266,7 +273,7 @@ const SIDEBAR_ITEMS = [
   return (
     <>
       {toast && <Toast message={toast.message} type={toast.type} onClose={hideToast} />}
-      
+
       <div
         className={`relative z-10 flex-shrink-0 ${isSidebarOpen ? "w-35" : "w-16"}`}
         style={{
@@ -312,7 +319,7 @@ const SIDEBAR_ITEMS = [
           </button>
 
           {/* Navigation Items with Scroll */}
-          <nav 
+          <nav
             ref={sidebarRef}
             onScroll={handleScroll}
             className="mt-4 flex-grow overflow-y-auto sidebar-nav"

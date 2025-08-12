@@ -19,7 +19,7 @@ const RawmatGroupTable = lazy(() => import("./TableRawmat/RawmatGroup/RawmatGrou
 const ProdRawmatTable = lazy(() => import("./TableProduction/ProdRawmat/ProdRawmatTable"));
 const ProductionTable = lazy(() => import("./TableProduction/Production/ProductionTable"));
 
-
+const ImportRMCSV = lazy(() => import("./ImPortcsvFileRM/mainPage.jsx"));
 
 const HisInputPage = lazy(() => import("./HisInput/HisInputPage"));
 const MDmanagepage = lazy(() => import("./MDmanage/MDmanagepage"));
@@ -34,9 +34,12 @@ const LineNameTable = lazy(() => import("./TableLine/AddLineName/LineNameTable")
 
 const CartTable = lazy(() => import("./Carttable/CartTable"));
 
+const WorkplaceSelector = lazy(() => import("../User/WorkplaceSelector.jsx"));
+
 
 const DelayTimeTrackingPage = lazy(() => import("./DelayTimeTracking/DelayTimeTrackingPage"));
 
+const WorkplacePage = lazy(() => import("./Workplace/WorkplacePage"));
 
 // เก็บเส้นทางทั้งหมดไว้ใน Array เพื่อลดโค้ดซ้ำซ้อน
 const routes = [
@@ -73,6 +76,12 @@ const routes = [
 { path: "/CartMange", element: <CartTable /> },
 
 { path: "/DelayTraking", element: <DelayTimeTrackingPage /> },
+
+
+
+{ path: "/WorkplaceSelector", element: <WorkplaceSelector /> },
+{ path: "/WorkplacePage", element: <WorkplacePage /> },
+{ path: "/import/rm/csv", element: <ImportRMCSV/> },
   // // จัดการการทำงาน
   // { path: "/Table/WorkPlace", element: <TableWorkPlaceSup /> },
   // { path: "/Table/Role", element: <TableRoleSup /> },

@@ -22,7 +22,7 @@ const dbConfig = {
 
 let pool = null;
 
-const connectToDatabase = async (retryCount = 3, delayMs = 3000) => {
+const connectToDatabase = async (retryCount = 1, delayMs = 3000) => {
   if (pool && pool.connected) {
     console.log("🔄 Using existing DB connection pool");
     return pool;

@@ -13,11 +13,13 @@ import { RiArrowUpBoxLine } from "react-icons/ri";
 import { PiThermometerColdThin } from "react-icons/pi";
 import { PiThermometerColdBold } from "react-icons/pi";
 import { BsFillCartXFill } from "react-icons/bs";
-
+import { FaPeopleCarry } from 'react-icons/fa';
 import { IoMove } from "react-icons/io5";
 
 const API_URL = import.meta.env.VITE_API_URL;
-
+const pos_id = localStorage.getItem("pos_id");
+const allowedPositions = ["3", "4", "5", "6"];
+const showWorkplaceSelector = allowedPositions.includes(pos_id);
 const SIDEBAR_ITEMS = [
   { name: "หน้าหลัก", icon: GoHomeFill, href: "/coldStorage" },
   {
@@ -75,6 +77,11 @@ const SIDEBAR_ITEMS = [
     //   // { name: "ประวัติส่งออก", href: "/coldStorage/HisOutput/HisOutputPage" },
     // ],
   },
+  
+   ...(showWorkplaceSelector
+      ? [{ name: "เปลี่ยนที่ทำงาน", icon: FaPeopleCarry, href: "/coldStorage/WorkplaceSelector" }]
+      : []),
+  
   { name: "ออกจากระบบ", icon: TbLogout2, href: "/logout" },
   
 ];

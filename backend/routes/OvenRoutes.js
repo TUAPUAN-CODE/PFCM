@@ -293,7 +293,36 @@ router.post("/oven/saveRMForProd", async (req, res) => {
     const { license_plate, rmfpID, ntray, weightTotal, recorder, userID, level_eu } = req.body;
     const pool = await connectToDatabase();
     const transaction = new sql.Transaction(pool);
-  
+
+        // ตรวจสอบสถานะก่อนทำรายการ
+        const checkTrolley = await pool.request()
+          .input("tro_id", license_plate)
+          .query(`
+          SELECT tro_status, rsrv_timestamp
+          FROM Trolley
+          WHERE tro_id = @tro_id
+        `);
+
+        if (checkTrolley.recordset.length === 0) {
+          return res.status(404).json({ success: false, error: "ไม่พบรถเข็นนี้ในระบบ" });
+        }
+
+        const { tro_status, rsrv_timestamp } = checkTrolley.recordset[0];
+
+        if (tro_status !== 'rsrv') {
+          return res.status(400).json({ success: false, error: "ไม่สามารถทำรายการได้ เนื่องจากเลยเวลาที่กำหนด 5 นาที" });
+        }
+
+        // ตรวจสอบว่าเกินเวลา 5 นาทีหรือไม่
+        const now = new Date();
+        const reservedTime = new Date(rsrv_timestamp);
+        const diffMs = now - reservedTime;
+        const diffMinutes = diffMs / 1000 / 60;
+
+        if (diffMinutes > 5) {
+          return res.status(400).json({ success: false, error: "ไม่สามารถทำรายการได้ เนื่องจากเลยเวลาที่กำหนด 5 นาที" });
+        }
+
     try {
       await transaction.begin();
   
@@ -388,7 +417,7 @@ router.post("/oven/saveRMForProd", async (req, res) => {
         .input("tro_id", license_plate)
         .query(`
           UPDATE Trolley
-          SET tro_status = '0'
+          SET tro_status = '0' ,rsrv_timestamp = null
           WHERE tro_id = @tro_id
         `);
   

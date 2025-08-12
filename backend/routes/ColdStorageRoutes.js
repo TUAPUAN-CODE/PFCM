@@ -80,6 +80,7 @@ module.exports = (io) => {
                     rmm.rm_status IN ('QcCheck','เหลือจากไลน์ผลิต','รอแก้ไข','รอกลับมาเตรียม','รอ Qc','QcCheck รอ MD','QcCheck รอกลับมาเตรียม','รอQCตรวจสอบ')
                     AND rmf.rm_group_id = rmg.rm_group_id
                     AND rmm.tro_id IS NOT NULL
+                    AND rmm.dest = 'เข้าห้องเย็น'
 
 
           `);
@@ -124,7 +125,7 @@ module.exports = (io) => {
                 JOIN 
                     History htr ON rmm.mapping_id = htr.mapping_id
                 WHERE 
-                   -- rmm.dest = 'เข้าห้องเย็น'
+                     rmm.dest = 'เข้าห้องเย็น'
                      rmm.rm_status IN ('เหลือจากไลน์ผลิต','รอแก้ไข')
                      AND rmm.tro_id IS NOT NULL
           `);
@@ -3076,517 +3077,535 @@ module.exports = (io) => {
 
 
     router.put("/cold/checkin/update/Trolley", async (req, res) => {
-        const { tro_id, cs_id, slot_id, selectedOption } = req.body;
+    const { tro_id, cs_id, slot_id, selectedOption } = req.body;
 
-        try {
-            const pool = await connectToDatabase();
+    try {
+        const pool = await connectToDatabase();
 
-            // ตรวจสอบว่ารถเข็นมีอยู่ในระบบหรือไม่
-            const trolleyResult = await pool
-                .request()
-                .input("tro_id", sql.VarChar(4), tro_id)
-                .query("SELECT tro_status FROM Trolley WHERE tro_id = @tro_id");
+        // ตรวจสอบว่ารถเข็นมีอยู่ในระบบหรือไม่
+        const trolleyResult = await pool
+            .request()
+            .input("tro_id", sql.VarChar(4), tro_id)
+            .query("SELECT tro_status, rsrv_timestamp FROM Trolley WHERE tro_id = @tro_id");
 
-            if (trolleyResult.recordset.length === 0) {
-                return res.status(400).json({ success: false, message: "ไม่พบรถเข็นในระบบ" });
+        if (trolleyResult.recordset.length === 0) {
+            return res.status(400).json({ success: false, message: "ไม่พบรถเข็นในระบบ" });
+        }
+
+        // เพิ่มการตรวจสอบว่ารถเข็นอยู่ในห้องเย็นอยู่แล้วหรือไม่
+        const trolleyInColdResult = await pool
+            .request()
+            .input("tro_id", sql.VarChar(4), tro_id)
+            .query("SELECT cs_id, slot_id FROM Slot WHERE tro_id = @tro_id");
+
+        if (trolleyInColdResult.recordset.length > 0) {
+            return res.status(400).json({
+                success: false,
+                message: `รถเข็นนี้อยู่ในห้องเย็นอยู่แล้ว (ช่อง ${trolleyInColdResult.recordset[0].slot_id})`
+            });
+        }
+
+        // ตรวจสอบว่าช่องเก็บว่างหรือไม่
+        const slotResult = await pool
+            .request()
+            .input("cs_id", sql.Int, cs_id)
+            .input("slot_id", sql.VarChar, slot_id)
+            .query("SELECT tro_id FROM Slot WHERE cs_id = @cs_id AND slot_id = @slot_id");
+
+        if (slotResult.recordset.length === 0 || slotResult.recordset[0].tro_id !== null && slotResult.recordset[0].tro_id !== 'rsrv') {
+            return res.status(400).json({ success: false, message: "ช่องเก็บนี้ไม่ว่าง" });
+        }
+
+        const tro_status = trolleyResult.recordset[0].tro_status;
+        const rsrv_timestamp = trolleyResult.recordset[0].rsrv_timestamp;
+
+        console.log("tro_status", tro_status);
+        console.log("rsrv_timestamp", rsrv_timestamp);
+
+        // กรณีรถเข็นว่าง
+        if (selectedOption === "รถเข็นว่าง") {
+            // ถ้า tro_status = 0 คือ รถเข็นถูกใช้ไปแล้ว ไม่สามารถใช้รถเข็นคันนี้ได้
+            if (tro_status === false) {
+                return res.status(400).json({ success: false, message: "รถเข็นคันนี้ถูกใช้งานแล้ว" });
             }
 
-            // เพิ่มการตรวจสอบว่ารถเข็นอยู่ในห้องเย็นอยู่แล้วหรือไม่
-            const trolleyInColdResult = await pool
-                .request()
-                .input("tro_id", sql.VarChar(4), tro_id)
-                .query("SELECT cs_id, slot_id FROM Slot WHERE tro_id = @tro_id");
-
-            if (trolleyInColdResult.recordset.length > 0) {
-                return res.status(400).json({
-                    success: false,
-                    message: `รถเข็นนี้อยู่ในห้องเย็นอยู่แล้ว (ช่อง ${trolleyInColdResult.recordset[0].slot_id})`
+            // ตรวจสอบเงื่อนไขก่อนอัปเดต tro_status
+            // ถ้า rsrv_timestamp = null ไม่สามารถอัปเดตได้
+            if (rsrv_timestamp === null) {
+                return res.status(400).json({ 
+                    success: false, 
+                    message: "ไม่สามารถจองรถเข็นได้เนื่องจากเลยเวลาดำเนินการ 5 นาที" 
                 });
             }
 
-            // ตรวจสอบว่าช่องเก็บว่างหรือไม่
-            const slotResult = await pool
-                .request()
-                .input("cs_id", sql.Int, cs_id)
-                .input("slot_id", sql.VarChar, slot_id)
-                .query("SELECT tro_id FROM Slot WHERE cs_id = @cs_id AND slot_id = @slot_id");
-
-            if (slotResult.recordset.length === 0 || slotResult.recordset[0].tro_id !== null && slotResult.recordset[0].tro_id !== 'rsrv') {
-                return res.status(400).json({ success: false, message: "ช่องเก็บนี้ไม่ว่าง" });
-            }
-
-            const tro_status = trolleyResult.recordset[0].tro_status;
-
-            console.log("tro_status", tro_status)
-
-            // กรณีรถเข็นว่าง
-            if (selectedOption === "รถเข็นว่าง") {
-                // ถ้า tro_status = 0 คือ รถเข็นถูกใช้ไปแล้ว ไม่สามารถใช้รถเข็นคันนี้ได้
-                if (tro_status === false) {
-                    return res.status(400).json({ success: false, message: "รถเข็นคันนี้ถูกใช้งานแล้ว" });
-                }
-
-                await pool
-                    .request()
-                    .input("tro_id", sql.VarChar(4), tro_id)
-                    .input("cs_id", sql.Int, cs_id)
-                    .input("slot_id", sql.VarChar, slot_id)
-                    .query("UPDATE Slot SET tro_id = @tro_id , reserved_at = NULL WHERE cs_id = @cs_id AND slot_id = @slot_id");
-
-                // เพิ่มการอัพเดต tro_status เป็น 0 ในตาราง Trolley (รถเข็นถูกใช้งานแล้ว)
-                await pool
-                    .request()
-                    .input("tro_id", sql.VarChar(4), tro_id)
-                    .query("UPDATE Trolley SET tro_status = 0 WHERE tro_id = @tro_id");
-
-                return res.status(200).json({ success: true, message: "รับเข้ารถเข็นว่าง" });
-            }
-
-            // สำหรับกรณีอื่นๆ (ไม่ใช่รถเข็นว่าง) ต้องตรวจสอบวัตถุดิบในรถเข็น
-            // ตรวจสอบข้อมูลวัตถุดิบใน TrolleyRMMapping
-            const rmResults = await pool
-                .request()
-                .input("tro_id", sql.VarChar(4), tro_id)
-                .query("SELECT dest,rmm_line_name, rm_status, cold_time, prep_to_cold_time, rework_time,mix_time, rmfp_id, mapping_id FROM TrolleyRMMapping WHERE tro_id = @tro_id");
-
-            if (rmResults.recordset.length === 0) {
-                return res.status(400).json({ success: false, message: "ไม่พบวัตถุดิบในรถเข็นนี้" });
-            }
-
-            // ตรวจสอบว่าทุกวัตถุดิบมีปลายทางเป็น "เข้าห้องเย็น"
-            const invalidDestItems = rmResults.recordset.filter(item => item.dest !== "เข้าห้องเย็น");
-            if (invalidDestItems.length > 0) {
-                return res.status(400).json({
-                    success: false,
-                    message: "มีวัตถุดิบในรถเข็นที่ไม่ได้เตรียมเข้าห้องเย็น"
+            // ถ้า tro_status = 1 หรือ 0 ไม่สามารถอัปเดตได้ (แต่ rsrv สามารถอัปเดตได้)
+            if (tro_status === 1 || tro_status === 0) {
+                return res.status(400).json({ 
+                    success: false, 
+                    message: "ไม่สามารถจองรถเข็นได้เนื่องจากเลยเวลาดำเนินการ 5 นาที" 
                 });
             }
 
-            // ตรวจสอบสถานะของวัตถุดิบตามเงื่อนไขที่เลือก
-            const statusMap = {
-                "วัตถุดิบรอแก้ไข": ["รอแก้ไข"],
-                "วัตถุดิบรับฝาก": ["QcCheck รอกลับมาเตรียม", "QcCheck รอ MD", "รอ Qc", "รอกลับมาเตรียม"],
-                "วัตถุดิบตรง": ["QcCheck"],
-                "เหลือจากไลน์ผลิต": ["เหลือจากไลน์ผลิต"],
-            };
-
-            if (!(selectedOption in statusMap)) {
-                return res.status(400).json({ success: false, message: "ตัวเลือกไม่ถูกต้อง" });
-            }
-
-            const validStatuses = statusMap[selectedOption];
-            const invalidStatusItems = rmResults.recordset.filter(item =>
-                !validStatuses.includes(item.rm_status)
-            );
-
-            if (invalidStatusItems.length > 0) {
-                return res.status(400).json({
-                    success: false,
-                    message: `ไม่ตรงเงื่อนไขรับเข้า ${selectedOption} มีวัตถุดิบที่มีสถานะไม่ตรงกับเงื่อนไข`
-                });
-            }
-
-            for (const item of rmResults.recordset) {
-                const { cold_time, prep_to_cold_time, rework_time, mix_time, rmfp_id, mapping_id } = item;
-
-                let coldTimeValue = cold_time; // ใช้ค่าเดิมเป็นค่าเริ่มต้น
-                let pic_time = prep_to_cold_time; // เก็บค่า prep_to_cold_time เดิมไว้
-                let ReworkTime = rework_time; // เก็บค่า rework_time เดิมไว้
-                let MixTime = mix_time;
-
-                console.log(`MP ID : ${mapping_id} ,RMFP ID: ${rmfp_id}, cold_time ตอนรับ:`, cold_time);
-                console.log(`MP ID : ${mapping_id} ,RMFP ID: ${rmfp_id}, ptc_time ตอนรับ:`, prep_to_cold_time);
-                console.log(`MP ID : ${mapping_id} ,RMFP ID: ${rmfp_id}, rework_time ตอนรับ:`, rework_time);
-                console.log(`MP ID : ${mapping_id} ,RMFP ID: ${rmfp_id}, mix_time ตอนรับ:`, mix_time);
-
-                // เฉพาะกรณีที่ cold_time เป็น null ให้ดึงค่าจาก RawMatGroup
-                if (cold_time === null) {
-                    const rmgResult = await pool
-                        .request()
-                        .input("rmfp_id", sql.Int, rmfp_id)
-                        .query(`
-                        SELECT rmg.cold 
-                        FROM RMForProd rmf 
-                        JOIN 
-                            RawMatGroup rmg ON rmg.rm_group_id = rmf.rm_group_id
-                        WHERE 
-                            rmf.rmfp_id = @rmfp_id
-                    `);
-
-                    if (rmgResult.recordset.length > 0) {
-                        coldTimeValue = rmgResult.recordset[0].cold;
-                    }
-                }
-
-                if (mix_time !== null) {
-                    // กรณีมีค่า mix_time ให้คำนวณเวลาที่เหลือโดยใช้ mixed_date
-                    const mixQuery = await pool
-                        .request()
-                        .input("mapping_id", sql.Int, mapping_id)
-                        .query(`
-                            SELECT FORMAT(mixed_date, 'yyyy-MM-dd HH:mm:ss') AS mixed_date
-                            FROM History
-                            WHERE mapping_id = @mapping_id AND mixed_date IS NOT NULL
-                        `);
-
-                    if (mixQuery.recordset.length > 0 && mixQuery.recordset[0].mixed_date) {
-                        const mixedDate = new Date(mixQuery.recordset[0].mixed_date);
-                        const currentDate = new Date();
-
-                        // คำนวณเวลาที่ผ่านไปแล้วเป็นนาที
-                        const timeDiffMinutes = (currentDate - mixedDate) / (1000 * 60);
-
-                        console.log(`MP ID : ${mapping_id} ,RMFP ID: ${rmfp_id}, ใช้เวลาอ้างอิงจาก mixed_date`);
-
-                        // กรณีพิเศษ: ถ้า mix_time เป็น 0.00
-                        if (mix_time === 0.00) {
-                            // ค่า 0 - เวลาที่ผ่านไป จะได้ค่าลบเสมอ
-                            const totalMinutesRemaining = -timeDiffMinutes;
-
-                            // แปลงเป็นรูปแบบ ชั่วโมง.นาที
-                            const updatedHours = Math.floor(Math.abs(totalMinutesRemaining) / 60);
-                            const updatedMinutes = Math.floor(Math.abs(totalMinutesRemaining) % 60);
-
-                            // ใส่เครื่องหมายลบ เพราะเป็นเวลาที่เกินมาแล้ว
-                            MixTime = -1 * (updatedHours + (updatedMinutes / 100));
-
-                            console.log(`MP ID : ${mapping_id} ,RMFP ID: ${rmfp_id}, กรณี mix_time เป็น 0.00`);
-                            console.log(`MP ID : ${mapping_id} ,RMFP ID: ${rmfp_id}, เวลาที่ผ่านไปแล้ว (นาที):`, timeDiffMinutes);
-                            console.log(`MP ID : ${mapping_id} ,RMFP ID: ${rmfp_id}, เวลาที่เหลือ (ติดลบ):`, MixTime);
-                        } else {
-                            // กรณีค่าเป็นลบหรือบวกอื่นๆ
-                            const isNegative = mix_time < 0;
-                            const absValue = Math.abs(mix_time);
-                            const hours = Math.floor(absValue);
-                            const minutes = Math.round((absValue - hours) * 100);
-
-                            // แปลงเป็นนาทีทั้งหมด คำนวณตามเครื่องหมาย
-                            let totalMinutes = (isNegative ? -1 : 1) * (hours * 60 + minutes);
-
-                            // ลบเวลาที่ผ่านไป
-                            const totalMinutesRemaining = totalMinutes - timeDiffMinutes;
-
-                            // แปลงกลับเป็นรูปแบบ ชั่วโมง.นาที
-                            const isResultNegative = totalMinutesRemaining < 0;
-                            const absMinutesRemaining = Math.abs(totalMinutesRemaining);
-                            const updatedHours = Math.floor(absMinutesRemaining / 60);
-                            const updatedMinutes = Math.floor(absMinutesRemaining % 60);
-
-                            // รูปแบบ hours.minutes โดยแปลง minutes เป็นทศนิยม และคงเครื่องหมาย
-                            MixTime = (isResultNegative ? -1 : 1) * (updatedHours + (updatedMinutes / 100));
-
-                            console.log(`MP ID : ${mapping_id} ,RMFP ID: ${rmfp_id}, mix_time เดิม:`, mix_time);
-                            console.log(`MP ID : ${mapping_id} ,RMFP ID: ${rmfp_id}, เวลาที่ผ่านไปแล้ว (นาที):`, timeDiffMinutes);
-                            console.log(`MP ID : ${mapping_id} ,RMFP ID: ${rmfp_id}, เวลาที่เหลืออยู่ (ชั่วโมง.นาที):`, MixTime);
-                        }
-
-                        // ทำให้เป็นทศนิยม 2 ตำแหน่ง
-                        MixTime = parseFloat(MixTime.toFixed(2));
-                    }
-                }
-
-
-                // ตรวจสอบ rework_time และคำนวณเวลาที่เหลือ
-                if (rework_time !== null) {
-                    // กรณีมีค่า rework_time ให้คำนวณเวลาที่เหลือโดยใช้ rework_date
-                    const reworkQuery = await pool
-                        .request()
-                        .input("mapping_id", sql.Int, mapping_id)
-                        .query(`
-                            SELECT FORMAT(qc_date, 'yyyy-MM-dd HH:mm:ss') AS qc_date
-                            FROM History
-                            WHERE mapping_id = @mapping_id AND qc_date IS NOT NULL
-                        `);
-
-                    if (reworkQuery.recordset.length > 0 && reworkQuery.recordset[0].qc_date) {
-                        const qcDate = new Date(reworkQuery.recordset[0].qc_date);
-                        const currentDate = new Date();
-
-                        // คำนวณเวลาที่ผ่านไปแล้วเป็นนาที
-                        const timeDiffMinutes = (currentDate - qcDate) / (1000 * 60);
-
-                        console.log(`RMFP ID: ${rmfp_id}, ใช้เวลาอ้างอิงจาก qc_date`);
-
-                        // กรณีพิเศษ: ถ้า rework_time เป็น 0.00
-                        if (rework_time === 0.00) {
-                            // ค่า 0 - เวลาที่ผ่านไป จะได้ค่าลบเสมอ
-                            const totalMinutesRemaining = -timeDiffMinutes;
-
-                            // แปลงเป็นรูปแบบ ชั่วโมง.นาที
-                            const updatedHours = Math.floor(Math.abs(totalMinutesRemaining) / 60);
-                            const updatedMinutes = Math.floor(Math.abs(totalMinutesRemaining) % 60);
-
-                            // ใส่เครื่องหมายลบ เพราะเป็นเวลาที่เกินมาแล้ว
-                            ReworkTime = -1 * (updatedHours + (updatedMinutes / 100));
-
-                            console.log(`MP ID : ${mapping_id} ,RMFP ID: ${rmfp_id}, กรณี rework_time เป็น 0.00`);
-                            console.log(`MP ID : ${mapping_id} ,RMFP ID: ${rmfp_id}, เวลาที่ผ่านไปแล้ว (นาที):`, timeDiffMinutes);
-                            console.log(`MP ID : ${mapping_id} ,RMFP ID: ${rmfp_id}, เวลาที่เหลือ (ติดลบ):`, ReworkTime);
-                        } else {
-                            // กรณีค่าเป็นลบหรือบวกอื่นๆ
-                            const isNegative = rework_time < 0;
-                            const absValue = Math.abs(rework_time);
-                            const hours = Math.floor(absValue);
-                            const minutes = Math.round((absValue - hours) * 100);
-
-                            // แปลงเป็นนาทีทั้งหมด คำนวณตามเครื่องหมาย
-                            let totalMinutes = (isNegative ? -1 : 1) * (hours * 60 + minutes);
-
-                            // ลบเวลาที่ผ่านไป
-                            const totalMinutesRemaining = totalMinutes - timeDiffMinutes;
-
-                            // แปลงกลับเป็นรูปแบบ ชั่วโมง.นาที
-                            const isResultNegative = totalMinutesRemaining < 0;
-                            const absMinutesRemaining = Math.abs(totalMinutesRemaining);
-                            const updatedHours = Math.floor(absMinutesRemaining / 60);
-                            const updatedMinutes = Math.floor(absMinutesRemaining % 60);
-
-                            // รูปแบบ hours.minutes โดยแปลง minutes เป็นทศนิยม และคงเครื่องหมาย
-                            ReworkTime = (isResultNegative ? -1 : 1) * (updatedHours + (updatedMinutes / 100));
-
-                            console.log(`MP ID : ${mapping_id} ,RMFP ID: ${rmfp_id}, rework_time เดิม:`, rework_time);
-                            console.log(`MP ID : ${mapping_id} ,RMFP ID: ${rmfp_id}, เวลาที่ผ่านไปแล้ว (นาที):`, timeDiffMinutes);
-                            console.log(`MP ID : ${mapping_id} ,RMFP ID: ${rmfp_id}, เวลาที่เหลืออยู่ (ชั่วโมง.นาที):`, ReworkTime);
-                        }
-
-                        // ทำให้เป็นทศนิยม 2 ตำแหน่ง
-                        ReworkTime = parseFloat(ReworkTime.toFixed(2));
-                    }
-                } else {
-                    // กรณี rework_time เป็น null ให้คำนวณ prep_to_cold_time ตามเดิม
-                    // การคำนวณเวลา prep_to_cold_time
-                    // การคำนวณเวลา prep_to_cold_time
-                    if (prep_to_cold_time === null) {
-                        const ptcResult = await pool
-                            .request()
-                            .input("rmfp_id", sql.Int, rmfp_id)
-                            .input("tro_id", sql.VarChar(4), tro_id)
-                            .query(`
-            SELECT 
-                rmg.prep_to_cold,
-                FORMAT(htr.cooked_date, 'yyyy-MM-dd HH:mm:ss') AS cooked_date,
-                FORMAT(htr.rmit_date, 'yyyy-MM-dd HH:mm:ss') AS rmit_date
-            FROM 
-                TrolleyRMMapping rmm
-            JOIN  
-                RMForProd rmf ON rmm.rmfp_id = rmf.rmfp_id
-            JOIN 
-                RawMatGroup rmg ON rmg.rm_group_id = rmf.rm_group_id
-            JOIN
-                History htr ON rmm.mapping_id = htr.mapping_id
-            WHERE 
-                rmm.rmfp_id = @rmfp_id AND rmm.tro_id = @tro_id
-        `);
-
-                        if (ptcResult.recordset.length > 0) {
-                            const prepToCold = ptcResult.recordset[0].prep_to_cold;
-                            const currentDate = new Date();
-
-                            // ใช้ rmit_date ถ้ามี ถ้าไม่มีให้ใช้ cooked_date
-                            const referenceDate = ptcResult.recordset[0].rmit_date ?
-                                new Date(ptcResult.recordset[0].rmit_date) :
-                                new Date(ptcResult.recordset[0].cooked_date);
-                            const referenceType = ptcResult.recordset[0].rmit_date ? 'rmit_date' : 'cooked_date';
-
-                            // คำนวณเวลาที่ผ่านไปแล้วเป็นนาที
-                            const timeDiffMinutes = (currentDate - referenceDate) / (1000 * 60);
-
-                            // คำนวณเวลาที่เหลืออยู่ในหน่วยชั่วโมง
-                            let remainingTimeHours = prepToCold - (timeDiffMinutes / 60);
-
-                            // แปลงให้อยู่ในรูปแบบ ชั่วโมง.นาที (0.01-0.60)
-                            const hours = Math.floor(remainingTimeHours);
-                            const minutes = Math.floor((remainingTimeHours - hours) * 60);
-
-                            // รูปแบบ hours.minutes โดยแปลง minutes เป็นทศนิยม (เช่น 30 นาที = 0.30)
-                            pic_time = hours + (minutes / 100);
-
-                            // ทำให้เป็นทศนิยม 2 ตำแหน่ง
-                            pic_time = parseFloat(pic_time.toFixed(2));
-
-                            console.log(`MP ID : ${mapping_id} ,RMFP ID: ${rmfp_id}, ใช้เวลาอ้างอิงจาก: ${referenceType}`);
-                            console.log(`MP ID : ${mapping_id} ,RMFP ID: ${rmfp_id}, prep_to_cold จาก RawMatGroup:`, prepToCold);
-                            console.log(`MP ID : ${mapping_id} ,RMFP ID: ${rmfp_id}, เวลาที่ผ่านไปแล้ว (นาที):`, timeDiffMinutes);
-                            console.log(`MP ID : ${mapping_id} ,RMFP ID: ${rmfp_id}, เวลาที่เหลืออยู่ (ชั่วโมง.นาที):`, pic_time);
-                        }
-                    } else {
-                        const ptcQuery = await pool
-                            .request()
-                            .input("rmfp_id", sql.Int, rmfp_id)
-                            .input("tro_id", sql.VarChar(4), tro_id)
-                            .query(`
-            SELECT 
-                FORMAT(htr.cooked_date, 'yyyy-MM-dd HH:mm:ss') AS cooked_date,
-                FORMAT(htr.rmit_date, 'yyyy-MM-dd HH:mm:ss') AS rmit_date,
-                FORMAT(htr.out_cold_date, 'yyyy-MM-dd HH:mm:ss') AS out_cold_date,
-                FORMAT(htr.out_cold_date_two, 'yyyy-MM-dd HH:mm:ss') AS out_cold_date_two,
-                FORMAT(htr.out_cold_date_three, 'yyyy-MM-dd HH:mm:ss') AS out_cold_date_three
-            FROM 
-                TrolleyRMMapping rmm
-            JOIN
-                History htr ON rmm.mapping_id = htr.mapping_id
-            WHERE 
-                rmm.rmfp_id = @rmfp_id AND rmm.tro_id = @tro_id
-        `);
-
-                        if (ptcQuery.recordset.length > 0) {
-                            // หาเวลาออกจากห้องเย็นล่าสุด (ถ้ามี)
-                            const outColdDates = [
-                                ptcQuery.recordset[0].out_cold_date_three,
-                                ptcQuery.recordset[0].out_cold_date_two,
-                                ptcQuery.recordset[0].out_cold_date
-                            ].filter(date => date);
-
-                            let referenceDate;
-                            let referenceType = '';
-
-                            if (outColdDates.length > 0) {
-                                // ถ้ามีเวลาออกจากห้องเย็น ให้ใช้เวลาล่าสุด
-                                referenceDate = new Date(outColdDates[0]);
-                                referenceType = 'out_cold_date';
-                            } else {
-                                // ถ้าไม่มี ให้ใช้ rmit_date ถ้ามี ถ้าไม่มีให้ใช้ cooked_date
-                                referenceDate = ptcQuery.recordset[0].rmit_date ?
-                                    new Date(ptcQuery.recordset[0].rmit_date) :
-                                    new Date(ptcQuery.recordset[0].cooked_date);
-                                referenceType = ptcQuery.recordset[0].rmit_date ? 'rmit_date' : 'cooked_date';
-                            }
-
-                            const currentDate = new Date();
-
-                            // คำนวณเวลาที่ผ่านไปแล้วเป็นนาที
-                            const timeDiffMinutes = (currentDate - referenceDate) / (1000 * 60);
-
-                            console.log(`MP ID : ${mapping_id} ,RMFP ID: ${rmfp_id}, ใช้เวลาอ้างอิงจาก: ${referenceType}`);
-
-                            // กรณีพิเศษ: ถ้า prep_to_cold_time เป็น 0.00
-                            if (prep_to_cold_time === 0.00) {
-                                // ค่า 0 - เวลาที่ผ่านไป จะได้ค่าลบเสมอ
-                                const totalMinutesRemaining = -timeDiffMinutes;
-
-                                // แปลงเป็นรูปแบบ ชั่วโมง.นาที
-                                const updatedHours = Math.floor(Math.abs(totalMinutesRemaining) / 60);
-                                const updatedMinutes = Math.floor(Math.abs(totalMinutesRemaining) % 60);
-
-                                // ใส่เครื่องหมายลบ เพราะเป็นเวลาที่เกินมาแล้ว
-                                pic_time = -1 * (updatedHours + (updatedMinutes / 100));
-
-                                console.log(`MP ID : ${mapping_id} ,RMFP ID: ${rmfp_id}, กรณี prep_to_cold_time เป็น 0.00`);
-                                console.log(`MP ID : ${mapping_id} ,RMFP ID: ${rmfp_id}, เวลาที่ผ่านไปแล้ว (นาที):`, timeDiffMinutes);
-                                console.log(`MP ID : ${mapping_id} ,RMFP ID: ${rmfp_id}, เวลาที่เหลือ (ติดลบ):`, pic_time);
-                            } else {
-                                // กรณีค่าเป็นลบหรือบวกอื่นๆ
-                                const isNegative = prep_to_cold_time < 0;
-                                const absValue = Math.abs(prep_to_cold_time);
-                                const hours = Math.floor(absValue);
-                                const minutes = Math.round((absValue - hours) * 100);
-
-                                // แปลงเป็นนาทีทั้งหมด คำนวณตามเครื่องหมาย
-                                let totalMinutes = (isNegative ? -1 : 1) * (hours * 60 + minutes);
-
-                                // ลบเวลาที่ผ่านไป
-                                const totalMinutesRemaining = totalMinutes - timeDiffMinutes;
-
-                                // แปลงกลับเป็นรูปแบบ ชั่วโมง.นาที
-                                const isResultNegative = totalMinutesRemaining < 0;
-                                const absMinutesRemaining = Math.abs(totalMinutesRemaining);
-                                const updatedHours = Math.floor(absMinutesRemaining / 60); // ส่วนชั่วโมง
-                                const updatedMinutes = Math.round(absMinutesRemaining % 60); // ส่วนนาที
-
-                                // รูปแบบ hours.minutes โดยแปลง minutes เป็นทศนิยม และคงเครื่องหมาย
-                                pic_time = (isResultNegative ? -1 : 1) * (updatedHours + (updatedMinutes / 100));
-
-                                console.log(`MP ID : ${mapping_id} ,RMFP ID: ${rmfp_id}, prep_to_cold_time เดิม:`, prep_to_cold_time);
-                                console.log(`MP ID : ${mapping_id} ,RMFP ID: ${rmfp_id}, เวลาที่ผ่านไปแล้ว (นาที):`, timeDiffMinutes);
-                                console.log(`MP ID : ${mapping_id} ,RMFP ID: ${rmfp_id}, เวลาที่เหลืออยู่ (ชั่วโมง.นาที):`, pic_time);
-                            }
-
-                            // ทำให้เป็นทศนิยม 2 ตำแหน่ง
-                            pic_time = parseFloat(pic_time.toFixed(2));
-                        }
-                    }
-                }
-
-                console.log(`MP ID ${mapping_id}, RMFP ID: ${rmfp_id}, cold_time update:`, coldTimeValue);
-                console.log(`MP ID ${mapping_id}, RMFP ID: ${rmfp_id}, prep_to_cold_time:`, pic_time);
-                console.log(`MP ID ${mapping_id}, RMFP ID: ${rmfp_id}, rework_time update:`, ReworkTime);
-                io.to('saveRMForProdRoom').emit('dataUpdated', []);
-                // อัปเดตข้อมูลในตาราง TrolleyRMMapping สำหรับวัตถุดิบนี้
-                await pool
-                    .request()
-                    .input("rmfp_id", sql.Int, rmfp_id)
-                    .input("tro_id", sql.VarChar(4), tro_id)
-                    .input("selectedOption", sql.VarChar, selectedOption)
-                    .input("stay_place", sql.VarChar, "เข้าห้องเย็น")
-                    .input("dest", sql.VarChar, "ห้องเย็น")
-                    .input("cold_time", sql.Float, coldTimeValue)
-                    .input("prep_to_cold_time", sql.Float, pic_time)
-                    .input("rework_time", sql.Float, ReworkTime)
-                    .input("mix_time", sql.Float, MixTime)
-
-                    .query(`
-                        UPDATE TrolleyRMMapping 
-                        SET 
-                            rm_cold_status = @selectedOption, 
-                            stay_place = @stay_place,
-                            dest = @dest,
-                            cold_time = @cold_time,
-                            prep_to_cold_time = @prep_to_cold_time,
-                            rework_time = @rework_time,
-                            mix_time = @mix_time
-                        WHERE 
-                            tro_id = @tro_id AND rmfp_id = @rmfp_id
-                    `);
-            }
-
-            // อัปเดตช่องเก็บในห้องเย็น
             await pool
                 .request()
                 .input("tro_id", sql.VarChar(4), tro_id)
                 .input("cs_id", sql.Int, cs_id)
                 .input("slot_id", sql.VarChar, slot_id)
-                .query("UPDATE Slot SET tro_id = @tro_id WHERE cs_id = @cs_id AND slot_id = @slot_id");
+                .query("UPDATE Slot SET tro_id = @tro_id , reserved_at = NULL WHERE cs_id = @cs_id AND slot_id = @slot_id");
 
-            // อัปเดตประวัติการเข้าห้องเย็น
-            const mappingResults = await pool.request()
+            // เพิ่มการอัพเดต tro_status เป็น 0 ในตาราง Trolley (รถเข็นถูกใช้งานแล้ว)
+            await pool
+                .request()
                 .input("tro_id", sql.VarChar(4), tro_id)
-                .query("SELECT mapping_id FROM TrolleyRMMapping WHERE tro_id = @tro_id");
+                .query("UPDATE Trolley SET tro_status = 0,rsrv_timestamp = null WHERE tro_id = @tro_id");
 
-            if (mappingResults.recordset.length > 0) {
-                for (const row of mappingResults.recordset) {
-                    const mapping_id = row.mapping_id;
+            return res.status(200).json({ success: true, message: "รับเข้ารถเข็นว่าง" });
+        }
 
-                    await pool.request()
-                        .input("mapping_id", sql.Int, mapping_id)
-                        .query(`
-                        UPDATE History 
-                        SET 
-                          come_cold_date = 
-                            CASE 
-                              WHEN come_cold_date IS NULL THEN GETDATE() 
-                              ELSE come_cold_date 
-                            END,
-                          come_cold_date_two = 
-                            CASE 
-                              WHEN come_cold_date IS NOT NULL AND come_cold_date_two IS NULL THEN GETDATE() 
-                              ELSE come_cold_date_two 
-                            END,
-                          come_cold_date_three = 
-                            CASE 
-                              WHEN come_cold_date IS NOT NULL AND come_cold_date_two IS NOT NULL AND come_cold_date_three IS NULL THEN GETDATE() 
-                              ELSE come_cold_date_three 
-                            END
-                        WHERE mapping_id = @mapping_id
-                    `);
+        // สำหรับกรณีอื่นๆ (ไม่ใช่รถเข็นว่าง) ต้องตรวจสอบวัตถุดิบในรถเข็น
+        // ตรวจสอบข้อมูลวัตถุดิบใน TrolleyRMMapping
+        const rmResults = await pool
+            .request()
+            .input("tro_id", sql.VarChar(4), tro_id)
+            .query("SELECT dest,rmm_line_name, rm_status, cold_time, prep_to_cold_time, rework_time,mix_time, rmfp_id, mapping_id FROM TrolleyRMMapping WHERE tro_id = @tro_id");
+
+        if (rmResults.recordset.length === 0) {
+            return res.status(400).json({ success: false, message: "ไม่พบวัตถุดิบในรถเข็นนี้" });
+        }
+
+        // ตรวจสอบว่าทุกวัตถุดิบมีปลายทางเป็น "เข้าห้องเย็น"
+        const invalidDestItems = rmResults.recordset.filter(item => item.dest !== "เข้าห้องเย็น");
+        if (invalidDestItems.length > 0) {
+            return res.status(400).json({
+                success: false,
+                message: "มีวัตถุดิบในรถเข็นที่ไม่ได้เตรียมเข้าห้องเย็น"
+            });
+        }
+
+        // ตรวจสอบสถานะของวัตถุดิบตามเงื่อนไขที่เลือก
+        const statusMap = {
+            "วัตถุดิบรอแก้ไข": ["รอแก้ไข"],
+            "วัตถุดิบรับฝาก": ["QcCheck รอกลับมาเตรียม", "QcCheck รอ MD", "รอ Qc", "รอกลับมาเตรียม"],
+            "วัตถุดิบตรง": ["QcCheck"],
+            "เหลือจากไลน์ผลิต": ["เหลือจากไลน์ผลิต"],
+        };
+
+        if (!(selectedOption in statusMap)) {
+            return res.status(400).json({ success: false, message: "ตัวเลือกไม่ถูกต้อง" });
+        }
+
+        const validStatuses = statusMap[selectedOption];
+        const invalidStatusItems = rmResults.recordset.filter(item =>
+            !validStatuses.includes(item.rm_status)
+        );
+
+        if (invalidStatusItems.length > 0) {
+            return res.status(400).json({
+                success: false,
+                message: `ไม่ตรงเงื่อนไขรับเข้า ${selectedOption} มีวัตถุดิบที่มีสถานะไม่ตรงกับเงื่อนไข`
+            });
+        }
+
+        for (const item of rmResults.recordset) {
+            const { cold_time, prep_to_cold_time, rework_time, mix_time, rmfp_id, mapping_id } = item;
+
+            let coldTimeValue = cold_time; // ใช้ค่าเดิมเป็นค่าเริ่มต้น
+            let pic_time = prep_to_cold_time; // เก็บค่า prep_to_cold_time เดิมไว้
+            let ReworkTime = rework_time; // เก็บค่า rework_time เดิมไว้
+            let MixTime = mix_time;
+
+            console.log(`MP ID : ${mapping_id} ,RMFP ID: ${rmfp_id}, cold_time ตอนรับ:`, cold_time);
+            console.log(`MP ID : ${mapping_id} ,RMFP ID: ${rmfp_id}, ptc_time ตอนรับ:`, prep_to_cold_time);
+            console.log(`MP ID : ${mapping_id} ,RMFP ID: ${rmfp_id}, rework_time ตอนรับ:`, rework_time);
+            console.log(`MP ID : ${mapping_id} ,RMFP ID: ${rmfp_id}, mix_time ตอนรับ:`, mix_time);
+
+            // เฉพาะกรณีที่ cold_time เป็น null ให้ดึงค่าจาก RawMatGroup
+            if (cold_time === null) {
+                const rmgResult = await pool
+                    .request()
+                    .input("rmfp_id", sql.Int, rmfp_id)
+                    .query(`
+                    SELECT rmg.cold 
+                    FROM RMForProd rmf 
+                    JOIN 
+                        RawMatGroup rmg ON rmg.rm_group_id = rmf.rm_group_id
+                    WHERE 
+                        rmf.rmfp_id = @rmfp_id
+                `);
+
+                if (rmgResult.recordset.length > 0) {
+                    coldTimeValue = rmgResult.recordset[0].cold;
                 }
             }
 
-            return res.status(200).json({ success: true, message: `รับเข้า ${selectedOption}` });
-        } catch (err) {
-            console.error("SQL error", err);
-            res.status(500).json({ success: false, error: err.message });
+            if (mix_time !== null) {
+                // กรณีมีค่า mix_time ให้คำนวณเวลาที่เหลือโดยใช้ mixed_date
+                const mixQuery = await pool
+                    .request()
+                    .input("mapping_id", sql.Int, mapping_id)
+                    .query(`
+                        SELECT FORMAT(mixed_date, 'yyyy-MM-dd HH:mm:ss') AS mixed_date
+                        FROM History
+                        WHERE mapping_id = @mapping_id AND mixed_date IS NOT NULL
+                    `);
+
+                if (mixQuery.recordset.length > 0 && mixQuery.recordset[0].mixed_date) {
+                    const mixedDate = new Date(mixQuery.recordset[0].mixed_date);
+                    const currentDate = new Date();
+
+                    // คำนวณเวลาที่ผ่านไปแล้วเป็นนาที
+                    const timeDiffMinutes = (currentDate - mixedDate) / (1000 * 60);
+
+                    console.log(`MP ID : ${mapping_id} ,RMFP ID: ${rmfp_id}, ใช้เวลาอ้างอิงจาก mixed_date`);
+
+                    // กรณีพิเศษ: ถ้า mix_time เป็น 0.00
+                    if (mix_time === 0.00) {
+                        // ค่า 0 - เวลาที่ผ่านไป จะได้ค่าลบเสมอ
+                        const totalMinutesRemaining = -timeDiffMinutes;
+
+                        // แปลงเป็นรูปแบบ ชั่วโมง.นาที
+                        const updatedHours = Math.floor(Math.abs(totalMinutesRemaining) / 60);
+                        const updatedMinutes = Math.floor(Math.abs(totalMinutesRemaining) % 60);
+
+                        // ใส่เครื่องหมายลบ เพราะเป็นเวลาที่เกินมาแล้ว
+                        MixTime = -1 * (updatedHours + (updatedMinutes / 100));
+
+                        console.log(`MP ID : ${mapping_id} ,RMFP ID: ${rmfp_id}, กรณี mix_time เป็น 0.00`);
+                        console.log(`MP ID : ${mapping_id} ,RMFP ID: ${rmfp_id}, เวลาที่ผ่านไปแล้ว (นาที):`, timeDiffMinutes);
+                        console.log(`MP ID : ${mapping_id} ,RMFP ID: ${rmfp_id}, เวลาที่เหลือ (ติดลบ):`, MixTime);
+                    } else {
+                        // กรณีค่าเป็นลบหรือบวกอื่นๆ
+                        const isNegative = mix_time < 0;
+                        const absValue = Math.abs(mix_time);
+                        const hours = Math.floor(absValue);
+                        const minutes = Math.round((absValue - hours) * 100);
+
+                        // แปลงเป็นนาทีทั้งหมด คำนวณตามเครื่องหมาย
+                        let totalMinutes = (isNegative ? -1 : 1) * (hours * 60 + minutes);
+
+                        // ลบเวลาที่ผ่านไป
+                        const totalMinutesRemaining = totalMinutes - timeDiffMinutes;
+
+                        // แปลงกลับเป็นรูปแบบ ชั่วโมง.นาที
+                        const isResultNegative = totalMinutesRemaining < 0;
+                        const absMinutesRemaining = Math.abs(totalMinutesRemaining);
+                        const updatedHours = Math.floor(absMinutesRemaining / 60);
+                        const updatedMinutes = Math.floor(absMinutesRemaining % 60);
+
+                        // รูปแบบ hours.minutes โดยแปลง minutes เป็นทศนิยม และคงเครื่องหมาย
+                        MixTime = (isResultNegative ? -1 : 1) * (updatedHours + (updatedMinutes / 100));
+
+                        console.log(`MP ID : ${mapping_id} ,RMFP ID: ${rmfp_id}, mix_time เดิม:`, mix_time);
+                        console.log(`MP ID : ${mapping_id} ,RMFP ID: ${rmfp_id}, เวลาที่ผ่านไปแล้ว (นาที):`, timeDiffMinutes);
+                        console.log(`MP ID : ${mapping_id} ,RMFP ID: ${rmfp_id}, เวลาที่เหลืออยู่ (ชั่วโมง.นาที):`, MixTime);
+                    }
+
+                    // ทำให้เป็นทศนิยม 2 ตำแหน่ง
+                    MixTime = parseFloat(MixTime.toFixed(2));
+                }
+            }
+
+            // ตรวจสอบ rework_time และคำนวณเวลาที่เหลือ
+            if (rework_time !== null) {
+                // กรณีมีค่า rework_time ให้คำนวณเวลาที่เหลือโดยใช้ rework_date
+                const reworkQuery = await pool
+                    .request()
+                    .input("mapping_id", sql.Int, mapping_id)
+                    .query(`
+                        SELECT FORMAT(qc_date, 'yyyy-MM-dd HH:mm:ss') AS qc_date
+                        FROM History
+                        WHERE mapping_id = @mapping_id AND qc_date IS NOT NULL
+                    `);
+
+                if (reworkQuery.recordset.length > 0 && reworkQuery.recordset[0].qc_date) {
+                    const qcDate = new Date(reworkQuery.recordset[0].qc_date);
+                    const currentDate = new Date();
+
+                    // คำนวณเวลาที่ผ่านไปแล้วเป็นนาที
+                    const timeDiffMinutes = (currentDate - qcDate) / (1000 * 60);
+
+                    console.log(`RMFP ID: ${rmfp_id}, ใช้เวลาอ้างอิงจาก qc_date`);
+
+                    // กรณีพิเศษ: ถ้า rework_time เป็น 0.00
+                    if (rework_time === 0.00) {
+                        // ค่า 0 - เวลาที่ผ่านไป จะได้ค่าลบเสมอ
+                        const totalMinutesRemaining = -timeDiffMinutes;
+
+                        // แปลงเป็นรูปแบบ ชั่วโมง.นาที
+                        const updatedHours = Math.floor(Math.abs(totalMinutesRemaining) / 60);
+                        const updatedMinutes = Math.floor(Math.abs(totalMinutesRemaining) % 60);
+
+                        // ใส่เครื่องหมายลบ เพราะเป็นเวลาที่เกินมาแล้ว
+                        ReworkTime = -1 * (updatedHours + (updatedMinutes / 100));
+
+                        console.log(`MP ID : ${mapping_id} ,RMFP ID: ${rmfp_id}, กรณี rework_time เป็น 0.00`);
+                        console.log(`MP ID : ${mapping_id} ,RMFP ID: ${rmfp_id}, เวลาที่ผ่านไปแล้ว (นาที):`, timeDiffMinutes);
+                        console.log(`MP ID : ${mapping_id} ,RMFP ID: ${rmfp_id}, เวลาที่เหลือ (ติดลบ):`, ReworkTime);
+                    } else {
+                        // กรณีค่าเป็นลบหรือบวกอื่นๆ
+                        const isNegative = rework_time < 0;
+                        const absValue = Math.abs(rework_time);
+                        const hours = Math.floor(absValue);
+                        const minutes = Math.round((absValue - hours) * 100);
+
+                        // แปลงเป็นนาทีทั้งหมด คำนวณตามเครื่องหมาย
+                        let totalMinutes = (isNegative ? -1 : 1) * (hours * 60 + minutes);
+
+                        // ลบเวลาที่ผ่านไป
+                        const totalMinutesRemaining = totalMinutes - timeDiffMinutes;
+
+                        // แปลงกลับเป็นรูปแบบ ชั่วโมง.นาที
+                        const isResultNegative = totalMinutesRemaining < 0;
+                        const absMinutesRemaining = Math.abs(totalMinutesRemaining);
+                        const updatedHours = Math.floor(absMinutesRemaining / 60);
+                        const updatedMinutes = Math.floor(absMinutesRemaining % 60);
+
+                        // รูปแบบ hours.minutes โดยแปลง minutes เป็นทศนิยม และคงเครื่องหมาย
+                        ReworkTime = (isResultNegative ? -1 : 1) * (updatedHours + (updatedMinutes / 100));
+
+                        console.log(`MP ID : ${mapping_id} ,RMFP ID: ${rmfp_id}, rework_time เดิม:`, rework_time);
+                        console.log(`MP ID : ${mapping_id} ,RMFP ID: ${rmfp_id}, เวลาที่ผ่านไปแล้ว (นาที):`, timeDiffMinutes);
+                        console.log(`MP ID : ${mapping_id} ,RMFP ID: ${rmfp_id}, เวลาที่เหลืออยู่ (ชั่วโมง.นาที):`, ReworkTime);
+                    }
+
+                    // ทำให้เป็นทศนิยม 2 ตำแหน่ง
+                    ReworkTime = parseFloat(ReworkTime.toFixed(2));
+                }
+            } else {
+                // กรณี rework_time เป็น null ให้คำนวณ prep_to_cold_time ตามเดิม
+                // การคำนวณเวลา prep_to_cold_time
+                // การคำนวณเวลา prep_to_cold_time
+                if (prep_to_cold_time === null) {
+                    const ptcResult = await pool
+                        .request()
+                        .input("rmfp_id", sql.Int, rmfp_id)
+                        .input("tro_id", sql.VarChar(4), tro_id)
+                        .query(`
+        SELECT 
+            rmg.prep_to_cold,
+            FORMAT(htr.cooked_date, 'yyyy-MM-dd HH:mm:ss') AS cooked_date,
+            FORMAT(htr.rmit_date, 'yyyy-MM-dd HH:mm:ss') AS rmit_date
+        FROM 
+            TrolleyRMMapping rmm
+        JOIN  
+            RMForProd rmf ON rmm.rmfp_id = rmf.rmfp_id
+        JOIN 
+            RawMatGroup rmg ON rmg.rm_group_id = rmf.rm_group_id
+        JOIN
+            History htr ON rmm.mapping_id = htr.mapping_id
+        WHERE 
+            rmm.rmfp_id = @rmfp_id AND rmm.tro_id = @tro_id
+    `);
+
+                    if (ptcResult.recordset.length > 0) {
+                        const prepToCold = ptcResult.recordset[0].prep_to_cold;
+                        const currentDate = new Date();
+
+                        // ใช้ rmit_date ถ้ามี ถ้าไม่มีให้ใช้ cooked_date
+                        const referenceDate = ptcResult.recordset[0].rmit_date ?
+                            new Date(ptcResult.recordset[0].rmit_date) :
+                            new Date(ptcResult.recordset[0].cooked_date);
+                        const referenceType = ptcResult.recordset[0].rmit_date ? 'rmit_date' : 'cooked_date';
+
+                        // คำนวณเวลาที่ผ่านไปแล้วเป็นนาที
+                        const timeDiffMinutes = (currentDate - referenceDate) / (1000 * 60);
+
+                        // คำนวณเวลาที่เหลืออยู่ในหน่วยชั่วโมง
+                        let remainingTimeHours = prepToCold - (timeDiffMinutes / 60);
+
+                        // แปลงให้อยู่ในรูปแบบ ชั่วโมง.นาที (0.01-0.60)
+                        const hours = Math.floor(remainingTimeHours);
+                        const minutes = Math.floor((remainingTimeHours - hours) * 60);
+
+                        // รูปแบบ hours.minutes โดยแปลง minutes เป็นทศนิยม (เช่น 30 นาที = 0.30)
+                        pic_time = hours + (minutes / 100);
+
+                        // ทำให้เป็นทศนิยม 2 ตำแหน่ง
+                        pic_time = parseFloat(pic_time.toFixed(2));
+
+                        console.log(`MP ID : ${mapping_id} ,RMFP ID: ${rmfp_id}, ใช้เวลาอ้างอิงจาก: ${referenceType}`);
+                        console.log(`MP ID : ${mapping_id} ,RMFP ID: ${rmfp_id}, prep_to_cold จาก RawMatGroup:`, prepToCold);
+                        console.log(`MP ID : ${mapping_id} ,RMFP ID: ${rmfp_id}, เวลาที่ผ่านไปแล้ว (นาที):`, timeDiffMinutes);
+                        console.log(`MP ID : ${mapping_id} ,RMFP ID: ${rmfp_id}, เวลาที่เหลืออยู่ (ชั่วโมง.นาที):`, pic_time);
+                    }
+                } else {
+                    const ptcQuery = await pool
+                        .request()
+                        .input("rmfp_id", sql.Int, rmfp_id)
+                        .input("tro_id", sql.VarChar(4), tro_id)
+                        .query(`
+        SELECT 
+            FORMAT(htr.cooked_date, 'yyyy-MM-dd HH:mm:ss') AS cooked_date,
+            FORMAT(htr.rmit_date, 'yyyy-MM-dd HH:mm:ss') AS rmit_date,
+            FORMAT(htr.out_cold_date, 'yyyy-MM-dd HH:mm:ss') AS out_cold_date,
+            FORMAT(htr.out_cold_date_two, 'yyyy-MM-dd HH:mm:ss') AS out_cold_date_two,
+            FORMAT(htr.out_cold_date_three, 'yyyy-MM-dd HH:mm:ss') AS out_cold_date_three
+        FROM 
+            TrolleyRMMapping rmm
+        JOIN
+            History htr ON rmm.mapping_id = htr.mapping_id
+        WHERE 
+            rmm.rmfp_id = @rmfp_id AND rmm.tro_id = @tro_id
+    `);
+
+                    if (ptcQuery.recordset.length > 0) {
+                        // หาเวลาออกจากห้องเย็นล่าสุด (ถ้ามี)
+                        const outColdDates = [
+                            ptcQuery.recordset[0].out_cold_date_three,
+                            ptcQuery.recordset[0].out_cold_date_two,
+                            ptcQuery.recordset[0].out_cold_date
+                        ].filter(date => date);
+
+                        let referenceDate;
+                        let referenceType = '';
+
+                        if (outColdDates.length > 0) {
+                            // ถ้ามีเวลาออกจากห้องเย็น ให้ใช้เวลาล่าสุด
+                            referenceDate = new Date(outColdDates[0]);
+                            referenceType = 'out_cold_date';
+                        } else {
+                            // ถ้าไม่มี ให้ใช้ rmit_date ถ้ามี ถ้าไม่มีให้ใช้ cooked_date
+                            referenceDate = ptcQuery.recordset[0].rmit_date ?
+                                new Date(ptcQuery.recordset[0].rmit_date) :
+                                new Date(ptcQuery.recordset[0].cooked_date);
+                            referenceType = ptcQuery.recordset[0].rmit_date ? 'rmit_date' : 'cooked_date';
+                        }
+
+                        const currentDate = new Date();
+
+                        // คำนวณเวลาที่ผ่านไปแล้วเป็นนาที
+                        const timeDiffMinutes = (currentDate - referenceDate) / (1000 * 60);
+
+                        console.log(`MP ID : ${mapping_id} ,RMFP ID: ${rmfp_id}, ใช้เวลาอ้างอิงจาก: ${referenceType}`);
+
+                        // กรณีพิเศษ: ถ้า prep_to_cold_time เป็น 0.00
+                        if (prep_to_cold_time === 0.00) {
+                            // ค่า 0 - เวลาที่ผ่านไป จะได้ค่าลบเสมอ
+                            const totalMinutesRemaining = -timeDiffMinutes;
+
+                            // แปลงเป็นรูปแบบ ชั่วโมง.นาที
+                            const updatedHours = Math.floor(Math.abs(totalMinutesRemaining) / 60);
+                            const updatedMinutes = Math.floor(Math.abs(totalMinutesRemaining) % 60);
+
+                            // ใส่เครื่องหมายลบ เพราะเป็นเวลาที่เกินมาแล้ว
+                            pic_time = -1 * (updatedHours + (updatedMinutes / 100));
+
+                            console.log(`MP ID : ${mapping_id} ,RMFP ID: ${rmfp_id}, กรณี prep_to_cold_time เป็น 0.00`);
+                            console.log(`MP ID : ${mapping_id} ,RMFP ID: ${rmfp_id}, เวลาที่ผ่านไปแล้ว (นาที):`, timeDiffMinutes);
+                            console.log(`MP ID : ${mapping_id} ,RMFP ID: ${rmfp_id}, เวลาที่เหลือ (ติดลบ):`, pic_time);
+                        } else {
+                            // กรณีค่าเป็นลบหรือบวกอื่นๆ
+                            const isNegative = prep_to_cold_time < 0;
+                            const absValue = Math.abs(prep_to_cold_time);
+                            const hours = Math.floor(absValue);
+                            const minutes = Math.round((absValue - hours) * 100);
+
+                            // แปลงเป็นนาทีทั้งหมด คำนวณตามเครื่องหมาย
+                            let totalMinutes = (isNegative ? -1 : 1) * (hours * 60 + minutes);
+
+                            // ลบเวลาที่ผ่านไป
+                            const totalMinutesRemaining = totalMinutes - timeDiffMinutes;
+
+                            // แปลงกลับเป็นรูปแบบ ชั่วโมง.นาที
+                            const isResultNegative = totalMinutesRemaining < 0;
+                            const absMinutesRemaining = Math.abs(totalMinutesRemaining);
+                            const updatedHours = Math.floor(absMinutesRemaining / 60); // ส่วนชั่วโมง
+                            const updatedMinutes = Math.round(absMinutesRemaining % 60); // ส่วนนาที
+
+                            // รูปแบบ hours.minutes โดยแปลง minutes เป็นทศนิยม และคงเครื่องหมาย
+                            pic_time = (isResultNegative ? -1 : 1) * (updatedHours + (updatedMinutes / 100));
+
+                            console.log(`MP ID : ${mapping_id} ,RMFP ID: ${rmfp_id}, prep_to_cold_time เดิม:`, prep_to_cold_time);
+                            console.log(`MP ID : ${mapping_id} ,RMFP ID: ${rmfp_id}, เวลาที่ผ่านไปแล้ว (นาที):`, timeDiffMinutes);
+                            console.log(`MP ID : ${mapping_id} ,RMFP ID: ${rmfp_id}, เวลาที่เหลืออยู่ (ชั่วโมง.นาที):`, pic_time);
+                        }
+
+                        // ทำให้เป็นทศนิยม 2 ตำแหน่ง
+                        pic_time = parseFloat(pic_time.toFixed(2));
+                    }
+                }
+            }
+
+            console.log(`MP ID ${mapping_id}, RMFP ID: ${rmfp_id}, cold_time update:`, coldTimeValue);
+            console.log(`MP ID ${mapping_id}, RMFP ID: ${rmfp_id}, prep_to_cold_time:`, pic_time);
+            console.log(`MP ID ${mapping_id}, RMFP ID: ${rmfp_id}, rework_time update:`, ReworkTime);
+            io.to('saveRMForProdRoom').emit('dataUpdated', []);
+            // อัปเดตข้อมูลในตาราง TrolleyRMMapping สำหรับวัตถุดิบนี้
+            await pool
+                .request()
+                .input("rmfp_id", sql.Int, rmfp_id)
+                .input("tro_id", sql.VarChar(4), tro_id)
+                .input("selectedOption", sql.VarChar, selectedOption)
+                .input("stay_place", sql.VarChar, "เข้าห้องเย็น")
+                .input("dest", sql.VarChar, "ห้องเย็น")
+                .input("cold_time", sql.Float, coldTimeValue)
+                .input("prep_to_cold_time", sql.Float, pic_time)
+                .input("rework_time", sql.Float, ReworkTime)
+                .input("mix_time", sql.Float, MixTime)
+
+                .query(`
+                    UPDATE TrolleyRMMapping 
+                    SET 
+                        rm_cold_status = @selectedOption, 
+                        stay_place = @stay_place,
+                        dest = @dest,
+                        cold_time = @cold_time,
+                        prep_to_cold_time = @prep_to_cold_time,
+                        rework_time = @rework_time,
+                        mix_time = @mix_time
+                    WHERE 
+                        tro_id = @tro_id AND rmfp_id = @rmfp_id
+                `);
         }
-    });
+
+        // อัปเดตช่องเก็บในห้องเย็น
+        await pool
+            .request()
+            .input("tro_id", sql.VarChar(4), tro_id)
+            .input("cs_id", sql.Int, cs_id)
+            .input("slot_id", sql.VarChar, slot_id)
+            .query("UPDATE Slot SET tro_id = @tro_id WHERE cs_id = @cs_id AND slot_id = @slot_id");
+
+        // อัปเดตประวัติการเข้าห้องเย็น
+        const mappingResults = await pool.request()
+            .input("tro_id", sql.VarChar(4), tro_id)
+            .query("SELECT mapping_id FROM TrolleyRMMapping WHERE tro_id = @tro_id");
+
+        if (mappingResults.recordset.length > 0) {
+            for (const row of mappingResults.recordset) {
+                const mapping_id = row.mapping_id;
+
+                await pool.request()
+                    .input("mapping_id", sql.Int, mapping_id)
+                    .query(`
+                    UPDATE History 
+                    SET 
+                      come_cold_date = 
+                        CASE 
+                          WHEN come_cold_date IS NULL THEN GETDATE() 
+                          ELSE come_cold_date 
+                        END,
+                      come_cold_date_two = 
+                        CASE 
+                          WHEN come_cold_date IS NOT NULL AND come_cold_date_two IS NULL THEN GETDATE() 
+                          ELSE come_cold_date_two 
+                        END,
+                      come_cold_date_three = 
+                        CASE 
+                          WHEN come_cold_date IS NOT NULL AND come_cold_date_two IS NOT NULL AND come_cold_date_three IS NULL THEN GETDATE() 
+                          ELSE come_cold_date_three 
+                        END
+                    WHERE mapping_id = @mapping_id
+                `);
+            }
+        }
+
+        return res.status(200).json({ success: true, message: `รับเข้า ${selectedOption}` });
+    } catch (err) {
+        console.error("SQL error", err);
+        res.status(500).json({ success: false, error: err.message });
+    }
+});
 
     // router.put("/coldstorage/moveRawmatintolley", async (req, res) => {
     //     try {

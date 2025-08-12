@@ -7,6 +7,8 @@ import ProductsPage from "./ScanSAP/ScanSAPPage";
 
 import SalesPage from "./MatCold/MatColdPage";
 import HistoryBakingPrep from "./HistoryBaking/HistoryBakingPage";
+import WorkplaceSelector from "../User/WorkplaceSelector.jsx";
+
 const API_URL = import.meta.env.VITE_API_URL;
 
 function AppOven() {
@@ -24,6 +26,7 @@ function AppOven() {
 				<Route path='/products' element={<ProductsPage />} />
 				<Route path='/sales' element={<SalesPage />} />
 				<Route path='/analytics' element={<HistoryBakingPrep />} />
+				<Route path='/WorkplaceSelector' element={<WorkplaceSelector />} />
 			</Routes>
 		</div>
 	);

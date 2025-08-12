@@ -15,7 +15,7 @@ const { createClient } = require("redis");
 const { createAdapter } = require("@socket.io/redis-adapter");
 const { setupMaster, setupWorker } = require("@socket.io/sticky");
 const { setupPrimary } = require("@socket.io/cluster-adapter");
-const { getLatestData } = require("./autofetch");
+// const { getLatestData } = require("./autofetch");
 // Load environment variables early
 dotenv.config();
 const PORT = process.env.PORT || 3000;
@@ -108,7 +108,7 @@ if (process.env.NODE_ENV === "production" && cluster.isPrimary) {
         `http://${process.env.DB_SERVER}:5173`,
         "http://192.168.1.103:5173",
         "http://172.48.0.114:5173",
-        "http://10.53.61.97:5173",
+        "http://172.16.151.128:5173",
         "http://localhost:5173",
       ],
       credentials: true,
@@ -137,7 +137,7 @@ if (process.env.NODE_ENV === "production" && cluster.isPrimary) {
   // Enhanced Redis configuration
   const pubClient = createClient({
     socket: {
-      host: '10.53.61.97',
+      host: '172.16.151.128',
       port: 6379,
       reconnectStrategy: retries => {
         // กำหนด retry connection ให้ถี่ขึ้น (เร็วขึ้น)
@@ -179,7 +179,7 @@ if (process.env.NODE_ENV === "production" && cluster.isPrimary) {
         "http://localhost:5173",
         // "http://127.0.0.1:5173",
         // "http://172.48.0.114:5173",
-        "http://10.53.61.97:5173",
+        "http://172.16.151.128:5173",
         `http://${process.env.DB_SERVER}:5173`
       ];
 

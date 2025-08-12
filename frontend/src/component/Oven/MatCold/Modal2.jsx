@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from "axios";
-axios.defaults.withCredentials = true; 
+axios.defaults.withCredentials = true;
 import {
   Dialog,
   DialogActions,
@@ -66,37 +66,51 @@ const Modal2 = ({ open, onClose, onNext, data, rmfp_id, CookedDateTime, level_eu
     }
   }, [open, data]);
 
-  useEffect(() => {
-      const fetchUserDataFromLocalStorage = () => {
-        try {
-          const firstName = localStorage.getItem('first_name') || '';
-          
-          if (firstName) {
-            setOperator(`${firstName}`.trim());
-          }
-        } catch (error) {
-          console.error("Error fetching user data from localStorage:", error);
-        }
-      };
-    
-      if (open) {
-        fetchUserDataFromLocalStorage();
-      }
-    }, [open]);
 
-    useEffect(() => {
-      if (rm_type_id === 3 || rm_type_id === 6 || rm_type_id === 7 || rm_type_id === 8) {
-        const numbers = Array.from({ length: 10 }, (_, i) => ({
-          id: i + 1,
-          value: `Eu ${i + 1}`,
-        }));
-        setEuOptions(numbers);
-        setLevelEuState(numbers[0]?.value || '');
-      } else {
-        setEuOptions([]);
-        setLevelEuState('');
+
+  const returnreserveTrolley = async (tro_id) => {
+    try {
+      const response = await axios.post(`${API_URL}/api/re/reserveTrolley`, {
+        tro_id: tro_id,
+      });
+      return response.data.success;
+    } catch (error) {
+      console.error(error);
+      return false;
+    }
+  };
+
+  useEffect(() => {
+    const fetchUserDataFromLocalStorage = () => {
+      try {
+        const firstName = localStorage.getItem('first_name') || '';
+
+        if (firstName) {
+          setOperator(`${firstName}`.trim());
+        }
+      } catch (error) {
+        console.error("Error fetching user data from localStorage:", error);
       }
-    }, [rm_type_id]);
+    };
+
+    if (open) {
+      fetchUserDataFromLocalStorage();
+    }
+  }, [open]);
+
+  useEffect(() => {
+    if (rm_type_id === 3 || rm_type_id === 6 || rm_type_id === 7 || rm_type_id === 8) {
+      const numbers = Array.from({ length: 10 }, (_, i) => ({
+        id: i + 1,
+        value: `Eu ${i + 1}`,
+      }));
+      setEuOptions(numbers);
+      setLevelEuState(numbers[0]?.value || '');
+    } else {
+      setEuOptions([]);
+      setLevelEuState('');
+    }
+  }, [rm_type_id]);
 
   const resetForm = () => {
     setRmTypeId(null);
@@ -109,7 +123,7 @@ const Modal2 = ({ open, onClose, onNext, data, rmfp_id, CookedDateTime, level_eu
 
   const validateInputs = () => {
     let isValid = true;
-    
+
     // Validate weight per cart
     const weight = parseFloat(weightPerCart);
     if (!weightPerCart || isNaN(weight) || weight <= 0) {
@@ -148,11 +162,11 @@ const Modal2 = ({ open, onClose, onNext, data, rmfp_id, CookedDateTime, level_eu
 
     const updatedData = {
       ...data,
-      input2: { 
-        weightPerCart: weight, 
-        operator, 
-        numberOfTrays: trays, 
-        level_eu: levelEuState || '' 
+      input2: {
+        weightPerCart: weight,
+        operator,
+        numberOfTrays: trays,
+        level_eu: levelEuState || ''
       },
       rmfp_id: rmfp_id,
       cookedDateTime: CookedDateTime,
@@ -162,8 +176,17 @@ const Modal2 = ({ open, onClose, onNext, data, rmfp_id, CookedDateTime, level_eu
     onNext(updatedData);
   };
 
-  const handleClose = () => {
-    resetForm();
+  const handleClose = async () => {
+    const troId = data?.inputValues?.[0];
+
+    if (troId) {
+      const success = await returnreserveTrolley(troId);
+      if (!success) {
+        setErrorDialogOpen(true);
+        return;
+      }
+    }
+    clearData();
     onClose();
   };
 
@@ -188,13 +211,13 @@ const Modal2 = ({ open, onClose, onNext, data, rmfp_id, CookedDateTime, level_eu
   };
 
   return (
-    <Dialog 
-      open={open} 
+    <Dialog
+      open={open}
       onClose={(e, reason) => {
         if (reason === 'backdropClick') return;
         onClose();
-      }} 
-      fullWidth 
+      }}
+      fullWidth
       maxWidth="xs"
     >
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, fontSize: "15px", color: "#555" }}>
@@ -258,7 +281,7 @@ const Modal2 = ({ open, onClose, onNext, data, rmfp_id, CookedDateTime, level_eu
             }}
           />
 
-          {rm_type_id === 3 && rm_type_id === 6 && rm_type_id === 7 &&rm_type_id === 8 (
+          {rm_type_id === 3 && rm_type_id === 6 && rm_type_id === 7 && rm_type_id === 8(
             <FormControl fullWidth size="small" sx={{ marginBottom: '16px' }} variant="outlined">
               <InputLabel>กรุณาเลือกค่า Eu (สำหรับวัตถุดิบปลา)</InputLabel>
               <Select

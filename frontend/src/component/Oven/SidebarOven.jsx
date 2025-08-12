@@ -6,6 +6,8 @@ import { LuScanBarcode } from "react-icons/lu";
 import { PiFishLight } from "react-icons/pi";
 import { VscHistory } from "react-icons/vsc";
 import { TbLogout2 } from "react-icons/tb";
+import { FaPeopleCarry } from 'react-icons/fa';
+
 import axios from "axios";
 axios.defaults.withCredentials = true; 
 
@@ -86,11 +88,19 @@ const useRawMatFetcher = () => {
   return { fetchAllData };
 };
 
+const pos_id = localStorage.getItem("pos_id");
+const allowedPositions = ["3", "4", "5", "6"];
+const showWorkplaceSelector = allowedPositions.includes(pos_id);
+
 const SIDEBAR_ITEMS = [
   { name: "หน้าหลัก", icon: GoHomeFill, href: "/oven" },
   { name: "Scan SAP", icon: LuScanBarcode, href: "/oven/products" },
 
   { name: "วัตถุดิบฝากห้องเย็น", icon: PiFishLight, href: "/oven/sales" },
+ ...(showWorkplaceSelector
+    ? [{ name: "เปลี่ยนที่ทำงาน", icon: FaPeopleCarry, href: "/oven/WorkplaceSelector" }]
+    : []),
+
   // { name: "ประวัติต้ม/อบเสร็จ", icon: VscHistory, href: "/oven/analytics" },
   // { 
   //   name: "รีเฟรชข้อมูลรถเข็น", 

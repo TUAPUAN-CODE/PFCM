@@ -1,5 +1,6 @@
 const express = require("express");
 const { connectToDatabase } = require("../database/db");
+const sql = require("mssql");
 const router = express.Router();
 
 // เชื่อมต่อฐานข้อมูล
@@ -1515,5 +1516,342 @@ router.get("/rmintrolley", async (req, res) => {
     });
   }
 });
+
+//  1. ดึงข้อมูลกลุ่มวัตถุดิบ (RawMatGroup)
+router.get( "/rawmat-groups", async (req, res) => {
+  try {
+    const pool = await getPool();
+    const result = await pool.request()
+      .query(`
+        SELECT TOP (1000) 
+          [rm_group_id],
+          [rm_group_name], 
+          [rm_type_id],
+          [prep_to_cold],
+          [prep_to_pack],
+          [cold],
+          [cold_to_pack],
+          [rework],
+          [cooked_group]
+        FROM [PFCMv2].[dbo].[RawMatGroup]
+        ORDER BY [rm_group_name]
+      `);
+    
+    res.json(result.recordset);
+  } catch (error) {
+    console.error('Error fetching raw mat groups:', error);
+    res.status(500).json({ error: 'เกิดข้อผิดพลาดในการดึงข้อมูลกลุ่มวัตถุดิบ' });
+  }
+});
+
+// 2. ดึงข้อมูลประเภทวัตถุดิบ (RawMatType)
+router.get('/rawmat-types', async (req, res) => {
+  try {
+   const pool = await getPool();
+    const result = await pool.request()
+      .query(`
+        SELECT TOP (1000) 
+          [rm_type_id],
+          [rm_type_name]
+        FROM [PFCMv2].[dbo].[RawMatType]
+        ORDER BY [rm_type_name]
+      `);
+    
+    res.json(result.recordset);
+  } catch (error) {
+    console.error('Error fetching raw mat types:', error);
+    res.status(500).json({ error: 'เกิดข้อผิดพลาดในการดึงข้อมูลประเภทวัตถุดิบ' });
+  }
+});
+
+// 3. ตรวจสอบว่า mat มีอยู่ใน RawMat หรือไม่
+router.post('/check-existing-materials', async (req, res) => {
+  try {
+    const { materials } = req.body;
+    const pool = await getPool();
+    
+    // สร้าง IN clause สำหรับตรวจสอบ mat ที่มีอยู่แล้ว
+    const matValues = materials.map(m => `'${m.mat}'`).join(',');
+    
+    const result = await pool.request()
+      .query(`
+        SELECT [mat] 
+        FROM [PFCMv2].[dbo].[RawMat]
+        WHERE [mat] IN (${matValues})
+      `);
+    
+    res.json(result.recordset);
+  } catch (error) {
+    console.error('Error checking existing materials:', error);
+    res.status(500).json({ error: 'เกิดข้อผิดพลาดในการตรวจสอบข้อมูล' });
+  }
+});
+
+// 4. ตรวจสอบว่า mat + rm_group_id มีอยู่ใน RawMatCookedGroup หรือไม่
+router.post('/check-existing-cooked-groups', async (req, res) => {
+  try {
+    const { materials } = req.body;
+   const pool = await getPool();
+    
+    // สร้างเงื่อนไขสำหรับตรวจสอบ
+    const conditions = materials.map(m => 
+      `([mat] = '${m.mat}' AND [rm_group_id] = ${m.rm_group_id})`
+    ).join(' OR ');
+    
+    const result = await pool.request()
+      .query(`
+        SELECT [mat], [rm_group_id]
+        FROM [PFCMv2].[dbo].[RawMatCookedGroup]
+        WHERE ${conditions}
+      `);
+    
+    res.json(result.recordset);
+  } catch (error) {
+    console.error('Error checking existing cooked groups:', error);
+    res.status(500).json({ error: 'เกิดข้อผิดพลาดในการตรวจสอบข้อมูล' });
+  }
+});
+
+
+router.post('/save-materials', async (req, res) => {
+  const { materials } = req.body;
+  let transaction;
+
+  if (!Array.isArray(materials) || materials.length === 0) {
+    return res.status(400).json({
+      success: false,
+      message: 'ไม่มีข้อมูล materials'
+    });
+  }
+
+  try {
+    const pool = await getPool();
+    transaction = new sql.Transaction(pool);
+    await transaction.begin();
+
+    let savedCount = 0;
+    let skippedMaterials = [];
+    let skippedCookedGroups = [];
+
+    // ===== 1. สร้าง TVP สำหรับ mat =====
+    const matTable = new sql.Table();
+    matTable.columns.add('mat', sql.VarChar(50));
+    materials.forEach(m => matTable.rows.add(m.mat));
+
+    const existingMatsResult = await transaction.request()
+      .input('MatList', matTable)
+      .query(`
+        SELECT r.mat
+        FROM @MatList ml
+        JOIN [PFCMv2].[dbo].[RawMat] r ON ml.mat = r.mat
+      `);
+    const existingMats = existingMatsResult.recordset.map(r => r.mat);
+
+    // ===== 2. สร้าง TVP สำหรับ mat + rm_group_id =====
+    const matGroupTable = new sql.Table();
+    matGroupTable.columns.add('mat', sql.VarChar(50));
+    matGroupTable.columns.add('rm_group_id', sql.Int);
+    materials.forEach(m => matGroupTable.rows.add(m.mat, m.rm_group_id));
+
+    const existingCookedGroupsResult = await transaction.request()
+      .input('MatGroupList', matGroupTable)
+      .query(`
+        SELECT cg.mat, cg.rm_group_id
+        FROM @MatGroupList mg
+        JOIN [PFCMv2].[dbo].[RawMatCookedGroup] cg
+          ON mg.mat = cg.mat AND mg.rm_group_id = cg.rm_group_id
+      `);
+    const existingCookedGroups = existingCookedGroupsResult.recordset;
+
+    // ===== 3. Insert RawMat =====
+    for (const material of materials) {
+      if (!existingMats.includes(material.mat)) {
+        await transaction.request()
+          .input('mat', sql.VarChar, material.mat)
+          .input('mat_name', sql.NVarChar, material.mat_name)
+          .query(`
+            INSERT INTO [PFCMv2].[dbo].[RawMat] ([mat], [mat_name])
+            VALUES (@mat, @mat_name)
+          `);
+        savedCount++;
+      } else {
+        skippedMaterials.push(material.mat);
+      }
+    }
+
+    // ===== 4. Insert RawMatCookedGroup =====
+    for (const material of materials) {
+      const exists = existingCookedGroups.some(
+        cg => cg.mat === material.mat && cg.rm_group_id === material.rm_group_id
+      );
+      if (!exists) {
+        await transaction.request()
+          .input('mat', sql.VarChar, material.mat)
+          .input('rm_group_id', sql.Int, material.rm_group_id)
+          .input('rm_type_id', sql.Int, material.rm_type_id)
+          .query(`
+            INSERT INTO [PFCMv2].[dbo].[RawMatCookedGroup]
+            ([mat], [rm_group_id], [rm_type_id])
+            VALUES (@mat, @rm_group_id, @rm_type_id)
+          `);
+      } else {
+        skippedCookedGroups.push(`${material.mat} (${material.rm_group_id})`);
+      }
+    }
+
+    await transaction.commit();
+
+    res.json({
+      success: true,
+      savedCount,
+      skippedMaterials,
+      skippedCookedGroups,
+      message: `บันทึกข้อมูลสำเร็จ ${savedCount} รายการ`
+    });
+
+  } catch (error) {
+    if (transaction) {
+      try {
+        await transaction.rollback();
+      } catch (rollbackError) {
+        console.error('Rollback failed:', rollbackError);
+      }
+    }
+    console.error('Error saving materials:', error);
+    res.status(500).json({
+      success: false,
+      error: 'เกิดข้อผิดพลาดในการบันทึกข้อมูล',
+      details: error.message
+    });
+  }
+});
+
+
+// 6. ดึงข้อมูล RawMat ทั้งหมด (สำหรับตรวจสอบ)
+router.get('/rawmat', async (req, res) => {
+  try {
+    const pool = await getPool();
+    const result = await pool.request()
+      .query(`
+        SELECT TOP (1000) 
+          [mat],
+          [mat_name]
+        FROM [PFCMv2].[dbo].[RawMat]
+        ORDER BY [mat]
+      `);
+    
+    res.json(result.recordset);
+  } catch (error) {
+    console.error('Error fetching raw materials:', error);
+    res.status(500).json({ error: 'เกิดข้อผิดพลาดในการดึงข้อมูลวัตถุดิบ' });
+  }
+});
+
+// 7. ดึงข้อมูล RawMatCookedGroup ทั้งหมด (สำหรับตรวจสอบ)
+router.get('/rawmat-cooked-groups', async (req, res) => {
+  try {
+    const pool = await getPool();
+    const result = await pool.request()
+      .query(`
+        SELECT TOP (1000) 
+          [rmcg_id],
+          [mat],
+          [rm_group_id], 
+          [rm_type_id]
+        FROM [PFCMv2].[dbo].[RawMatCookedGroup]
+        ORDER BY [rmcg_id]
+      `);
+    
+    res.json(result.recordset);
+  } catch (error) {
+    console.error('Error fetching cooked groups:', error);
+    res.status(500).json({ error: 'เกิดข้อผิดพลาดในการดึงข้อมูล' });
+  }
+});
+
+// 8. ดึงข้อมูลรายงานแบบ JOIN (สำหรับแสดงผลข้อมูลที่สมบูรณ์)
+router.get('/materials-report', async (req, res) => {
+  try {
+   const pool = await getPool();
+    const result = await pool.request()
+      .query(`
+        SELECT 
+          rm.[mat],
+          rm.[mat_name],
+          rmcg.[rm_group_id],
+          rmg.[rm_group_name],
+          rmcg.[rm_type_id], 
+          rmt.[rm_type_name],
+          rmcg.[rmcg_id]
+        FROM [PFCMv2].[dbo].[RawMat] rm
+        INNER JOIN [PFCMv2].[dbo].[RawMatCookedGroup] rmcg 
+          ON rm.[mat] = rmcg.[mat]
+        INNER JOIN [PFCMv2].[dbo].[RawMatGroup] rmg 
+          ON rmcg.[rm_group_id] = rmg.[rm_group_id]
+        INNER JOIN [PFCMv2].[dbo].[RawMatType] rmt 
+          ON rmcg.[rm_type_id] = rmt.[rm_type_id]
+        ORDER BY rm.[mat]
+      `);
+    
+    res.json(result.recordset);
+  } catch (error) {
+    console.error('Error fetching materials report:', error);
+    res.status(500).json({ error: 'เกิดข้อผิดพลาดในการดึงข้อมูลรายงาน' });
+  }
+});
+
+// 9. ลบข้อมูลวัตถุดิบ (สำหรับการจัดการ)
+router.delete('/materials/:mat', async (req, res) => {
+  const { mat } = req.params;
+  let transaction;
+  
+  try {
+  const pool = await getPool();
+    transaction = new sql.Transaction(pool);
+    await transaction.begin();
+    
+    // ลบจาก RawMatCookedGroup ก่อน (เพราะเป็น Foreign Key)
+    await transaction.request()
+      .input('mat', sql.VarChar, mat)
+      .query(`
+        DELETE FROM [PFCMv2].[dbo].[RawMatCookedGroup] 
+        WHERE [mat] = @mat
+      `);
+    
+    // ลบจาก RawMat
+    const result = await transaction.request()
+      .input('mat', sql.VarChar, mat)
+      .query(`
+        DELETE FROM [PFCMv2].[dbo].[RawMat] 
+        WHERE [mat] = @mat
+      `);
+    
+    await transaction.commit();
+    
+    if (result.rowsAffected[0] > 0) {
+      res.json({ success: true, message: 'ลบข้อมูลสำเร็จ' });
+    } else {
+      res.status(404).json({ success: false, message: 'ไม่พบข้อมูลที่ต้องการลบ' });
+    }
+    
+  } catch (error) {
+    if (transaction) {
+      try {
+        await transaction.rollback();
+      } catch (rollbackError) {
+        console.error('Rollback failed:', rollbackError);
+      }
+    }
+    
+    console.error('Error deleting material:', error);
+    res.status(500).json({ 
+      success: false, 
+      error: 'เกิดข้อผิดพลาดในการลบข้อมูล',
+      details: error.message 
+    });
+  }
+});
+
+
 
 module.exports = router;

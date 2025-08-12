@@ -6,8 +6,9 @@ import Modal3 from './Modal3';
 import ModalEditPD from './ModalEditPD';
 import ModalSuccess from './ModalSuccess';
 import axios from "axios";
-axios.defaults.withCredentials = true; 
+axios.defaults.withCredentials = true;
 import io from 'socket.io-client';
+import ClearTrolleyModal from "./ClearTrolleyModal";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -26,6 +27,8 @@ const ParentComponent = () => {
   const [socket, setSocket] = useState(null);
   const fetchTimeoutRef = useRef(null);
   const rmTypeIds = JSON.parse(localStorage.getItem('rm_type_id')) || [];
+  const [openClearTrolley, setOpenClearTrolley] = useState(false);
+  const [trolleyData, setTrolleyData] = useState(null);
 
   // Debounced fetchData
   const fetchDataDebounced = () => {
@@ -41,10 +44,10 @@ const ParentComponent = () => {
     try {
       const response = await axios.get(`${API_URL}/api/prep/matimport/fetchRMForProd`, {
         params: {
-        rm_type_ids: rmTypeIds.join(',') // ส่งเป็น string คั่นด้วย comma
-      }
+          rm_type_ids: rmTypeIds.join(',') // ส่งเป็น string คั่นด้วย comma
+        }
       });
-      
+
       setTableData(response.data.success ? response.data.data : []);
       console.log("Table data:", response.data);
     } catch (error) {
@@ -58,20 +61,20 @@ const ParentComponent = () => {
 
     // Socket.io setup
     const newSocket = io(API_URL, {
-        transports: ["websocket"],
-        reconnectionAttempts: 5, // จำนวนครั้งที่ลอง reconnect
-        reconnectionDelay: 1000, // หน่วงเวลา 1 วินาทีระหว่างการ reconnect
-        autoConnect: true
-      });
-      
+      transports: ["websocket"],
+      reconnectionAttempts: 5, // จำนวนครั้งที่ลอง reconnect
+      reconnectionDelay: 1000, // หน่วงเวลา 1 วินาทีระหว่างการ reconnect
+      autoConnect: true
+    });
+
     setSocket(newSocket);
     console.log('Socket connected');
     newSocket.emit('joinRoom', 'saveRMForProdRoom');
-    
 
-      newSocket.on('disconnect', (reason) => {
-        console.log('Socket disconnected:', reason);
-      }); 
+
+    newSocket.on('disconnect', (reason) => {
+      console.log('Socket disconnected:', reason);
+    });
 
     // Event listeners
     newSocket.on('dataUpdated', fetchDataDebounced);
@@ -95,7 +98,7 @@ const ParentComponent = () => {
 
   const handleOpenModal1 = (data) => {
     setDataForModal1({
-      rm_type_id: data.rm_type_id, 
+      rm_type_id: data.rm_type_id,
       mapping_id: data.mapping_id,
       tro_id: data.tro_id,
       CookedDateTime: data.CookedDateTime,
@@ -104,7 +107,7 @@ const ParentComponent = () => {
     });
     setOpenModal1(true);
   };
-  
+
   const handleOpenModal2 = (data) => {
     setDataForModal2({
       ...data,
@@ -166,19 +169,36 @@ const ParentComponent = () => {
     }
   };
 
+  const handleOpenClearTrolley = (row) => {
+    setTrolleyData(row);
+    setOpenClearTrolley(true);
+  };
+
+
   return (
     <div>
       <TableMainPrep
         handleOpenModal={handleOpenModal1}
         handleOpenEditModal={handleOpenEditModal}
         handleOpenSuccess={handleOpenSuccess}
+        handleOpenClearTrolley={handleOpenClearTrolley}
         data={tableData}
       />
-      
-      <Modal1 
-        open={openModal1} 
-        onClose={() => setOpenModal1(false)} 
-        onNext={handleOpenModal2} 
+
+      <ClearTrolleyModal
+        open={openClearTrolley}
+        onClose={() => setOpenClearTrolley(false)}
+        trolleyData={trolleyData}
+        onSuccess={() => {
+          fetchData(); 
+          setOpenClearTrolley(false);
+        }}
+      />
+
+      <Modal1
+        open={openModal1}
+        onClose={() => setOpenModal1(false)}
+        onNext={handleOpenModal2}
         data={dataForModal1}
         mapping_id={dataForModal1?.mapping_id}
         tro_id={dataForModal1?.tro_id}
@@ -186,9 +206,9 @@ const ParentComponent = () => {
         batch={dataForModal1?.batch}
         rmfp_id={dataForModal1?.rmfp_id}
       />
-      
-      <Modal2 
-        open={openModal2} 
+
+      <Modal2
+        open={openModal2}
         batch={dataForModal2?.batch}
         batch_before={dataForModal2?.batch_before}
         rm_type_id={dataForModal2?.rm_type_id}
@@ -198,14 +218,14 @@ const ParentComponent = () => {
           clearData();
         }}
         onNext={handleOpenModal3}
-        data={dataForModal2} 
+        data={dataForModal2}
         clearData={clearData}
       />
-      
+
       {openModal3 && dataForModal3 && (
         <Modal3
           open={openModal3}
-          CookedDateTime={dataForModal3?.CookedDateTime} 
+          CookedDateTime={dataForModal3?.CookedDateTime}
           onClose={() => {
             setOpenModal3(false);
             clearData();
@@ -215,7 +235,7 @@ const ParentComponent = () => {
             setOpenModal2(true);
             setOpenModal3(false);
           }}
-          clearData={clearData} 
+          clearData={clearData}
         />
       )}
 
@@ -226,7 +246,7 @@ const ParentComponent = () => {
         data={dataForEditModal}
         onSuccess={handleEditSuccess}
       />
-      
+
       <ModalSuccess
         open={openSuccessModal}
         onClose={() => setOpenSuccessModal(false)}

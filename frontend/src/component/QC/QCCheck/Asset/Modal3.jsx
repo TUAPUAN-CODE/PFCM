@@ -1144,6 +1144,7 @@ const Modal3 = ({ open, onClose, data, onEdit, dataForModal3 }) => {
 												}}
 												maxDateTime={dayjs()}
 												ampm={false}
+												timeSteps={{ minutes: 1 }}
 												slotProps={{
 													textField: {
 														fullWidth: false,

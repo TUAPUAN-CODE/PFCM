@@ -111,50 +111,33 @@ const ScanTrolley = ({ open, onClose, onNext, selectedOption, selectedSlot }) =>
   }, [open]);
 
   const checkTrolleyStatus = async (selectedSlot, selectedOption) => {
-    try {
-      console.log("🛠 Debug: selectedSlot =", selectedSlot);
-      console.log("🛠 Debug: selectedOption =", selectedOption);
+  try {
+    const { tro_id, cs_id, slot_id } = selectedSlot;
+    const response = await axios.get(`${API_URL}/api/cold/checkin/check/Trolley`, {
+      params: { tro_id, cs_id, slot_id, selectedOption }
+    });
 
-      if (!selectedSlot || typeof selectedSlot !== "object") {
-        console.error("❌ selectedSlot ไม่ถูกต้อง:", selectedSlot);
-        setApiError("ข้อมูลช่องว่างไม่ครบ");
-        return;
-      }
+    // กรณี success
+    onNext({ inputValues: [tro_id] });
+    
+  } catch (error) {
+    console.error("❌ API Error:", error);
 
-      const { tro_id, cs_id, slot_id } = selectedSlot;
-      if (!tro_id || !cs_id || !slot_id) {
-        setApiError("ข้อมูลช่องว่างไม่ครบ");
-        return;
-      }
-
-      const response = await axios.get(`${API_URL}/api/cold/checkin/check/Trolley`, {
-        params: { tro_id, cs_id, slot_id, selectedOption }
+    const serverData = error.response?.data;
+    if (serverData?.details?.invalidDestinations) {
+      // กรณีมีข้อมูลรายละเอียด
+      let errorMsg = serverData.message;
+      serverData.details.invalidDestinations.forEach(dest => {
+        errorMsg += `\n- ${dest.destination} (${dest.count} รายการ)`;
+        if (dest.items) errorMsg += `: ${dest.items.join(', ')}`;
       });
-
-      console.log("📥 ได้รับข้อมูลจาก API:", response.data);
-
-      if (response.data.success) {
-        onNext({ inputValues: [tro_id] });
-      } else {
-        // แสดงข้อความ error พร้อมรายละเอียด
-        if (response.data.details?.invalidDestinations) {
-          let errorMsg = response.data.message;
-          response.data.details.invalidDestinations.forEach(dest => {
-            errorMsg += `\n- ${dest.destination} (${dest.count} รายการ)`;
-            if (dest.items) {
-              errorMsg += `: ${dest.items.join(', ')}`;
-            }
-          });
-          setApiError(errorMsg);
-        } else {
-          setApiError(response.data.message);
-        }
-      }
-    } catch (error) {
-      console.error("❌ Error:", error);
-      setApiError(error.response?.data?.message || "เกิดข้อผิดพลาดในการเชื่อมต่อ");
+      setApiError(errorMsg);
+    } else {
+      setApiError(serverData?.message || "เกิดข้อผิดพลาดในการเชื่อมต่อ");
     }
-  };
+  }
+};
+
 
   const handleNextModal2 = async () => {
     if (inputValue.trim() === '') {

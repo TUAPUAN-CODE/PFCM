@@ -27,6 +27,7 @@ const ForgotPassword = lazy(() => import("./component/User/ForgotPassword.jsx"))
 const QCSelectWP = lazy(() => import("./component/User/QCSelectWP.jsx"));
 const LineSelectWP = lazy(() => import("./component/User/LineSelectWP.jsx"));
 const ManageSelect = lazy(() => import("./component/User/ManageSelect.jsx"));
+const WorkplaceSelector = lazy(() => import("./component/User/WorkplaceSelector.jsx"));
 
 // Loading Spinner Component สวย ๆ ด้วย MUI
 function Loading() {
@@ -66,6 +67,7 @@ function App() {
           <Route path="/preparation/selectwp" element={<ManageSelect />} />
           <Route path="/qc/selectwp" element={<QCSelectWP />} />
           <Route path="/line/selectwp" element={<LineSelectWP />} />
+          <Route path="/sup/WorkplaceSelector" element={<WorkplaceSelector />} />
 
           {/* Main App Sections */}
           <Route path="/oven/*" element={<AppOven />} />

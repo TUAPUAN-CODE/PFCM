@@ -24,14 +24,14 @@ import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import FactoryIcon from "@mui/icons-material/Factory";
 import InventoryIcon from "@mui/icons-material/Inventory";
 import axios from "axios";
-axios.defaults.withCredentials = true; 
+axios.defaults.withCredentials = true;
 import ModalAlert from "../../../../Popup/AlertSuccess";
 import SendColdPrinter from "../../History/Asset/SendColdPrinter";
 import TrolleyReworkModal from "./ModalTroRework";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
-const ModalSuccess = ({ open, onClose, tro_id, tableData, onSuccess, delayTime,closeParentModal }) => {
+const ModalSuccess = ({ open, onClose, tro_id, tableData, onSuccess, delayTime, closeParentModal }) => {
   const [confirm, setConfirm] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
   const [printDialogOpen, setPrintDialogOpen] = useState(false);
@@ -156,9 +156,18 @@ const ModalSuccess = ({ open, onClose, tro_id, tableData, onSuccess, delayTime,c
 
   const handleConfirm = async () => {
     try {
-      const response = await axios.post(`${API_URL}/api/pack/export/Trolley`, {
-        tro_id: tro_id
-      });
+      let url = '';
+      if (selectedAction === 'cold') {
+        url = `${API_URL}/api/pack/export/Trolley`;
+      } else if (selectedAction === 'line') {
+        url = `${API_URL}/api/pack/export/topack/Trolley`;
+      } else {
+        console.error("Invalid action:", selectedAction);
+        return;
+      }
+
+      const response = await axios.post(url, { tro_id });
+
       if (response.data.success) {
         console.log("Successfully updated production status:", response.data.message);
         setIsSubmitSuccess(true);
@@ -177,6 +186,7 @@ const ModalSuccess = ({ open, onClose, tro_id, tableData, onSuccess, delayTime,c
     setConfirm(false);
   };
 
+
   const handleAlertClose = () => {
     setShowAlert(false);
   };
@@ -194,6 +204,8 @@ const ModalSuccess = ({ open, onClose, tro_id, tableData, onSuccess, delayTime,c
     if (selectedAction === 'rework') {
       setReworkModalOpen(true);
     } else if (selectedAction === 'cold') {
+      setConfirm(true);
+    } else if (selectedAction === 'line') {
       setConfirm(true);
     }
   };
@@ -349,6 +361,14 @@ const ModalSuccess = ({ open, onClose, tro_id, tableData, onSuccess, delayTime,c
                 sx={{ flex: 1 }}
               >
                 แก้ไขวัตถุดิบ
+              </Button>
+              <Button
+                variant={selectedAction === 'line' ? "contained" : "outlined"}
+                startIcon={<LocalShippingIcon />}
+                onClick={() => setSelectedAction('line')}
+                sx={{ flex: 1 }}
+              >
+                ส่งให้ไลน์บรรจุอื่น
               </Button>
             </Stack>
           </Box>

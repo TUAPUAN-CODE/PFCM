@@ -4,7 +4,7 @@ import HisCheck from "./HisCheck/HisCheckPage";
 import QCCheckPage from "./QCCheck/QCCheckPage";
 import SidebarQC from "./SidebarQC";
 import QCMain from "./MainQC/MainPage";
-
+import WorkplaceSelector from "../User/WorkplaceSelector.jsx";
 import QCSelectWP from "../User/QCSelectWP"
 
 function AppQualityControl() {
@@ -22,6 +22,7 @@ function AppQualityControl() {
 				<Route path='/HisCheck/HisCheckPage' element={<HisCheck />} />
 				<Route path='/QCCheck/QCCheckPage' element={<QCCheckPage />} />
 				<Route path="/User/SelectWP" element={<QCSelectWP />} />
+				<Route path="/WorkplaceSelector" element={<WorkplaceSelector />} />
 			</Routes>
 		</div>
 	);

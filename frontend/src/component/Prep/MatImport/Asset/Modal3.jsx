@@ -56,70 +56,105 @@ const Modal3 = ({ open, onClose, data, onEdit, onSuccess }) => {
   }
 }
 
-const formattedPreparedTime = formatDateTime(data?.preparedDateTimeNew);
+ const handleClose = async () => {
+    const troId = data?.inputValues?.[0]; // สมมุติว่าเป็นรหัสรถเข็น
 
-  const handleConfirm = async () => {
-    if (isLoading) return;
-
-    setIsLoading(true);
-    setError(null);
-    console.log("Input Values:", inputValues);
-
-    try {
-      const formattedDateTime = formatDateTime(cookedDateTimeNew);
-
-      const payload = {
-        license_plate: inputValues.join(" "),
-        mapping_id: mapping_id,
-        tro_id: tro_id,
-        batch_after: batchAfter || "",
-        batch_before: batchBefore || "",
-        cookedDateTimeNew: formattedDateTime || "",
-        preparedDateTimeNew: formattedPreparedTime || "",
-        weightTotal: input2?.weightPerCart,
-        ntray: input2?.numberOfTrays,
-        recorder: input2?.operator,
-        dest: input2?.deliveryLocation,
-        desttype: input2?.deliveryType,
-        operator: input2?.operator,
-        level_eu: input2?.level_eu || "",
-        Process: input2?.selectedProcessType?.process_id,
-        userID: Number(userId),
-      };
-
-      console.log("Payload before sending:", payload);
-
-      const response = await axios.post(
-        `${API_URL}/api/prep/matimport/saveTrolley`,
-        payload,
-        {
-          headers: { "Content-Type": "application/json" },
-        }
-      );
-
-      console.log(response.data);
-
-      if (response.data.success) {
-        setAlertMessage(response.data.message || "บันทึกข้อมูลเสร็จสิ้น");
-
-        if (onSuccess) {
-          onSuccess(response.data.new_mapping_id || undefined);
-        }
-      } else {
-        throw new Error(response.data.error || "ไม่สามารถบันทึกข้อมูลได้");
-      }
-    } catch (error) {
-      console.error("Error:", error);
-      setError(error.message || "เกิดข้อผิดพลาดในการติดต่อเซิร์ฟเวอร์");
-      setAlertMessage("เกิดข้อผิดพลาด: " + (error.message || "ไม่สามารถบันทึกข้อมูลได้"));
-    } finally {
-      setIsLoading(false);
-      if (!error) {
-        onClose();
-        setShowAlert(true);
+    if (troId) {
+      const success = await returnreserveTrolley(troId);
+      if (!success) {
+        setErrorDialogOpen(true);
+        return;
       }
     }
+    onClose();
   };
+
+    const returnreserveTrolley = async (tro_id) => {
+    try {
+      const response = await axios.post(`${API_URL}/api/re/reserveTrolley`, {
+        tro_id: tro_id,
+      });
+      return response.data.success;
+    } catch (error) {
+      console.error(error);
+      return false;
+    }
+  };
+
+const formattedPreparedTime = formatDateTime(data?.preparedDateTimeNew);
+
+ const handleConfirm = async () => {
+  if (isLoading) return;
+
+  setIsLoading(true);
+  setError(null);
+  console.log("Input Values:", inputValues);
+
+  try {
+    const formattedDateTime = formatDateTime(cookedDateTimeNew);
+
+    const payload = {
+      license_plate: inputValues.join(" "),
+      mapping_id: mapping_id,
+      tro_id: tro_id,
+      batch_after: batchAfter || "",
+      batch_before: batchBefore || "",
+      cookedDateTimeNew: formattedDateTime || "",
+      preparedDateTimeNew: formattedPreparedTime || "",
+      weightTotal: input2?.weightPerCart,
+      ntray: input2?.numberOfTrays,
+      recorder: input2?.operator,
+      dest: input2?.deliveryLocation,
+      desttype: input2?.deliveryType,
+      operator: input2?.operator,
+      level_eu: input2?.level_eu || "",
+      Process: input2?.selectedProcessType?.process_id,
+      userID: Number(userId),
+    };
+
+    console.log("Payload before sending:", payload);
+
+    const response = await axios.post(
+      `${API_URL}/api/prep/matimport/add/saveTrolley`,
+      payload,
+      {
+        headers: { "Content-Type": "application/json" },
+      }
+    );
+
+    console.log(response.data);
+
+    if (response.data.success) {
+      setAlertMessage(response.data.message || "บันทึกข้อมูลเสร็จสิ้น");
+
+      if (onSuccess) {
+        onSuccess(response.data.new_mapping_id || undefined);
+      }
+
+      onClose();             // ✅ ปิด modal เฉพาะเมื่อสำเร็จ
+      setShowAlert(true);   // ✅ แสดง alert เฉพาะเมื่อสำเร็จ
+    } else {
+      // API ส่ง success: false กลับมา
+      throw new Error(response.data.error || "ไม่สามารถบันทึกข้อมูลได้");
+    }
+  }  catch (error) {
+  console.error("Error:", error);
+
+  // ถ้า error มาจาก response ของ API
+  if (error.response && error.response.data && error.response.data.error) {
+    setError(error.response.data.error);
+    setAlertMessage("เกิดข้อผิดพลาด: " + error.response.data.error);
+  } else {
+    // กรณีอื่น (เช่น network error หรือ server ล่ม)
+    setError(error.message || "เกิดข้อผิดพลาดในการติดต่อเซิร์ฟเวอร์");
+    setAlertMessage("เกิดข้อผิดพลาด: " + (error.message || "ไม่สามารถบันทึกข้อมูลได้"));
+  }
+}
+finally {
+    setIsLoading(false);
+  }
+};
+
 
   useEffect(() => {
     setBatchBefore(data?.batch || "ยังไม่ได้กำหนด");
@@ -205,7 +240,7 @@ const formattedPreparedTime = formatDateTime(data?.preparedDateTimeNew);
             sx={{ backgroundColor: "#E74A3B", color: "#fff" }}
             variant="contained"
             startIcon={<CancelIcon />}
-            onClick={onClose}
+            onClick={handleClose}
             disabled={isLoading}
           >
             ยกเลิก

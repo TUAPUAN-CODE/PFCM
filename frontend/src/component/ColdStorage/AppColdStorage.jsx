@@ -42,9 +42,9 @@ import CSChill4PageCOS from "./Move/Chill4/Chill4Page";
 import CSChill5PageCOS from "./Move/Chill5/Chill5Page";
 import CSChill6PageCOS from "./Move/Chill6/Chill6Page";
 import CSLargePageCOS from "./Move/LargeColdRoom/LargePage";
-
+import WorkplaceSelector from "../User/WorkplaceSelector.jsx";
 import EmptyTrolley from "./EmptyTrolley/DeleteTrolleyPage"
- 
+
 import RoomTableCS from "./RoomTable/RoomTable";
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -101,6 +101,8 @@ function AppColdStorage() {
 				<Route path='/Move/Chill5/Chill5Page' element={<CSChill5PageCOS />} />
 				<Route path='/Move/Chill6/Chill6Page' element={<CSChill6PageCOS />} />
 				<Route path='/Move/Large/LargePage' element={<CSLargePageCOS />} />
+				
+				<Route path='/WorkplaceSelector' element={<WorkplaceSelector />} />
 
 				<Route path='/EmptyTrolley/DeleteTrolleyPage' element={<EmptyTrolley />} />
 			</Routes>

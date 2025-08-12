@@ -11,6 +11,7 @@ import { GoHomeFill } from "react-icons/go";
 import { IoNewspaperOutline } from "react-icons/io5";
 import { ShoppingCart } from 'lucide-react';
 import { GiOpenedFoodCan } from "react-icons/gi";
+import { FaPeopleCarry } from 'react-icons/fa';
 
 
 const rawPosId = localStorage.getItem("pos_id");
@@ -65,7 +66,9 @@ const SIDEBAR_ITEMS = [
   { name: "ประวัติเข้า/ออก ห้องเย็น", icon: IoNewspaperOutline, href: "/sup/HisInput" },
   { name: "จัดการ Metal Detector", icon: MdConveyorBelt, href: "/sup/MDmanage" },
   { name: "นำเข้าแผนการผลิต", icon: MdConveyorBelt, href: "/sup/ipscvF" },
+  { name: "นำเข้าข้อมูลวัตถุดิบ", icon: MdConveyorBelt, href: "/sup/import/rm/csv" },
   { name: "Delay Time Traking", icon: MdConveyorBelt, href: "/sup/DelayTraking" },
+  { name: "เปลี่ยนที่ทำงาน", icon: FaPeopleCarry, href: "/sup/WorkplaceSelector" },
   { name: "ออกจากระบบ", icon: TbLogout2, href: "/logout" },
 ];
 

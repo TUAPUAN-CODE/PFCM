@@ -13,7 +13,7 @@ import {
   Typography,
 } from "@mui/material";
 import axios from "axios";
-axios.defaults.withCredentials = true; 
+axios.defaults.withCredentials = true;
 import ModalAlert from "../../../../Popup/AlertSuccess";
 import ModalPrint from "./ModalPrint"; // Add this import for ModalPrint
 
@@ -34,7 +34,7 @@ const safeDecimalConvert = (value, precision = 2) => {
   return Number(numValue.toFixed(precision));
 };
 
-const Modal3 = ({ open, onClose, data, onEdit, cookedDateTimeNew, mat_name, withdraw_date, production,mat }) => {
+const Modal3 = ({ open, onClose, data, onEdit, cookedDateTimeNew, mat_name, withdraw_date, production, mat }) => {
   const [userId, setUserId] = useState(null);
   const [showAlert, setShowAlert] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -53,6 +53,7 @@ const Modal3 = ({ open, onClose, data, onEdit, cookedDateTimeNew, mat_name, with
   const withdrawDateVal = withdraw_date || data?.withdraw_date || "";
   const productionValue = production || data?.production || "";
   const materialCode = mat || input2?.mat || data?.mat || "";
+  const [errorDialogOpen, setErrorDialogOpen] = useState(false); // สำหรับแจ้ง error
 
   const handleClosePrintModal = () => {
     setPrintModalOpen(false);
@@ -60,56 +61,81 @@ const Modal3 = ({ open, onClose, data, onEdit, cookedDateTimeNew, mat_name, with
     onClose();
   };
 
- function formatDateTime(dateTimeStr) {
-  if (!dateTimeStr) return null;
+  const handleClose = async () => {
+    const troId = data?.inputValues?.[0]; // สมมุติว่าเป็นรหัสรถเข็น
 
-  // ลบเครื่องหมายจุลภาคถ้ามี
-  dateTimeStr = dateTimeStr.replace(',', '');
-
-  try {
-    // สำหรับรูปแบบเวลาไทย (DD/MM/YYYY HH:MM)
-    if (dateTimeStr.includes('/')) {
-      const parts = dateTimeStr.split(' ');
-      
-      if (parts.length < 2) {
-        console.error("Invalid date time format:", dateTimeStr);
-        return null;
+    if (troId) {
+      const success = await returnreserveTrolley(troId);
+      if (!success) {
+        setErrorDialogOpen(true);
+        return;
       }
+    }
+    onClose();
+  };
 
-      const dateParts = parts[0].split('/');
-      const timePart = parts[1];
+    const returnreserveTrolley = async (tro_id) => {
+    try {
+      const response = await axios.post(`${API_URL}/api/re/reserveTrolley`, {
+        tro_id: tro_id,
+      });
+      return response.data.success;
+    } catch (error) {
+      console.error(error);
+      return false;
+    }
+  };
 
-      if (dateParts.length !== 3) {
-        console.error("Invalid date format:", parts[0]);
-        return null;
+  function formatDateTime(dateTimeStr) {
+    if (!dateTimeStr) return null;
+
+    // ลบเครื่องหมายจุลภาคถ้ามี
+    dateTimeStr = dateTimeStr.replace(',', '');
+
+    try {
+      // สำหรับรูปแบบเวลาไทย (DD/MM/YYYY HH:MM)
+      if (dateTimeStr.includes('/')) {
+        const parts = dateTimeStr.split(' ');
+
+        if (parts.length < 2) {
+          console.error("Invalid date time format:", dateTimeStr);
+          return null;
+        }
+
+        const dateParts = parts[0].split('/');
+        const timePart = parts[1];
+
+        if (dateParts.length !== 3) {
+          console.error("Invalid date format:", parts[0]);
+          return null;
+        }
+
+        const day = dateParts[0].padStart(2, '0');
+        const month = dateParts[1].padStart(2, '0');
+        const year = dateParts[2];
+
+        // สร้างวันที่ในเขตเวลาไทย (UTC+7)
+        return `${year}-${month}-${day} ${timePart}:00`;
       }
+      // สำหรับรูปแบบ ISO (จาก input datetime-local)
+      else if (dateTimeStr.includes('T')) {
+        const date = new Date(dateTimeStr);
+        // แปลงเป็นเวลาไทยโดยเพิ่ม 7 ชั่วโมง
+        date.setHours(date.getHours() + 7);
 
-      const day = dateParts[0].padStart(2, '0');
-      const month = dateParts[1].padStart(2, '0');
-      const year = dateParts[2];
+        const year = date.getFullYear();
+        const month = (date.getMonth() + 1).toString().padStart(2, '0');
+        const day = date.getDate().toString().padStart(2, '0');
+        const hours = date.getHours().toString().padStart(2, '0');
+        const minutes = date.getMinutes().toString().padStart(2, '0');
 
-      // สร้างวันที่ในเขตเวลาไทย (UTC+7)
-      return `${year}-${month}-${day} ${timePart}:00`;
+        return `${year}-${month}-${day} ${hours}:${minutes}:00`;
+      }
+    } catch (error) {
+      console.error("Error formatting date:", error);
+      return null;
     }
-    // สำหรับรูปแบบ ISO (จาก input datetime-local)
-    else if (dateTimeStr.includes('T')) {
-      const date = new Date(dateTimeStr);
-      // แปลงเป็นเวลาไทยโดยเพิ่ม 7 ชั่วโมง
-      date.setHours(date.getHours() + 7);
-      
-      const year = date.getFullYear();
-      const month = (date.getMonth() + 1).toString().padStart(2, '0');
-      const day = date.getDate().toString().padStart(2, '0');
-      const hours = date.getHours().toString().padStart(2, '0');
-      const minutes = date.getMinutes().toString().padStart(2, '0');
-      
-      return `${year}-${month}-${day} ${hours}:${minutes}:00`;
-    }
-  } catch (error) {
-    console.error("Error formatting date:", error);
-    return null;
   }
-}
 
   const handleConfirm = async () => {
     if (isLoading) return;
@@ -120,96 +146,96 @@ const Modal3 = ({ open, onClose, data, onEdit, cookedDateTimeNew, mat_name, with
 
 
     try {
-      
-        const formattedDateTime = formatDateTime(data?.cookedDateTimeNew);
-        const formattedPreparedTime = formatDateTime(data?.preparedDateTimeNew)
-        const formattedWithdrawDate = formatDateTime(withdrawDateVal);
 
-        // Safe conversion of numeric values
-        const weightTotal = safeDecimalConvert(input2?.weightPerCart);
-        const numberOfTrays = safeDecimalConvert(input2?.numberOfTrays, 0);
+      const formattedDateTime = formatDateTime(data?.cookedDateTimeNew);
+      const formattedPreparedTime = formatDateTime(data?.preparedDateTimeNew)
+      const formattedWithdrawDate = formatDateTime(withdrawDateVal);
 
-        const payload = {
-          license_plate: Array.isArray(inputValues) ? inputValues.join(" ") : inputValues,
-          rmfpID: rmfp_id || "",
-          batch_before: batchBefore || "",
-          batch_after: batchAfter || "",
-          cookedDateTimeNew: formattedDateTime || "",
-          preparedDateTimeNew: formattedPreparedTime || "",
-          weightTotal: weightTotal,
-          ntray: numberOfTrays,
-          recorder: input2?.operator || "",
-          Dest: input2?.deliveryLocation || "",
-          Process: input2?.selectedProcessType?.process_id || "",
-          deliveryType: input2?.deliveryType || "",
-          userID: Number(userId),
-          level_eu: level_eu || "",
-          tray_count: numberOfTrays,
-          weight_RM: weightTotal,
-          mat_name: materialName,
-          withdraw_date: formattedWithdrawDate || "",
-          production: productionValue,
-          mat: materialCode || mat || "" 
-        };
+      // Safe conversion of numeric values
+      const weightTotal = safeDecimalConvert(input2?.weightPerCart);
+      const numberOfTrays = safeDecimalConvert(input2?.numberOfTrays, 0);
 
-        console.log("Payload before sending:", payload);
+      const payload = {
+        license_plate: Array.isArray(inputValues) ? inputValues.join(" ") : inputValues,
+        rmfpID: rmfp_id || "",
+        batch_before: batchBefore || "",
+        batch_after: batchAfter || "",
+        cookedDateTimeNew: formattedDateTime || "",
+        preparedDateTimeNew: formattedPreparedTime || "",
+        weightTotal: weightTotal,
+        ntray: numberOfTrays,
+        recorder: input2?.operator || "",
+        Dest: input2?.deliveryLocation || "",
+        Process: input2?.selectedProcessType?.process_id || "",
+        deliveryType: input2?.deliveryType || "",
+        userID: Number(userId),
+        level_eu: level_eu || "",
+        tray_count: numberOfTrays,
+        weight_RM: weightTotal,
+        mat_name: materialName,
+        withdraw_date: formattedWithdrawDate || "",
+        production: productionValue,
+        mat: materialCode || mat || ""
+      };
 
-        const apiResponse = await axios.post(
-          `${API_URL}/api/prep/manage/saveTrolley`,
-          payload,
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
+      console.log("Payload before sending:", payload);
 
-        console.log("API Response:", apiResponse.data);
-
-        // ใช้ license_plate หรือ tro_id จาก API response
-        const tro_id = apiResponse.data.TRO_ID || (Array.isArray(inputValues) ? inputValues.join(" ") : inputValues);
-
-        // สร้างข้อมูลสำหรับการพิมพ์
-        const printData = {
-          tro_id: tro_id,
-          batch_after: batchAfter || batchBefore,
-          dest: input2?.deliveryLocation || "",
-          mat_name: materialName,
-          production: productionValue,
-          rmm_line_name: input2?.deliveryLocation || "",
-          level_eu: level_eu || "-",
-          process_name: input2?.selectedProcessType?.process_name || "",
-          weight_RM: weightTotal,
-          tray_count: numberOfTrays,
-          withdraw_date_formatted: formattedWithdrawDate || "",
-          withdraw_date: withdrawDateVal || "",
-          cooked_date: formattedDateTime || data?.cookedDateTimeNew || "",
-          receiver: input2?.operator || "",
-          qccheck: "-",
-          mdcheck: "-",
-          defectcheck: "-",
-          qc_datetime_formatted: "",
-          receiver_qc: input2?.operator || "",
-          general_remark: input2?.deliveryType || "ทั่วไป",
-          deliveryType: input2?.deliveryType || ""
-        };
-
-        setRowData(printData);
-
-        // เปิด modal พิมพ์เฉพาะเมื่อประเภทการส่งเป็น "รอกลับมาเตรียม" เท่านั้น
-        if (input2?.deliveryType === "รอกลับมาเตรียม") {
-          setPrintModalOpen(true);
-        } else {
-          // กรณีไม่ใช่ "รอกลับมาเตรียม" ให้แสดง alert สำเร็จโดยตรง
-          setShowAlert(true);
-          setIsLoading(false);
-          setIsProcessing(false);
-          onClose();
+      const apiResponse = await axios.post(
+        `${API_URL}/api/prep/manage/saveTrolley`,
+        payload,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
         }
+      );
+
+      console.log("API Response:", apiResponse.data);
+
+      // ใช้ license_plate หรือ tro_id จาก API response
+      const tro_id = apiResponse.data.TRO_ID || (Array.isArray(inputValues) ? inputValues.join(" ") : inputValues);
+
+      // สร้างข้อมูลสำหรับการพิมพ์
+      const printData = {
+        tro_id: tro_id,
+        batch_after: batchAfter || batchBefore,
+        dest: input2?.deliveryLocation || "",
+        mat_name: materialName,
+        production: productionValue,
+        rmm_line_name: input2?.deliveryLocation || "",
+        level_eu: level_eu || "-",
+        process_name: input2?.selectedProcessType?.process_name || "",
+        weight_RM: weightTotal,
+        tray_count: numberOfTrays,
+        withdraw_date_formatted: formattedWithdrawDate || "",
+        withdraw_date: withdrawDateVal || "",
+        cooked_date: formattedDateTime || data?.cookedDateTimeNew || "",
+        receiver: input2?.operator || "",
+        qccheck: "-",
+        mdcheck: "-",
+        defectcheck: "-",
+        qc_datetime_formatted: "",
+        receiver_qc: input2?.operator || "",
+        general_remark: input2?.deliveryType || "ทั่วไป",
+        deliveryType: input2?.deliveryType || ""
+      };
+
+      setRowData(printData);
+
+      // เปิด modal พิมพ์เฉพาะเมื่อประเภทการส่งเป็น "รอกลับมาเตรียม" เท่านั้น
+      if (input2?.deliveryType === "รอกลับมาเตรียม") {
+        setPrintModalOpen(true);
+      } else {
+        // กรณีไม่ใช่ "รอกลับมาเตรียม" ให้แสดง alert สำเร็จโดยตรง
+        setShowAlert(true);
+        setIsLoading(false);
+        setIsProcessing(false);
+        onClose();
+      }
 
     } catch (error) {
       console.error("Error:", error);
-      setError("เกิดข้อผิดพลาดในการบันทึกข้อมูล");
+      setError("ไม่สามารถทำรายการได้ เนื่องจากเลยเวลาที่กำหนด 5 นาที หรือ เกิดข้อผิดพลาดในการบันทึกข้อมูล");
       setIsLoading(false);
       setIsProcessing(false);
     }
@@ -324,7 +350,7 @@ const Modal3 = ({ open, onClose, data, onEdit, cookedDateTimeNew, mat_name, with
             sx={{ backgroundColor: "#E74A3B", color: "#fff" }}
             variant="contained"
             startIcon={<CancelIcon />}
-            onClick={onClose}
+            onClick={handleClose}
             disabled={isProcessing}
           >
             ยกเลิก

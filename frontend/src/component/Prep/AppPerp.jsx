@@ -10,6 +10,7 @@ import HistoryTranform from "./HistoryTranform/HistoryTranformPage";
 import MatImportPage from "./MatImport/MatImportPage";
 import ManageSelect from "../User/ManageSelect";
 import HistoryPage from "./History/HistoryPage";
+import WorkplaceSelector from "../User/WorkplaceSelector.jsx";
 
 function AppPrep() {
   return (
@@ -31,6 +32,7 @@ function AppPrep() {
         <Route path="/MatRework/MatReworkPage" element={<MatReworkPage />} />
         <Route path="/ScanSAP/ScanSAPPage" element={<ScanSAPPage />} />
         <Route path="/MatImport/MatImportPage" element={<MatImportPage />} />
+        <Route path="/WorkplaceSelector" element={<WorkplaceSelector />} />
         <Route
           path="/HistoryTranform/HistoryTranformPage"
           element={<HistoryTranform />}

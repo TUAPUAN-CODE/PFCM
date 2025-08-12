@@ -22,7 +22,7 @@ import {
 import CancelIcon from "@mui/icons-material/CancelOutlined";
 import CheckCircleIcon from "@mui/icons-material/CheckCircleOutlined";
 import axios from "axios";
-axios.defaults.withCredentials = true; 
+axios.defaults.withCredentials = true;
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -51,8 +51,9 @@ const Modal2 = ({ open, onClose, onNext, data, mapping_id, tro_id, CookedDateTim
   const [correctionMethodError, setCorrectionMethodError] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [otherCorrectionMethod, setOtherCorrectionMethod] = useState('');
+  const [errorDialogOpen, setErrorDialogOpen] = useState(false);
 
-  console.log("modal 2 data :",data)
+  console.log("modal 2 data :", data)
 
   const correctionMethodLabels = {
     blanching: "ลวก",
@@ -231,9 +232,30 @@ const Modal2 = ({ open, onClose, onNext, data, mapping_id, tro_id, CookedDateTim
     onNext(updatedData);
   };
 
-  const handleClose = () => {
-    resetForm();
-    onClose();
+  const handleClose = async () => {
+  const troId = data?.inputValues?.[0]; // สมมุติว่าเป็นรหัสรถเข็น
+
+  if (troId) {
+    const success = await returnreserveTrolley(troId);
+    if (!success) {
+      setErrorDialogOpen(true);
+      return;
+    }
+  }
+  onClose();
+};
+
+
+  const returnreserveTrolley = async (tro_id) => {
+    try {
+      const response = await axios.post(`${API_URL}/api/re/reserveTrolley`, {
+        tro_id: tro_id,
+      });
+      return response.data.success;
+    } catch (error) {
+      console.error(error);
+      return false;
+    }
   };
 
   const handleWeightChange = (e) => {
@@ -316,10 +338,10 @@ const Modal2 = ({ open, onClose, onNext, data, mapping_id, tro_id, CookedDateTim
               <Typography variant="body2">ไม่มีข้อมูลจาก Modal1</Typography>
             )}
           </Box>
-          
+
 
           {/* เพิ่มส่วนแสดงค่า remark_rework เมื่อมีค่า */}
-          {data?.remark_rework_cold&& (
+          {data?.remark_rework_cold && (
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: 1 }}>
               <Typography style={{ fontSize: "15px" }} color="rgba(0, 0, 0, 0.6)">
                 หมายเหตุแก้ไข-ห้องเย็น:
@@ -388,7 +410,7 @@ const Modal2 = ({ open, onClose, onNext, data, mapping_id, tro_id, CookedDateTim
           />
 
 
-          {(data?.remark_rework || data?.remark_rework_cold)&& (
+          {(data?.remark_rework || data?.remark_rework_cold) && (
             <FormControl
               component="fieldset"
               error={correctionMethodError}

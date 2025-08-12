@@ -9,6 +9,10 @@ import LineSelectWP from "../User/LineSelectWP";
 import ManagePack from "./manage/ManagePage";
 import PackTroPage from "./PackTro/PackTroPage";
 import MixRMPage from "./MixRM/MixRMPage";
+import RequestRawmat from "./requestrawmat/RequestrawmatPage";
+import OrderRequestRawmat from "./OrderRequestrawmat/RequestrawmatPage";
+import ManageRequestOrder from "./ManageRequestOrder/ManagePage";
+import WorkplaceSelector from "../User/WorkplaceSelector.jsx";
 
 function AppPack() {
   return (
@@ -27,6 +31,10 @@ function AppPack() {
         <Route path="/History/HistoryPage" element={<HistoryPage />} />
         <Route path="/Workplace/WorkplacePage" element={<WorkplacePage />} />
         <Route path="/Mixed/Trolley" element={<MixRMPage />} />
+        <Route path="/Request/Rawmat" element={<RequestRawmat />} />
+        <Route path="/Order/Request/Rawmat" element={<OrderRequestRawmat />} />
+        <Route path="/manage/Order/Request/Rawmat" element={<ManageRequestOrder />} />
+        <Route path="/WorkplaceSelector" element={<WorkplaceSelector />} />
 
         {/* เลือกสถานที่ไลน์ผลิต */}
         <Route path="/User/LineSelectWP" element={<LineSelectWP />} />

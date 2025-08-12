@@ -106,6 +106,9 @@ const Modal1 = ({ open, onClose, onNext ,mat, mat_name, batch, production, rmfp_
       } else if (response.data.success === true && response.data.message === "รถเข็นไม่พร้อมใช้งาน") {
         setApiError("รถเข็นไม่พร้อมใช้งาน");
         return false;
+      } else if (response.data.success === true && response.data.message === "รถเข็นถูกจองใช้งาน") {
+        setApiError("รถเข็นถูกจองใช้งาน");
+        return false;
       }
   
       return true; // รถเข็นพร้อมใช้งาน
@@ -115,6 +118,17 @@ const Modal1 = ({ open, onClose, onNext ,mat, mat_name, batch, production, rmfp_
     }
   };
   
+  const reserveTrolley = async (tro_id) => {
+    try {
+      const response = await axios.post(`${API_URL}/api/reserveTrolley`, {
+        tro_id: tro_id,
+      });
+      return response.data.success;
+    } catch (error) {
+      setApiError("รถเข็นถูกจองแล้ว");
+      return false;
+    }
+  };
 
   const handleNextModal2 = async () => {
     if (inputValue.trim() === '') {
@@ -125,6 +139,9 @@ const Modal1 = ({ open, onClose, onNext ,mat, mat_name, batch, production, rmfp_
   
     const isValid = await checkTrolleyStatus(inputValue);
     if (!isValid) return; 
+
+     const isReserved = await reserveTrolley(inputValue);
+    if (!isReserved) return;
   
     onNext({ 
       inputValues: [inputValue], 
@@ -133,6 +150,7 @@ const Modal1 = ({ open, onClose, onNext ,mat, mat_name, batch, production, rmfp_
     });
   };
   
+   
   
 
   return (

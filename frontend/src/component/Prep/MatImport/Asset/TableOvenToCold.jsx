@@ -7,14 +7,14 @@ import EditIcon from "@mui/icons-material/EditOutlined";
 import { SlClose } from "react-icons/sl";
 import { FaRegCircle, FaRegCheckCircle } from "react-icons/fa";
 import { io } from "socket.io-client";
+
 const API_URL = import.meta.env.VITE_API_URL;
 const socket = io(API_URL, {
   transports: ["websocket"],
-  reconnectionAttempts: 5, // จำนวนครั้งที่ลอง reconnect
-  reconnectionDelay: 1000, // หน่วงเวลา 1 วินาทีระหว่างการ reconnect
+  reconnectionAttempts: 5,
+  reconnectionDelay: 1000,
   autoConnect: true
 });
-
 
 const CUSTOM_COLUMN_WIDTHS = {
   delayTime: '180px',
@@ -23,7 +23,6 @@ const CUSTOM_COLUMN_WIDTHS = {
   edit: '70px'
 };
 
-
 const Row = ({
   row,
   columnWidths,
@@ -31,16 +30,17 @@ const Row = ({
   handleRowClick,
   handleOpenEditModal,
   handleOpenSuccess,
+  handleOpenClearTrolley,
+  handleOpenClearModal,
   selectedColor,
   openRowId,
   setOpenRowId,
-  index // เปลี่ยนสีจาราง ขาว เทา
+  index
 }) => {
-
-
   const isOpen = openRowId === row.rmfp_id;
-  const { rmfp_id, stay_place, dest, rm_type_id, rm_tro_id, oven_to_cold, mapping_id, edit_rework, ...displayRow } = row;
-  const backgroundColor = index % 2 === 0 ? '#ffffff' : "hsl(210, 100.00%, 88%)"; // เปลี่ยนสีจาราง ขาว เทา
+  const { rmfp_id, stay_place, dest, rm_type_id, oven_to_cold, mapping_id, edit_rework, ...displayRow } = row;
+  const backgroundColor = index % 2 === 0 ? '#ffffff' : "hsl(210, 100.00%, 88%)";
+  
   return (
     <>
       <TableRow >
@@ -48,7 +48,6 @@ const Row = ({
         </TableCell>
       </TableRow>
       <TableRow >
-
         {Object.values(displayRow).map((value, idx) => (
           <TableCell
             key={idx}
@@ -69,12 +68,25 @@ const Row = ({
               borderLeft: idx === 0 ? "1px solid #e0e0e0" : "1px solid #f2f2f2",
               borderTopLeftRadius: idx === 0 ? "8px" : "0px",
               borderBottomLeftRadius: idx === 0 ? "8px" : "0px",
-              backgroundColor: backgroundColor // เปลี่ยนสีจาราง ขาว เทา
+              backgroundColor: backgroundColor
             }}
           >
             {value || '-'}
           </TableCell>
         ))}
+        
+        {/* Clear Trolley Button */}
+        <CartActionCellclear
+          width={CUSTOM_COLUMN_WIDTHS.cart}
+          onClick={(e) => {
+            e.stopPropagation();
+            handleOpenClearTrolley(row);
+          }}
+          icon={<LiaShoppingCartSolid style={{ color: '#ff0000ff', fontSize: '25px' }} />}
+          backgroundColor={backgroundColor} 
+        />
+        
+        {/* Normal Cart Button */}
         <CartActionCell
           width={CUSTOM_COLUMN_WIDTHS.cart}
           onClick={(e) => {
@@ -82,8 +94,9 @@ const Row = ({
             handleOpenModal(row);
           }}
           icon={<LiaShoppingCartSolid style={{ color: '#007BFF', fontSize: '25px' }} />}
-          backgroundColor={backgroundColor} // Add this
+          backgroundColor={backgroundColor}
         />
+        
         <CompleteActionCell
           width={CUSTOM_COLUMN_WIDTHS.complete}
           onClick={(e) => {
@@ -91,9 +104,9 @@ const Row = ({
             handleOpenSuccess(row);
           }}
           icon={<FaRegCheckCircle style={{ color: '#26c200', fontSize: '20px' }} />}
-          backgroundColor={backgroundColor} // Add this
-
+          backgroundColor={backgroundColor}
         />
+        
         <EditActionCell
           width={CUSTOM_COLUMN_WIDTHS.edit}
           onClick={(e) => {
@@ -101,16 +114,54 @@ const Row = ({
             handleOpenEditModal(row);
           }}
           icon={<EditIcon style={{ color: '#edc026', fontSize: '22px' }} />}
-          backgroundColor={backgroundColor} // Add this
+          backgroundColor={backgroundColor}
         />
       </TableRow>
-
       <TableRow >
         <TableCell style={{ padding: "0px", border: "0px solid" }}>
         </TableCell>
       </TableRow>
-
     </>
+  );
+};
+
+const CartActionCellclear = ({ width, onClick, icon, backgroundColor }) => {
+  return (
+    <TableCell
+      style={{
+        width,
+        textAlign: 'center',
+        borderTop: '1px solid #e0e0e0',
+        borderBottom: '1px solid #e0e0e0',
+        borderLeft: '1px solid #f2f2f2',
+        height: '40px',
+        padding: '0px',
+        cursor: 'pointer',
+        transition: 'background-color 0.2s ease-in-out',
+        backgroundColor: backgroundColor
+      }}
+      onClick={onClick}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.backgroundColor = '#ff0000ff';
+        e.currentTarget.querySelector('svg').style.color = '#fff';
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.backgroundColor = backgroundColor;
+        e.currentTarget.querySelector('svg').style.color = '#ff0000ff';
+      }}
+      onTouchStart={(e) => {
+        e.currentTarget.style.backgroundColor = '#ff0000ff';
+        e.currentTarget.querySelector('svg').style.color = '#fff';
+      }}
+      onTouchEnd={(e) => {
+        e.currentTarget.style.backgroundColor = backgroundColor;
+        e.currentTarget.querySelector('svg').style.color = '#ff0000ff';
+      }}
+    >
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
+        {icon}
+      </div>
+    </TableCell>
   );
 };
 
@@ -127,7 +178,7 @@ const CartActionCell = ({ width, onClick, icon, backgroundColor }) => {
         padding: '0px',
         cursor: 'pointer',
         transition: 'background-color 0.2s ease-in-out',
-        backgroundColor: backgroundColor// เปลี่ยนสีจาราง ขาว เทา
+        backgroundColor: backgroundColor
       }}
       onClick={onClick}
       onMouseEnter={(e) => {
@@ -135,7 +186,7 @@ const CartActionCell = ({ width, onClick, icon, backgroundColor }) => {
         e.currentTarget.querySelector('svg').style.color = '#fff';
       }}
       onMouseLeave={(e) => {
-        e.currentTarget.style.backgroundColor = backgroundColor;// เปลี่ยนสีจาราง ขาว เทา
+        e.currentTarget.style.backgroundColor = backgroundColor;
         e.currentTarget.querySelector('svg').style.color = '#007BFF';
       }}
       onTouchStart={(e) => {
@@ -143,7 +194,7 @@ const CartActionCell = ({ width, onClick, icon, backgroundColor }) => {
         e.currentTarget.querySelector('svg').style.color = '#fff';
       }}
       onTouchEnd={(e) => {
-        e.currentTarget.style.backgroundColor = backgroundColor;// เปลี่ยนสีจาราง ขาว เทา
+        e.currentTarget.style.backgroundColor = backgroundColor;
         e.currentTarget.querySelector('svg').style.color = '#007BFF';
       }}
     >
@@ -153,6 +204,7 @@ const CartActionCell = ({ width, onClick, icon, backgroundColor }) => {
     </TableCell>
   );
 };
+
 const CompleteActionCell = ({ width, onClick, icon, backgroundColor }) => {
   return (
     <TableCell
@@ -193,7 +245,6 @@ const CompleteActionCell = ({ width, onClick, icon, backgroundColor }) => {
   );
 };
 
-
 const EditActionCell = ({ width, onClick, icon, backgroundColor }) => {
   return (
     <TableCell
@@ -210,7 +261,7 @@ const EditActionCell = ({ width, onClick, icon, backgroundColor }) => {
         transition: 'background-color 0.2s ease-in-out',
         borderTopRightRadius: "8px",
         borderBottomRightRadius: "8px",
-        backgroundColor: backgroundColor // เปลี่ยนสีจาราง ขาว เทา
+        backgroundColor: backgroundColor
       }}
       onClick={onClick}
       onMouseEnter={(e) => {
@@ -237,7 +288,15 @@ const EditActionCell = ({ width, onClick, icon, backgroundColor }) => {
   );
 };
 
-const TableMainPrep = ({ handleOpenModal, data, handleRowClick, handleOpenEditModal, handleOpenSuccess }) => {
+const TableMainPrep = ({ 
+  handleOpenModal, 
+  data, 
+  handleRowClick, 
+  handleOpenEditModal, 
+  handleOpenSuccess,
+  handleOpenClearTrolley,
+  handleOpenClearModal // เพิ่ม prop นี้
+}) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredRows, setFilteredRows] = useState(data);
   const [page, setPage] = useState(0);
@@ -251,11 +310,10 @@ const TableMainPrep = ({ handleOpenModal, data, handleRowClick, handleOpenEditMo
       setRows(updatedData);
     });
 
-    // ให้แน่ใจว่าทำการยกเลิกการเชื่อมต่อเมื่อคอมโพเนนต์ถูกยกเลิก
     return () => {
       socket.off("dataUpdated");
     };
-  }, []); // ใช้ [] เพื่อให้ทำงานแค่ครั้งเดียวเมื่อคอมโพเนนต์ถูก mount
+  }, []);
 
   useEffect(() => {
     setFilteredRows(
@@ -266,6 +324,12 @@ const TableMainPrep = ({ handleOpenModal, data, handleRowClick, handleOpenEditMo
       )
     );
   }, [searchTerm, data]);
+
+  const handleOpenClearModalLocal = (row) => {
+    if (handleOpenClearModal) {
+      handleOpenClearModal(row);
+    }
+  };
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -287,137 +351,135 @@ const TableMainPrep = ({ handleOpenModal, data, handleRowClick, handleOpenEditMo
   const columnWidths = Array(columns.length).fill(remainingWidth);
 
   return (
-    <Paper sx={{ width: '100%', overflow: 'hidden', boxShadow: '0px 0px 3px rgba(0, 0, 0, 0.2)' }}>
-      <Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, alignItems: 'center', gap: 1, paddingX: 2, height: { xs: 'auto', sm: '60px' }, margin: '5px 5px' }}>
-        <TextField
-          variant="outlined"
-          fullWidth
-          placeholder="พิมพ์เพื่อค้นหา..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <SearchIcon />
-              </InputAdornment>
-            ),
-            sx: { height: "40px" },
-          }}
-          sx={{
-            "& .MuiOutlinedInput-root": {
-              height: "40px",
-              fontSize: "14px",
-              borderRadius: "8px",
-              color: "#787878",
-            },
-            "& input": {
-              padding: "8px",
-            },
-          }}
-        />
-        <Box sx={{ display: "flex", gap: 1, justifyContent: "flex-start" }}>
-          {['green', 'yellow', 'red'].map((color) => (
-            <FilterButton
-              key={color}
-              color={color}
-              selectedColor={selectedColor}
-              onClick={() => handleFilterChange(color)}
-            />
-          ))}
+    <>
+      <Paper sx={{ width: '100%', overflow: 'hidden', boxShadow: '0px 0px 3px rgba(0, 0, 0, 0.2)' }}>
+        <Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, alignItems: 'center', gap: 1, paddingX: 2, height: { xs: 'auto', sm: '60px' }, margin: '5px 5px' }}>
+          <TextField
+            variant="outlined"
+            fullWidth
+            placeholder="พิมพ์เพื่อค้นหา..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon />
+                </InputAdornment>
+              ),
+              sx: { height: "40px" },
+            }}
+            sx={{
+              "& .MuiOutlinedInput-root": {
+                height: "40px",
+                fontSize: "14px",
+                borderRadius: "8px",
+                color: "#787878",
+              },
+              "& input": {
+                padding: "8px",
+              },
+            }}
+          />
+          <Box sx={{ display: "flex", gap: 1, justifyContent: "flex-start" }}>
+            {['green', 'yellow', 'red'].map((color) => (
+              <FilterButton
+                key={color}
+                color={color}
+                selectedColor={selectedColor}
+                onClick={() => handleFilterChange(color)}
+              />
+            ))}
+          </Box>
         </Box>
-      </Box>
-      <TableContainer style={{ padding: '0px 20px' }} sx={{ height: 'calc(68vh)', overflowY: 'auto', whiteSpace: 'nowrap', '@media (max-width: 1200px)': { overflowX: 'scroll', minWidth: "200px" } }}>
-        <Table stickyHeader style={{ tableLayout: 'auto' }} sx={{ minWidth: '1270px', width: 'max-content' }}>
-          <TableHead style={{ marginBottom: "10px" }}>
-            <TableRow sx={{ height: '40px' }}>
-
-
-              {/* เปลี่ยนชื่อคอลัมน์ที่นี่ */}
-              <TableCell align="center" style={{ backgroundColor: "hsl(210, 100%, 60%)", borderTopLeftRadius: "8px", borderBottomLeftRadius: "8px", border: "1px solid #e0e0e0", fontSize: '12px', color: '#787878', padding: '5px', width: "200px" }}>
-                <Box style={{ fontSize: '16px', color: '#ffffff' }}>Batch</Box>
-              </TableCell>
-              <TableCell align="center" style={{ backgroundColor: "hsl(210, 100%, 60%)", borderTop: "1px solid #e0e0e0", borderBottom: "1px solid #e0e0e0", borderRight: "1px solid #f2f2f2", fontSize: '12px', color: '#787878', padding: '5px', width: "200px" }}>
-                <Box style={{ fontSize: '16px', color: '#ffffff' }}>Material</Box>
-              </TableCell>
-              <TableCell align="center" style={{ backgroundColor: "hsl(210, 100%, 60%)", borderTop: "1px solid #e0e0e0", borderBottom: "1px solid #e0e0e0", borderRight: "1px solid #f2f2f2", fontSize: '12px', color: '#787878', padding: '5px', width: "400px" }}>
-                <Box style={{ fontSize: '16px', color: '#ffffff' }}>รายชื่อวัตถุดิบ</Box>
-              </TableCell>
-
-              <TableCell align="center" style={{ backgroundColor: "hsl(210, 100%, 60%)", borderTop: "1px solid #e0e0e0", borderBottom: "1px solid #e0e0e0", borderRight: "1px solid #f2f2f2", fontSize: '12px', color: '#787878', padding: '5px', width: "160px" }}>
-                <Box style={{ fontSize: '16px', color: '#ffffff' }}>แผนการผลิต</Box>
-              </TableCell>
-              <TableCell align="center" style={{ backgroundColor: "hsl(210, 100%, 60%)", borderTop: "1px solid #e0e0e0", borderBottom: "1px solid #e0e0e0", borderRight: "1px solid #f2f2f2", fontSize: '12px', color: '#787878', padding: '5px', width: "120px" }}>
-                <Box style={{ fontSize: '16px', color: '#ffffff' }}>ป้ายทะเบียน</Box>
-              </TableCell>
-
-              <TableCell align="center" style={{ backgroundColor: "hsl(210, 100%, 60%)", borderLeft: "0px solid ", borderTop: "1px solid #e0e0e0", borderBottom: "1px solid #e0e0e0", borderRight: "1px solid #f2f2f2", fontSize: '12px', color: '#787878', padding: '5px', width: "80px" }}>
-                <Box style={{ fontSize: '16px', color: '#ffffff' }}>level Eu</Box>
-              </TableCell>
-
-              <TableCell align="center" style={{ backgroundColor: "hsl(210, 100%, 60%)", borderTop: "1px solid #e0e0e0", borderBottom: "1px solid #e0e0e0", borderRight: "1px solid #f2f2f2", fontSize: '12px', color: '#787878', padding: '5px', width: "200px" }}>
-                <Box style={{ fontSize: '16px', color: '#ffffff' }}>เวลาต้ม/อบเสร็จ</Box>
-              </TableCell>
-
-
-              <TableCell align="center" style={{ backgroundColor: "hsl(210, 100%, 60%)", borderLeft: "0px solid ", borderTop: "1px solid #e0e0e0", borderBottom: "1px solid #e0e0e0", borderRight: "1px solid #f2f2f2", fontSize: '12px', color: '#787878', padding: '5px', width: "80px" }}>
-                <Box style={{ fontSize: '16px', color: '#ffffff' }}>รถเข็น</Box>
-              </TableCell>
-
-              <TableCell align="center" style={{ backgroundColor: "hsl(210, 100%, 60%)", borderLeft: "0px solid ", borderTop: "1px solid #e0e0e0", borderBottom: "1px solid #e0e0e0", borderRight: "1px solid #f2f2f2", fontSize: '12px', color: '#787878', padding: '5px', width: "80px" }}>
-                <Box style={{ fontSize: '16px', color: '#ffffff' }}>ยืนยัน</Box>
-              </TableCell>
-
-              <TableCell align="center" style={{ backgroundColor: "hsl(210, 100%, 60%)", borderTopRightRadius: "8px", borderBottomRightRadius: "8px", borderTop: "1px solid #e0e0e0", borderBottom: "1px solid #e0e0e0", borderRight: "1px solid #e0e0e0", fontSize: '12px', color: '#787878', padding: '5px', width: "80px" }}>
-                <Box style={{ fontSize: '16px', color: '#ffffff' }}>แก้ไข</Box>
-              </TableCell>
-            </TableRow>
-          </TableHead>
-
-          <TableBody sx={{ '& > tr': { marginBottom: '8px' } }}>
-            {filteredRows.length > 0 ? (
-              filteredRows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, index) => (
-                <Row
-                  key={index}
-                  row={row}
-                  columnWidths={columnWidths}
-                  handleOpenModal={handleOpenModal}
-                  handleRowClick={handleRowClick}
-                  handleOpenEditModal={handleOpenEditModal}
-                  handleOpenSuccess={handleOpenSuccess}
-                  selectedColor={selectedColor}
-                  openRowId={openRowId}
-                  index={index} // เปลี่ยนสีจาราง ขาว เทา
-                  setOpenRowId={setOpenRowId}
-                />
-              ))
-            ) : (
-              <TableRow>
-                <TableCell colSpan={columns.length + 11} align="center" sx={{ padding: "20px", fontSize: "16px", color: "#787878" }}>
-                  ไม่มีรายการวัตถุดิบในขณะนี้
+        
+        <TableContainer style={{ padding: '0px 20px' }} sx={{ height: 'calc(68vh)', overflowY: 'auto', whiteSpace: 'nowrap', '@media (max-width: 1200px)': { overflowX: 'scroll', minWidth: "200px" } }}>
+          <Table stickyHeader style={{ tableLayout: 'auto' }} sx={{ minWidth: '1270px', width: 'max-content' }}>
+            <TableHead style={{ marginBottom: "10px" }}>
+              <TableRow sx={{ height: '40px' }}>
+                <TableCell align="center" style={{ backgroundColor: "hsl(210, 100%, 60%)", borderTopLeftRadius: "8px", borderBottomLeftRadius: "8px", border: "1px solid #e0e0e0", fontSize: '12px', color: '#787878', padding: '5px', width: "200px" }}>
+                  <Box style={{ fontSize: '16px', color: '#ffffff' }}>Batch</Box>
+                </TableCell>
+                <TableCell align="center" style={{ backgroundColor: "hsl(210, 100%, 60%)", borderTop: "1px solid #e0e0e0", borderBottom: "1px solid #e0e0e0", borderRight: "1px solid #f2f2f2", fontSize: '12px', color: '#787878', padding: '5px', width: "200px" }}>
+                  <Box style={{ fontSize: '16px', color: '#ffffff' }}>Material</Box>
+                </TableCell>
+                <TableCell align="center" style={{ backgroundColor: "hsl(210, 100%, 60%)", borderTop: "1px solid #e0e0e0", borderBottom: "1px solid #e0e0e0", borderRight: "1px solid #f2f2f2", fontSize: '12px', color: '#787878', padding: '5px', width: "400px" }}>
+                  <Box style={{ fontSize: '16px', color: '#ffffff' }}>รายชื่อวัตถุดิบ</Box>
+                </TableCell>
+                <TableCell align="center" style={{ backgroundColor: "hsl(210, 100%, 60%)", borderTop: "1px solid #e0e0e0", borderBottom: "1px solid #e0e0e0", borderRight: "1px solid #f2f2f2", fontSize: '12px', color: '#787878', padding: '5px', width: "160px" }}>
+                  <Box style={{ fontSize: '16px', color: '#ffffff' }}>แผนการผลิต</Box>
+                </TableCell>
+                <TableCell align="center" style={{ backgroundColor: "hsl(210, 100%, 60%)", borderTop: "1px solid #e0e0e0", borderBottom: "1px solid #e0e0e0", borderRight: "1px solid #f2f2f2", fontSize: '12px', color: '#787878', padding: '5px', width: "120px" }}>
+                  <Box style={{ fontSize: '16px', color: '#ffffff' }}>ป้ายทะเบียน</Box>
+                </TableCell>
+                <TableCell align="center" style={{ backgroundColor: "hsl(210, 100%, 60%)", borderLeft: "0px solid ", borderTop: "1px solid #e0e0e0", borderBottom: "1px solid #e0e0e0", borderRight: "1px solid #f2f2f2", fontSize: '12px', color: '#787878', padding: '5px', width: "80px" }}>
+                  <Box style={{ fontSize: '16px', color: '#ffffff' }}>level Eu</Box>
+                </TableCell>
+                <TableCell align="center" style={{ backgroundColor: "hsl(210, 100%, 60%)", borderTop: "1px solid #e0e0e0", borderBottom: "1px solid #e0e0e0", borderRight: "1px solid #f2f2f2", fontSize: '12px', color: '#787878', padding: '5px', width: "200px" }}>
+                  <Box style={{ fontSize: '16px', color: '#ffffff' }}>เวลาต้ม/อบเสร็จ</Box>
+                </TableCell>
+                <TableCell align="center" style={{ backgroundColor: "hsl(210, 100%, 60%)", borderLeft: "0px solid ", borderTop: "1px solid #e0e0e0", borderBottom: "1px solid #e0e0e0", borderRight: "1px solid #f2f2f2", fontSize: '12px', color: '#787878', padding: '5px', width: "80px" }}>
+                  <Box style={{ fontSize: '16px', color: '#ffffff' }}>เคลียร์รถเข็น</Box>
+                </TableCell>
+                <TableCell align="center" style={{ backgroundColor: "hsl(210, 100%, 60%)", borderLeft: "0px solid ", borderTop: "1px solid #e0e0e0", borderBottom: "1px solid #e0e0e0", borderRight: "1px solid #f2f2f2", fontSize: '12px', color: '#787878', padding: '5px', width: "80px" }}>
+                  <Box style={{ fontSize: '16px', color: '#ffffff' }}>รถเข็น</Box>
+                </TableCell>
+                <TableCell align="center" style={{ backgroundColor: "hsl(210, 100%, 60%)", borderLeft: "0px solid ", borderTop: "1px solid #e0e0e0", borderBottom: "1px solid #e0e0e0", borderRight: "1px solid #f2f2f2", fontSize: '12px', color: '#787878', padding: '5px', width: "80px" }}>
+                  <Box style={{ fontSize: '16px', color: '#ffffff' }}>ยืนยัน</Box>
+                </TableCell>
+                <TableCell align="center" style={{ backgroundColor: "hsl(210, 100%, 60%)", borderTopRightRadius: "8px", borderBottomRightRadius: "8px", borderTop: "1px solid #e0e0e0", borderBottom: "1px solid #e0e0e0", borderRight: "1px solid #e0e0e0", fontSize: '12px', color: '#787878', padding: '5px', width: "80px" }}>
+                  <Box style={{ fontSize: '16px', color: '#ffffff' }}>แก้ไข</Box>
                 </TableCell>
               </TableRow>
-            )}
-          </TableBody>
-        </Table>
+            </TableHead>
 
-      </TableContainer>
-      <TablePagination
-        sx={{
-          "& .MuiTablePagination-selectLabel, .MuiTablePagination-displayedRows, .MuiTablePagination-toolbar": {
-            fontSize: '10px',
-            color: "#787878",
-            padding: "0px",
-          }
-        }}
-        rowsPerPageOptions={[20, 50, 100]}
-        component="div"
-        count={filteredRows.length}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-      />
-    </Paper>
+            <TableBody sx={{ '& > tr': { marginBottom: '8px' } }}>
+              {filteredRows.length > 0 ? (
+                filteredRows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, index) => (
+                  <Row
+                    key={index}
+                    row={row}
+                    columnWidths={columnWidths}
+                    handleOpenModal={handleOpenModal}
+                    handleRowClick={handleRowClick}
+                    handleOpenEditModal={handleOpenEditModal}
+                    handleOpenSuccess={handleOpenSuccess}
+                    handleOpenClearTrolley={handleOpenClearTrolley}
+                    handleOpenClearModal={handleOpenClearModalLocal}
+                    selectedColor={selectedColor}
+                    openRowId={openRowId}
+                    index={index}
+                    setOpenRowId={setOpenRowId}
+                  />
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={columns.length + 11} align="center" sx={{ padding: "20px", fontSize: "16px", color: "#787878" }}>
+                    ไม่มีรายการวัตถุดิบในขณะนี้
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </TableContainer>
+        
+        <TablePagination
+          sx={{
+            "& .MuiTablePagination-selectLabel, .MuiTablePagination-displayedRows, .MuiTablePagination-toolbar": {
+              fontSize: '10px',
+              color: "#787878",
+              padding: "0px",
+            }
+          }}
+          rowsPerPageOptions={[20, 50, 100]}
+          component="div"
+          count={filteredRows.length}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+        />
+      </Paper>
+    </>
   );
 };
 
@@ -496,6 +558,5 @@ const FilterButton = ({ color, selectedColor, onClick }) => {
     </div>
   );
 };
-
 
 export default TableMainPrep;

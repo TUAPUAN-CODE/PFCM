@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
-axios.defaults.withCredentials = true; 
+axios.defaults.withCredentials = true;
 import { Modal, Box, Typography, TextField, Button, IconButton, Alert, useTheme, Divider } from "@mui/material";
 import { styled } from "@mui/system";
 import { IoClose } from "react-icons/io5";
@@ -123,31 +123,47 @@ const Modal1 = ({ open, onClose, onNext, mat, mat_name, batch, production, rmfp_
       const response = await axios.get(`${API_URL}/api/checkTrolley`, {
         params: { tro: value },
       });
-  
+
       if (response.data.success === false) {
         setApiError(response.data.message || "ไม่มีรถเข็นคันนี้ในระบบ");
         return false;
       } else if (response.data.success === true && response.data.message === "รถเข็นไม่พร้อมใช้งาน") {
         setApiError("รถเข็นไม่พร้อมใช้งาน");
         return false;
+      } else if (response.data.success === true && response.data.message === "รถเข็นถูกจองใช้งาน") {
+        setApiError("รถเข็นถูกจองใช้งาน");
+        return false;
       }
-  
+
       return true; // รถเข็นพร้อมใช้งาน
     } catch (error) {
       setApiError("ไม่มีรถเข็นคันนี้ในระบบ");
       return false;
     }
   };
-  
+
+  const reserveTrolley = async (tro_id) => {
+    try {
+      const response = await axios.post(`${API_URL}/api/reserveTrolley`, {
+        tro_id: tro_id,
+      });
+      return response.data.success;
+    } catch (error) {
+      setApiError("รถเข็นถูกจองแล้ว");
+      return false;
+    }
+  };
+
+
   const handleNextModal2 = async () => {
     setInputError(false);
     setBatchError(false);
-    
+
     if (inputValue.trim() === '') {
       setInputError(true);
       return;
     }
-    
+
     // Validate batch for raw materials that require batch input (3, 6, 7, 8)
     if (requiresBatchInput) {
       if (batchInput.trim() === '') {
@@ -159,12 +175,15 @@ const Modal1 = ({ open, onClose, onNext, mat, mat_name, batch, production, rmfp_
         return;
       }
     }
-  
+
     const isValid = await checkTrolleyStatus(inputValue);
-    if (!isValid) return; 
-  
-    onNext({ 
-      inputValues: [inputValue], 
+    if (!isValid) return;
+
+    const isReserved = await reserveTrolley(inputValue);
+    if (!isReserved) return;
+
+    onNext({
+      inputValues: [inputValue],
       mapping_id: mapping_id,
       batch: batch,
       newBatch: batchInput,
@@ -179,7 +198,7 @@ const Modal1 = ({ open, onClose, onNext, mat, mat_name, batch, production, rmfp_
     }}>
       <ModalContent>
         <CloseButton aria-label="close" onClick={handleClose}><IoClose /></CloseButton>
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, fontSize: "15px", color: "#555" }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, fontSize: "15px", color: "#555" }}>
           <Typography sx={{ fontSize: "18px", fontWeight: 500, color: "#545454", marginBottom: "10px" }}>
             กรุณากรอกข้อมูลหรือสแกนป้ายทะเบียน
           </Typography>
@@ -190,103 +209,103 @@ const Modal1 = ({ open, onClose, onNext, mat, mat_name, batch, production, rmfp_
           {batchError && <Alert severity="error" sx={{ mb: 2 }}>กรุณากรอก Batch ใหม่ให้ครบ 10 ตัวอักษร</Alert>}
           {apiError && <Alert severity="error" sx={{ mb: 2 }}>{apiError}</Alert>}
 
-          <Divider sx={{mb:2}} />
-          
-          <video ref={videoRef} style={{ width: "100%", marginBottom: theme.spacing(1), borderRadius: "4px" }} autoPlay muted />
-         
-          <Divider sx={{ mt: 1, mb: 1 }} />
-          
-         {(rm_type_id === 3 || rm_type_id === 7 || rm_type_id === 8 || rm_type_id === 6) && (
-           <Box sx={{
-             display: "flex",
-             alignItems: "center",
-             gap: 1,
-           }}>
-             <TextField
-               fullWidth
-               label={(() => {
-                 if (rm_type_id === 3) return "กรอก Batch ใหม่(สำหรับวัตถุดิบปลา) 10 ตัวอักษร";
-                 else if (rm_type_id === 6) return "กรอก Batch ใหม่(สำหรับวัตถุดิบกุ้ง) 10 ตัวอักษร";
-                 else if (rm_type_id === 7) return "กรอก Batch ใหม่(สำหรับวัตถุดิบหมึก) 10 ตัวอักษร";
-                 else if (rm_type_id === 8) return "กรอก Batch ใหม่(สำหรับวัตถุดิบอื่นๆ) 10 ตัวอักษร";
-                 else return "กรอก Batch ใหม่ 10 ตัวอักษร";
-               })()}
-               value={batchInput}
-               onChange={(e) => {
-                 // Convert to uppercase and limit to 10 characters
-                 const upperValue = e.target.value.toUpperCase();
-                 if (upperValue.length <= 10) {
-                   setBatchInput(upperValue);
-                   setBatchError(false);
-                 }
-               }}
-               size="small"
-               error={batchError}
-               inputProps={{ 
-                 maxLength: 10,
-                 style: { textTransform: 'uppercase' } // Visual feedback
-               }}
-               sx={{
-                 '& .MuiInputBase-root': {
-                   height: '40px',
-                 },
-               }}
-             />
-             <Button
-               variant="contained"
-               onClick={() => {
-                 // Also convert existing batch to uppercase when resetting
-                 setBatchInput(batch ? batch.toUpperCase() : '');
-                 setBatchError(false);
-               }}
-               sx={{
-                 backgroundColor: "#41b0e6",
-                 color: "#fff",
-                 height: '40px',
-                 minWidth: 'auto',
-                 px: 2,
-                 fontSize: '0.875rem',
-                 '&:hover': {
-                   backgroundColor: "#2c8fcc",
-                 }
-               }}
-             >
-               ใช้ Batch เดิม
-             </Button>
-           </Box>
-         )}
+          <Divider sx={{ mb: 2 }} />
 
-        <Box sx={{ display: "flex", alignItems: "center" }}>
-          <TextField
-            fullWidth
-            label="เลขทะเบียนรถเข็น"
-            value={inputValue}
-            onChange={(e) => {
-              const raw = e.target.value.replace(/\D/g, ""); // กรองเฉพาะตัวเลข
-              const formatted = raw.padStart(4, "0").slice(-4); // เติม 0 ซ้าย และจำกัด 4 ตัว
-              setInputValue(formatted);
-              setInputError(false);
-            }}
-            margin="normal"
-            size="small"
-            style={{ padding: "0" }}
-            error={inputError}
-          />
-        </Box>
-      
-          <Divider sx={{mt:1,mb:1}} />
+          <video ref={videoRef} style={{ width: "100%", marginBottom: theme.spacing(1), borderRadius: "4px" }} autoPlay muted />
+
+          <Divider sx={{ mt: 1, mb: 1 }} />
+
+          {(rm_type_id === 3 || rm_type_id === 7 || rm_type_id === 8 || rm_type_id === 6) && (
+            <Box sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: 1,
+            }}>
+              <TextField
+                fullWidth
+                label={(() => {
+                  if (rm_type_id === 3) return "กรอก Batch ใหม่(สำหรับวัตถุดิบปลา) 10 ตัวอักษร";
+                  else if (rm_type_id === 6) return "กรอก Batch ใหม่(สำหรับวัตถุดิบกุ้ง) 10 ตัวอักษร";
+                  else if (rm_type_id === 7) return "กรอก Batch ใหม่(สำหรับวัตถุดิบหมึก) 10 ตัวอักษร";
+                  else if (rm_type_id === 8) return "กรอก Batch ใหม่(สำหรับวัตถุดิบอื่นๆ) 10 ตัวอักษร";
+                  else return "กรอก Batch ใหม่ 10 ตัวอักษร";
+                })()}
+                value={batchInput}
+                onChange={(e) => {
+                  // Convert to uppercase and limit to 10 characters
+                  const upperValue = e.target.value.toUpperCase();
+                  if (upperValue.length <= 10) {
+                    setBatchInput(upperValue);
+                    setBatchError(false);
+                  }
+                }}
+                size="small"
+                error={batchError}
+                inputProps={{
+                  maxLength: 10,
+                  style: { textTransform: 'uppercase' } // Visual feedback
+                }}
+                sx={{
+                  '& .MuiInputBase-root': {
+                    height: '40px',
+                  },
+                }}
+              />
+              <Button
+                variant="contained"
+                onClick={() => {
+                  // Also convert existing batch to uppercase when resetting
+                  setBatchInput(batch ? batch.toUpperCase() : '');
+                  setBatchError(false);
+                }}
+                sx={{
+                  backgroundColor: "#41b0e6",
+                  color: "#fff",
+                  height: '40px',
+                  minWidth: 'auto',
+                  px: 2,
+                  fontSize: '0.875rem',
+                  '&:hover': {
+                    backgroundColor: "#2c8fcc",
+                  }
+                }}
+              >
+                ใช้ Batch เดิม
+              </Button>
+            </Box>
+          )}
+
+          <Box sx={{ display: "flex", alignItems: "center" }}>
+            <TextField
+              fullWidth
+              label="เลขทะเบียนรถเข็น"
+              value={inputValue}
+              onChange={(e) => {
+                const raw = e.target.value.replace(/\D/g, ""); // กรองเฉพาะตัวเลข
+                const formatted = raw.padStart(4, "0").slice(-4); // เติม 0 ซ้าย และจำกัด 4 ตัว
+                setInputValue(formatted);
+                setInputError(false);
+              }}
+              margin="normal"
+              size="small"
+              style={{ padding: "0" }}
+              error={inputError}
+            />
+          </Box>
+
+          <Divider sx={{ mt: 1, mb: 1 }} />
 
           <Box sx={{ display: "flex", justifyContent: "space-between", pt: 1, height: "42px" }}>
             <Button style={{ backgroundColor: "#E74A3B", color: "#fff" }} variant="contained" startIcon={<CancelIcon />} onClick={handleClose}>
               ยกเลิก
             </Button>
-            <Button 
-              style={{ 
-                backgroundColor: isFormValid() ? "#41a2e6" : "#e0e0e0", 
-                color: "#fff" 
-              }} 
-              variant="contained" 
-              startIcon={<CheckCircleIcon />} 
+            <Button
+              style={{
+                backgroundColor: isFormValid() ? "#41a2e6" : "#e0e0e0",
+                color: "#fff"
+              }}
+              variant="contained"
+              startIcon={<CheckCircleIcon />}
               onClick={handleNextModal2}
               disabled={!isFormValid()}
             >

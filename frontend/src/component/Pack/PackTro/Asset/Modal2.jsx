@@ -56,11 +56,31 @@ const Modal2 = ({ open, onClose, onNext, data, rmfp_id, CookedDateTime, dest }) 
     onNext(updatedData);
   };
 
-  const handleClose = () => {
+ const handleClose = async () => {
+    const troId = data?.inputValues?.[0];
+
+    if (troId) {
+      const success = await returnreserveTrolley(troId);
+      if (!success) {
+        setErrorDialogOpen(true);
+        return;
+      }
+    }
     clearData();
     onClose();
   };
 
+    const returnreserveTrolley = async (tro_id) => {
+    try {
+      const response = await axios.post(`${API_URL}/api/re/reserveTrolley`, {
+        tro_id: tro_id,
+      });
+      return response.data.success;
+    } catch (error) {
+      console.error(error);
+      return false;
+    }
+  };
   const handleDeliveryLocationChange = (event) => {
     setDeliveryLocation(event.target.value);
   };

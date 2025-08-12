@@ -1,0 +1,779 @@
+2025-08-11 13:48:13: 🔌 Connecting to MSSQL... (Attempt 1/1)
+2025-08-11 13:48:19: 🔌 Connecting to MSSQL... (Attempt 1/1)
+2025-08-11 13:48:24: 🔌 Connecting to MSSQL... (Attempt 1/1)
+2025-08-11 13:48:30: 🔌 Connecting to MSSQL... (Attempt 1/1)
+2025-08-11 13:48:38: 🔌 Connecting to MSSQL... (Attempt 1/1)
+2025-08-11 13:48:44: 🔌 Connecting to MSSQL... (Attempt 1/1)
+2025-08-11 13:48:54: 🔌 Connecting to MSSQL... (Attempt 1/1)
+2025-08-11 13:49:02: 🔌 Connecting to MSSQL... (Attempt 1/1)
+2025-08-11 13:49:09: 🔌 Connecting to MSSQL... (Attempt 1/1)
+2025-08-11 13:49:15: 🔌 Connecting to MSSQL... (Attempt 1/1)
+2025-08-11 13:49:21: 🔌 Connecting to MSSQL... (Attempt 1/1)
+2025-08-11 13:49:32: 🔌 Connecting to MSSQL... (Attempt 1/1)
+2025-08-11 13:49:40: 🔌 Connecting to MSSQL... (Attempt 1/1)
+2025-08-11 13:49:48: 🔌 Connecting to MSSQL... (Attempt 1/1)
+2025-08-11 13:49:57: 🔌 Connecting to MSSQL... (Attempt 1/1)
+2025-08-11 13:50:01: 🔌 Connecting to MSSQL... (Attempt 1/1)
+2025-08-11 13:50:07: 🔌 Connecting to MSSQL... (Attempt 1/1)
+2025-08-11 13:50:13: 🔌 Connecting to MSSQL... (Attempt 1/1)
+2025-08-11 13:50:20: 🔌 Connecting to MSSQL... (Attempt 1/1)
+2025-08-11 13:50:27: 🔌 Connecting to MSSQL... (Attempt 1/1)
+2025-08-11 13:50:33: 🔌 Connecting to MSSQL... (Attempt 1/1)
+2025-08-11 13:50:42: 🔌 Connecting to MSSQL... (Attempt 1/1)
+2025-08-11 13:50:48: 🔌 Connecting to MSSQL... (Attempt 1/1)
+2025-08-11 13:50:55: 🔌 Connecting to MSSQL... (Attempt 1/1)
+2025-08-11 13:51:02: 🔌 Connecting to MSSQL... (Attempt 1/1)
+2025-08-11 13:51:10: 🔌 Connecting to MSSQL... (Attempt 1/1)
+2025-08-11 13:51:23: 🔌 Connecting to MSSQL... (Attempt 1/1)
+2025-08-11 13:51:31: 🔌 Connecting to MSSQL... (Attempt 1/1)
+2025-08-11 13:51:40: 🔌 Connecting to MSSQL... (Attempt 1/1)
+2025-08-11 13:51:48: 🔌 Connecting to MSSQL... (Attempt 1/1)
+2025-08-11 13:51:58: 🔌 Connecting to MSSQL... (Attempt 1/1)
+2025-08-11 13:52:03: 🔌 Connecting to MSSQL... (Attempt 1/1)
+2025-08-11 13:52:12: 🔌 Connecting to MSSQL... (Attempt 1/1)
+2025-08-11 13:52:31: 🔌 Connecting to MSSQL... (Attempt 1/1)
+2025-08-11 13:52:43: 🔌 Connecting to MSSQL... (Attempt 1/1)
+2025-08-11 13:52:52: 🔌 Connecting to MSSQL... (Attempt 1/1)
+2025-08-11 13:52:53: Worker 11780 started on port 3000
+2025-08-11 13:52:53: Accessible on:
+2025-08-11 13:52:53:   http://172.16.151.128:3000
+2025-08-11 13:52:53: ✅ Redis adapter connected
+2025-08-11 13:52:53: ✅ Database connection successful!
+2025-08-11 13:52:53: Database connection successful
+2025-08-11 13:53:53: 🔄 Using existing DB connection pool
+2025-08-11 13:54:53: 🔄 Using existing DB connection pool
+2025-08-11 13:55:15: 🔌 Connecting to MSSQL... (Attempt 1/1)
+2025-08-11 13:55:17: Worker 2016 started on port 3000
+2025-08-11 13:55:17: Accessible on:
+2025-08-11 13:55:17:   http://172.16.151.128:3000
+2025-08-11 13:55:17: ✅ Redis adapter connected
+2025-08-11 13:55:17: ✅ Database connection successful!
+2025-08-11 13:55:17: Database connection successful
+2025-08-11 13:55:30: 🔄 Using existing DB connection pool
+2025-08-11 13:55:33: Client connected: u5loC9U9Jgn3pOvZAAAC
+2025-08-11 13:55:33: ✅ New connection: u5loC9U9Jgn3pOvZAAAC
+2025-08-11 13:55:33: Client connected: 7GjNgKejjwsdmJnMAAAF
+2025-08-11 13:55:33: ✅ New connection: 7GjNgKejjwsdmJnMAAAF
+2025-08-11 13:55:33: Client connected: yP2fLC-JkiIffy7CAAAH
+2025-08-11 13:55:33: ✅ New connection: yP2fLC-JkiIffy7CAAAH
+2025-08-11 13:55:33: 🔄 Using existing DB connection pool
+2025-08-11 13:55:33: 🔄 Using existing DB connection pool
+2025-08-11 13:55:33: 🔄 Using existing DB connection pool
+2025-08-11 13:55:33: 🔄 Using existing DB connection pool
+2025-08-11 13:55:33: Client connected: 1gFHOYlLyRrtNkq0AAAK
+2025-08-11 13:55:33: ✅ New connection: 1gFHOYlLyRrtNkq0AAAK
+2025-08-11 13:55:33: 🔗 1gFHOYlLyRrtNkq0AAAK joined room: trolleyUpdateRoom
+2025-08-11 13:55:33: 🔄 Using existing DB connection pool
+2025-08-11 13:55:34: 🔄 Using existing DB connection pool
+2025-08-11 13:55:34: 🔄 Using existing DB connection pool
+2025-08-11 13:55:34: 🔄 Using existing DB connection pool
+2025-08-11 13:56:09: Client disconnected: 1gFHOYlLyRrtNkq0AAAK
+2025-08-11 13:56:09: ⚠️ Disconnected: 1gFHOYlLyRrtNkq0AAAK (client namespace disconnect)
+2025-08-11 13:56:09: ⚠️ 1gFHOYlLyRrtNkq0AAAK disconnected: client namespace disconnect
+2025-08-11 13:56:17: 🔄 Using existing DB connection pool
+2025-08-11 13:56:19: 🔄 Using existing DB connection pool
+2025-08-11 13:56:23: Client connected: BmVlmf_gRoniOWscAAAO
+2025-08-11 13:56:23: ✅ New connection: BmVlmf_gRoniOWscAAAO
+2025-08-11 13:56:23: Client connected: llP4oGnijftklPtYAAAQ
+2025-08-11 13:56:23: ✅ New connection: llP4oGnijftklPtYAAAQ
+2025-08-11 13:56:23: 🔄 Using existing DB connection pool
+2025-08-11 13:56:23: 🔄 Using existing DB connection pool
+2025-08-11 13:56:23: 🔄 Using existing DB connection pool
+2025-08-11 13:56:23: 🔄 Using existing DB connection pool
+2025-08-11 13:56:23: 🔄 Using existing DB connection pool
+2025-08-11 13:56:23: 🔄 Using existing DB connection pool
+2025-08-11 13:56:24: 🔄 Using existing DB connection pool
+2025-08-11 13:56:24: item : {
+  rmfp_id: 33974,
+  tro_id: '0004',
+  batch_after: '0000000001',
+  mat: '.14L300000120',
+  mat_name: 'มันเทศสีส้ม(ปอกเปลือก)หันเต๋า ? 0.7x0.7x0.7 cm',
+  production: 'M152 (Cup1)',
+  level_eu: null,
+  remaining_time: '0.58',
+  standard_time: '1.00',
+  remaining_rework_time: null,
+  standard_rework_time: '2.00',
+  rm_status: 'QcCheck',
+  dest: 'เข้าห้องเย็น',
+  weight_RM: 500,
+  tray_count: 50,
+  cooked_date: '2025-08-08 06:56:00',
+  rmit_date: '2025-08-08 13:29:00',
+  qc_date: '2025-08-08 13:30:55',
+  out_cold_date: '2025-08-08 06:58:22',
+  out_cold_date_two: null,
+  out_cold_date_three: null
+}
+2025-08-11 13:56:24: 🔄 Using existing DB connection pool
+2025-08-11 13:56:24: item : {
+  rmfp_id: 33974,
+  tro_id: '0004',
+  batch_after: '0000000001',
+  mat: '.14L300000120',
+  mat_name: 'มันเทศสีส้ม(ปอกเปลือก)หันเต๋า ? 0.7x0.7x0.7 cm',
+  production: 'M152 (Cup1)',
+  level_eu: null,
+  remaining_time: '0.58',
+  standard_time: '1.00',
+  remaining_rework_time: null,
+  standard_rework_time: '2.00',
+  rm_status: 'QcCheck',
+  dest: 'เข้าห้องเย็น',
+  weight_RM: 500,
+  tray_count: 50,
+  cooked_date: '2025-08-08 06:56:00',
+  rmit_date: '2025-08-08 13:29:00',
+  qc_date: '2025-08-08 13:30:55',
+  out_cold_date: '2025-08-08 06:58:22',
+  out_cold_date_two: null,
+  out_cold_date_three: null
+}
+2025-08-11 13:56:42: 🔄 Using existing DB connection pool
+2025-08-11 13:56:53: ♻️ Terminating stale connection: u5loC9U9Jgn3pOvZAAAC
+2025-08-11 13:56:53: Client disconnected: u5loC9U9Jgn3pOvZAAAC
+2025-08-11 13:56:53: ⚠️ Disconnected: u5loC9U9Jgn3pOvZAAAC (server namespace disconnect)
+2025-08-11 13:56:53: ⚠️ u5loC9U9Jgn3pOvZAAAC disconnected: server namespace disconnect
+2025-08-11 13:56:53: ♻️ Terminating stale connection: 7GjNgKejjwsdmJnMAAAF
+2025-08-11 13:56:53: Client disconnected: 7GjNgKejjwsdmJnMAAAF
+2025-08-11 13:56:53: ⚠️ Disconnected: 7GjNgKejjwsdmJnMAAAF (server namespace disconnect)
+2025-08-11 13:56:53: ⚠️ 7GjNgKejjwsdmJnMAAAF disconnected: server namespace disconnect
+2025-08-11 13:56:53: ♻️ Terminating stale connection: yP2fLC-JkiIffy7CAAAH
+2025-08-11 13:56:53: Client disconnected: yP2fLC-JkiIffy7CAAAH
+2025-08-11 13:56:53: ⚠️ Disconnected: yP2fLC-JkiIffy7CAAAH (server namespace disconnect)
+2025-08-11 13:56:53: ⚠️ yP2fLC-JkiIffy7CAAAH disconnected: server namespace disconnect
+2025-08-11 13:57:17: 🔄 Using existing DB connection pool
+2025-08-11 13:57:43: ♻️ Terminating stale connection: BmVlmf_gRoniOWscAAAO
+2025-08-11 13:57:43: Client disconnected: BmVlmf_gRoniOWscAAAO
+2025-08-11 13:57:43: ⚠️ Disconnected: BmVlmf_gRoniOWscAAAO (server namespace disconnect)
+2025-08-11 13:57:43: ⚠️ BmVlmf_gRoniOWscAAAO disconnected: server namespace disconnect
+2025-08-11 13:57:43: ♻️ Terminating stale connection: llP4oGnijftklPtYAAAQ
+2025-08-11 13:57:43: Client disconnected: llP4oGnijftklPtYAAAQ
+2025-08-11 13:57:43: ⚠️ Disconnected: llP4oGnijftklPtYAAAQ (server namespace disconnect)
+2025-08-11 13:57:43: ⚠️ llP4oGnijftklPtYAAAQ disconnected: server namespace disconnect
+2025-08-11 13:58:17: 🔄 Using existing DB connection pool
+2025-08-11 13:59:17: 🔄 Using existing DB connection pool
+2025-08-11 14:00:17: 🔄 Using existing DB connection pool
+2025-08-11 14:01:17: 🔄 Using existing DB connection pool
+2025-08-11 14:02:17: 🔄 Using existing DB connection pool
+2025-08-11 14:03:17: 🔄 Using existing DB connection pool
+2025-08-11 14:04:17: 🔄 Using existing DB connection pool
+2025-08-11 14:05:17: 🔄 Using existing DB connection pool
+2025-08-11 14:06:17: 🔄 Using existing DB connection pool
+2025-08-11 14:07:17: 🔄 Using existing DB connection pool
+2025-08-11 14:08:17: 🔄 Using existing DB connection pool
+2025-08-11 14:09:17: 🔄 Using existing DB connection pool
+2025-08-11 14:10:17: 🔄 Using existing DB connection pool
+2025-08-11 14:11:05: 🔌 Connecting to MSSQL... (Attempt 1/1)
+2025-08-11 14:11:07: Worker 10660 started on port 3000
+2025-08-11 14:11:07: Accessible on:
+2025-08-11 14:11:07:   http://172.16.151.128:3000
+2025-08-11 14:11:07: ✅ Redis adapter connected
+2025-08-11 14:11:07: ✅ Database connection successful!
+2025-08-11 14:11:07: Database connection successful
+2025-08-11 14:11:52: 🔌 Connecting to MSSQL... (Attempt 1/1)
+2025-08-11 14:11:54: Worker 2400 started on port 3000
+2025-08-11 14:11:54: Accessible on:
+2025-08-11 14:11:54:   http://172.16.151.128:3000
+2025-08-11 14:11:54: ✅ Redis adapter connected
+2025-08-11 14:11:54: ✅ Database connection successful!
+2025-08-11 14:11:54: Database connection successful
+2025-08-11 14:12:54: 🔄 Using existing DB connection pool
+2025-08-11 14:13:54: 🔄 Using existing DB connection pool
+2025-08-11 14:14:02: 🔌 Connecting to MSSQL... (Attempt 1/1)
+2025-08-11 14:14:03: Worker 8132 started on port 3000
+2025-08-11 14:14:03: Accessible on:
+2025-08-11 14:14:03:   http://172.16.151.128:3000
+2025-08-11 14:14:03: ✅ Redis adapter connected
+2025-08-11 14:14:03: ✅ Database connection successful!
+2025-08-11 14:14:03: Database connection successful
+2025-08-11 14:15:03: 🔄 Using existing DB connection pool
+2025-08-11 14:15:11: 🔌 Connecting to MSSQL... (Attempt 1/1)
+2025-08-11 14:15:13: Worker 11504 started on port 3000
+2025-08-11 14:15:13: Accessible on:
+2025-08-11 14:15:13:   http://172.16.151.128:3000
+2025-08-11 14:15:13: ✅ Redis adapter connected
+2025-08-11 14:15:13: ✅ Database connection successful!
+2025-08-11 14:15:13: Database connection successful
+2025-08-11 14:15:51: 🔌 Connecting to MSSQL... (Attempt 1/1)
+2025-08-11 14:15:53: Worker 9052 started on port 3000
+2025-08-11 14:15:53: Accessible on:
+2025-08-11 14:15:53:   http://172.16.151.128:3000
+2025-08-11 14:15:53: ✅ Redis adapter connected
+2025-08-11 14:15:53: ✅ Database connection successful!
+2025-08-11 14:15:53: Database connection successful
+2025-08-11 14:16:52: 🔄 Using existing DB connection pool
+2025-08-11 14:17:52: 🔄 Using existing DB connection pool
+2025-08-11 14:18:52: 🔄 Using existing DB connection pool
+2025-08-11 14:19:52: 🔄 Using existing DB connection pool
+2025-08-11 14:20:52: 🔄 Using existing DB connection pool
+2025-08-11 14:21:52: 🔄 Using existing DB connection pool
+2025-08-11 14:22:52: 🔄 Using existing DB connection pool
+2025-08-11 14:23:52: 🔄 Using existing DB connection pool
+2025-08-11 14:24:52: 🔄 Using existing DB connection pool
+2025-08-11 14:25:52: 🔄 Using existing DB connection pool
+2025-08-11 14:26:31: 🔌 Connecting to MSSQL... (Attempt 1/1)
+2025-08-11 14:26:34: Worker 7932 started on port 3000
+2025-08-11 14:26:34: Accessible on:
+2025-08-11 14:26:34:   http://172.16.151.128:3000
+2025-08-11 14:26:34: ✅ Redis adapter connected
+2025-08-11 14:26:34: ✅ Database connection successful!
+2025-08-11 14:26:34: Database connection successful
+2025-08-11 14:26:54: 🔌 Connecting to MSSQL... (Attempt 1/1)
+2025-08-11 14:26:55: Worker 4116 started on port 3000
+2025-08-11 14:26:55: Accessible on:
+2025-08-11 14:26:55:   http://172.16.151.128:3000
+2025-08-11 14:26:55: ✅ Redis adapter connected
+2025-08-11 14:26:55: ✅ Database connection successful!
+2025-08-11 14:26:55: Database connection successful
+2025-08-11 14:27:09: 🔌 Connecting to MSSQL... (Attempt 1/1)
+2025-08-11 14:27:14: 🔌 Connecting to MSSQL... (Attempt 1/1)
+2025-08-11 14:27:23: 🔌 Connecting to MSSQL... (Attempt 1/1)
+2025-08-11 14:27:25: Worker 2892 started on port 3000
+2025-08-11 14:27:25: Accessible on:
+2025-08-11 14:27:25:   http://172.16.151.128:3000
+2025-08-11 14:27:25: ✅ Redis adapter connected
+2025-08-11 14:27:25: 🔌 Connecting to MSSQL... (Attempt 1/1)
+2025-08-11 14:27:25: ✅ Database connection successful!
+2025-08-11 14:27:25: Database connection successful
+2025-08-11 14:27:25: ✅ Database connection successful!
+2025-08-11 14:28:25: 🔄 Using existing DB connection pool
+2025-08-11 14:29:25: 🔄 Using existing DB connection pool
+2025-08-11 14:30:25: 🔄 Using existing DB connection pool
+2025-08-11 14:31:25: 🔄 Using existing DB connection pool
+2025-08-11 14:32:25: 🔄 Using existing DB connection pool
+2025-08-11 14:33:13: 🔄 Using existing DB connection pool
+2025-08-11 14:33:13: 🔄 Using existing DB connection pool
+2025-08-11 14:33:13: 🔄 Using existing DB connection pool
+2025-08-11 14:33:13: 🔄 Using existing DB connection pool
+2025-08-11 14:33:13: 🔄 Using existing DB connection pool
+2025-08-11 14:33:13: 🔄 Using existing DB connection pool
+2025-08-11 14:33:25: 🔄 Using existing DB connection pool
+2025-08-11 14:33:27: 🔄 Using existing DB connection pool
+2025-08-11 14:33:27: 🔄 Using existing DB connection pool
+2025-08-11 14:33:27: 🔄 Using existing DB connection pool
+2025-08-11 14:33:27: 🔄 Using existing DB connection pool
+2025-08-11 14:34:25: 🔄 Using existing DB connection pool
+2025-08-11 14:35:13: 🔌 Connecting to MSSQL... (Attempt 1/1)
+2025-08-11 14:35:14: Worker 10716 started on port 3000
+2025-08-11 14:35:14: Accessible on:
+2025-08-11 14:35:14:   http://172.16.151.128:3000
+2025-08-11 14:35:14: ✅ Redis adapter connected
+2025-08-11 14:35:15: ✅ Database connection successful!
+2025-08-11 14:35:15: Database connection successful
+2025-08-11 14:36:14: 🔄 Using existing DB connection pool
+2025-08-11 14:37:14: 🔄 Using existing DB connection pool
+2025-08-11 14:38:14: 🔄 Using existing DB connection pool
+2025-08-11 14:38:38: 🔌 Connecting to MSSQL... (Attempt 1/1)
+2025-08-11 14:38:39: Worker 1316 started on port 3000
+2025-08-11 14:38:39: Accessible on:
+2025-08-11 14:38:39:   http://172.16.151.128:3000
+2025-08-11 14:38:39: ✅ Redis adapter connected
+2025-08-11 14:38:39: ✅ Database connection successful!
+2025-08-11 14:38:39: Database connection successful
+2025-08-11 14:38:40: 🔄 Using existing DB connection pool
+2025-08-11 14:39:39: 🔄 Using existing DB connection pool
+2025-08-11 14:40:23: 🔌 Connecting to MSSQL... (Attempt 1/1)
+2025-08-11 14:40:26: Worker 9820 started on port 3000
+2025-08-11 14:40:26: Accessible on:
+2025-08-11 14:40:26:   http://172.16.151.128:3000
+2025-08-11 14:40:26: ✅ Redis adapter connected
+2025-08-11 14:40:26: ✅ Database connection successful!
+2025-08-11 14:40:26: Database connection successful
+2025-08-11 14:40:33: 🔌 Connecting to MSSQL... (Attempt 1/1)
+2025-08-11 14:40:34: Worker 12268 started on port 3000
+2025-08-11 14:40:34: Accessible on:
+2025-08-11 14:40:34:   http://172.16.151.128:3000
+2025-08-11 14:40:34: ✅ Redis adapter connected
+2025-08-11 14:40:34: 🔌 Connecting to MSSQL... (Attempt 1/1)
+2025-08-11 14:40:34: ✅ Database connection successful!
+2025-08-11 14:40:34: Database connection successful
+2025-08-11 14:40:34: ✅ Database connection successful!
+2025-08-11 14:41:34: 🔄 Using existing DB connection pool
+2025-08-11 14:42:34: 🔄 Using existing DB connection pool
+2025-08-11 14:43:34: 🔄 Using existing DB connection pool
+2025-08-11 14:44:34: 🔄 Using existing DB connection pool
+2025-08-11 14:45:34: 🔄 Using existing DB connection pool
+2025-08-11 14:46:34: 🔄 Using existing DB connection pool
+2025-08-11 14:47:35: 🔄 Using existing DB connection pool
+2025-08-11 14:48:35: 🔄 Using existing DB connection pool
+2025-08-11 14:49:35: 🔄 Using existing DB connection pool
+2025-08-11 14:50:35: 🔄 Using existing DB connection pool
+2025-08-11 14:51:22: 🔌 Connecting to MSSQL... (Attempt 1/1)
+2025-08-11 14:51:30: 🔌 Connecting to MSSQL... (Attempt 1/1)
+2025-08-11 14:51:38: 🔌 Connecting to MSSQL... (Attempt 1/1)
+2025-08-11 14:51:51: 🔌 Connecting to MSSQL... (Attempt 1/1)
+2025-08-11 14:52:01: 🔌 Connecting to MSSQL... (Attempt 1/1)
+2025-08-11 14:52:03: Worker 10816 started on port 3000
+2025-08-11 14:52:03: Accessible on:
+2025-08-11 14:52:03:   http://172.16.151.128:3000
+2025-08-11 14:52:03: ✅ Redis adapter connected
+2025-08-11 14:52:03: ✅ Database connection successful!
+2025-08-11 14:52:03: Database connection successful
+2025-08-11 14:52:33: 🔌 Connecting to MSSQL... (Attempt 1/1)
+2025-08-11 14:52:36: Worker 6908 started on port 3000
+2025-08-11 14:52:36: Accessible on:
+2025-08-11 14:52:36:   http://172.16.151.128:3000
+2025-08-11 14:52:36: ✅ Redis adapter connected
+2025-08-11 14:52:36: ✅ Database connection successful!
+2025-08-11 14:52:36: Database connection successful
+2025-08-11 14:53:36: 🔄 Using existing DB connection pool
+2025-08-11 14:54:36: 🔄 Using existing DB connection pool
+2025-08-11 14:55:36: 🔄 Using existing DB connection pool
+2025-08-11 14:56:36: 🔄 Using existing DB connection pool
+2025-08-11 14:57:36: 🔄 Using existing DB connection pool
+2025-08-11 14:58:36: 🔄 Using existing DB connection pool
+2025-08-11 14:59:36: 🔄 Using existing DB connection pool
+2025-08-11 15:00:36: 🔄 Using existing DB connection pool
+2025-08-11 15:01:36: 🔄 Using existing DB connection pool
+2025-08-11 15:02:36: 🔄 Using existing DB connection pool
+2025-08-11 15:03:36: 🔄 Using existing DB connection pool
+2025-08-11 15:04:36: 🔄 Using existing DB connection pool
+2025-08-11 15:05:36: 🔄 Using existing DB connection pool
+2025-08-11 15:06:36: 🔄 Using existing DB connection pool
+2025-08-11 15:07:36: 🔄 Using existing DB connection pool
+2025-08-11 15:08:36: 🔄 Using existing DB connection pool
+2025-08-11 15:09:36: 🔄 Using existing DB connection pool
+2025-08-11 15:10:36: 🔄 Using existing DB connection pool
+2025-08-11 15:11:36: 🔄 Using existing DB connection pool
+2025-08-11 15:12:36: 🔄 Using existing DB connection pool
+2025-08-11 15:13:36: 🔄 Using existing DB connection pool
+2025-08-11 15:14:36: 🔄 Using existing DB connection pool
+2025-08-11 15:15:36: 🔄 Using existing DB connection pool
+2025-08-11 15:16:36: 🔄 Using existing DB connection pool
+2025-08-11 15:17:36: 🔄 Using existing DB connection pool
+2025-08-11 15:18:36: 🔄 Using existing DB connection pool
+2025-08-11 15:19:36: 🔄 Using existing DB connection pool
+2025-08-11 15:20:36: 🔄 Using existing DB connection pool
+2025-08-11 15:21:36: 🔄 Using existing DB connection pool
+2025-08-11 15:22:36: 🔄 Using existing DB connection pool
+2025-08-11 15:23:36: 🔄 Using existing DB connection pool
+2025-08-11 15:24:36: 🔄 Using existing DB connection pool
+2025-08-11 15:25:36: 🔄 Using existing DB connection pool
+2025-08-11 15:26:36: 🔄 Using existing DB connection pool
+2025-08-11 15:27:36: 🔄 Using existing DB connection pool
+2025-08-11 15:28:36: 🔄 Using existing DB connection pool
+2025-08-11 15:29:36: 🔄 Using existing DB connection pool
+2025-08-11 15:30:36: 🔄 Using existing DB connection pool
+2025-08-11 15:31:36: 🔄 Using existing DB connection pool
+2025-08-11 15:32:36: 🔄 Using existing DB connection pool
+2025-08-11 15:33:36: 🔄 Using existing DB connection pool
+2025-08-11 15:34:36: 🔄 Using existing DB connection pool
+2025-08-11 15:35:36: 🔄 Using existing DB connection pool
+2025-08-11 15:36:36: 🔄 Using existing DB connection pool
+2025-08-11 15:37:36: 🔄 Using existing DB connection pool
+2025-08-11 15:38:36: 🔄 Using existing DB connection pool
+2025-08-11 15:39:36: 🔄 Using existing DB connection pool
+2025-08-11 15:40:36: 🔄 Using existing DB connection pool
+2025-08-11 15:41:36: 🔄 Using existing DB connection pool
+2025-08-11 15:42:36: 🔄 Using existing DB connection pool
+2025-08-11 15:43:36: 🔄 Using existing DB connection pool
+2025-08-11 15:44:36: 🔄 Using existing DB connection pool
+2025-08-11 15:45:36: 🔄 Using existing DB connection pool
+2025-08-11 15:46:36: 🔄 Using existing DB connection pool
+2025-08-11 15:47:36: 🔄 Using existing DB connection pool
+2025-08-11 15:48:36: 🔄 Using existing DB connection pool
+2025-08-11 15:49:36: 🔄 Using existing DB connection pool
+2025-08-11 15:50:36: 🔄 Using existing DB connection pool
+2025-08-11 15:51:36: 🔄 Using existing DB connection pool
+2025-08-11 15:52:36: 🔄 Using existing DB connection pool
+2025-08-11 15:53:36: 🔄 Using existing DB connection pool
+2025-08-11 15:54:36: 🔄 Using existing DB connection pool
+2025-08-11 15:55:36: 🔄 Using existing DB connection pool
+2025-08-11 15:56:36: 🔄 Using existing DB connection pool
+2025-08-11 15:57:36: 🔄 Using existing DB connection pool
+2025-08-11 15:58:36: 🔄 Using existing DB connection pool
+2025-08-11 15:59:36: 🔄 Using existing DB connection pool
+2025-08-11 16:00:36: 🔄 Using existing DB connection pool
+2025-08-11 16:01:36: 🔄 Using existing DB connection pool
+2025-08-11 16:02:36: 🔄 Using existing DB connection pool
+2025-08-11 16:03:36: 🔄 Using existing DB connection pool
+2025-08-11 16:04:36: 🔄 Using existing DB connection pool
+2025-08-11 16:05:36: 🔄 Using existing DB connection pool
+2025-08-11 16:06:36: 🔄 Using existing DB connection pool
+2025-08-11 16:07:36: 🔄 Using existing DB connection pool
+2025-08-11 16:08:36: 🔄 Using existing DB connection pool
+2025-08-11 16:09:36: 🔄 Using existing DB connection pool
+2025-08-11 16:10:36: 🔄 Using existing DB connection pool
+2025-08-11 16:11:36: 🔄 Using existing DB connection pool
+2025-08-11 16:12:36: 🔄 Using existing DB connection pool
+2025-08-11 16:13:36: 🔄 Using existing DB connection pool
+2025-08-11 16:14:36: 🔄 Using existing DB connection pool
+2025-08-11 16:15:36: 🔄 Using existing DB connection pool
+2025-08-11 16:16:36: 🔄 Using existing DB connection pool
+2025-08-11 16:17:36: 🔄 Using existing DB connection pool
+2025-08-11 16:18:36: 🔄 Using existing DB connection pool
+2025-08-11 16:19:36: 🔄 Using existing DB connection pool
+2025-08-11 16:20:36: 🔄 Using existing DB connection pool
+2025-08-11 16:21:36: 🔄 Using existing DB connection pool
+2025-08-11 16:22:36: 🔄 Using existing DB connection pool
+2025-08-11 16:23:36: 🔄 Using existing DB connection pool
+2025-08-11 16:24:36: 🔄 Using existing DB connection pool
+2025-08-11 16:25:36: 🔄 Using existing DB connection pool
+2025-08-11 16:26:36: 🔄 Using existing DB connection pool
+2025-08-11 16:27:36: 🔄 Using existing DB connection pool
+2025-08-11 16:28:36: 🔄 Using existing DB connection pool
+2025-08-11 16:29:36: 🔄 Using existing DB connection pool
+2025-08-11 16:30:36: 🔄 Using existing DB connection pool
+2025-08-11 16:31:36: 🔄 Using existing DB connection pool
+2025-08-11 16:32:36: 🔄 Using existing DB connection pool
+2025-08-11 13:35:23: 🔌 Connecting to MSSQL... (Attempt 1/1)
+2025-08-11 13:35:27: 🔌 Connecting to MSSQL... (Attempt 1/1)
+2025-08-11 13:35:29: Worker 6112 started on port 3000
+2025-08-11 13:35:29: Accessible on:
+2025-08-11 13:35:29:   http://172.16.151.128:3000
+2025-08-11 13:35:29: ✅ Redis adapter connected
+2025-08-11 13:35:29: ✅ Database connection successful!
+2025-08-11 13:35:29: Database connection successful
+2025-08-11 13:36:29: 🔄 Using existing DB connection pool
+2025-08-11 13:37:29: 🔄 Using existing DB connection pool
+2025-08-11 13:38:29: 🔄 Using existing DB connection pool
+2025-08-11 13:39:29: 🔄 Using existing DB connection pool
+2025-08-11 13:40:25: 🔄 Using existing DB connection pool
+2025-08-11 13:40:25: Client connected: xKsJGlF7uKkSs5ahAAAB
+2025-08-11 13:40:25: ✅ New connection: xKsJGlF7uKkSs5ahAAAB
+2025-08-11 13:40:25: 🔗 xKsJGlF7uKkSs5ahAAAB joined room: saveRMForProdRoom
+2025-08-11 13:40:25: 🔗 xKsJGlF7uKkSs5ahAAAB joined room: trolleyUpdatesRoom
+2025-08-11 13:40:25: 🔗 xKsJGlF7uKkSs5ahAAAB joined room: QcCheckRoom
+2025-08-11 13:40:25: 🔄 Using existing DB connection pool
+2025-08-11 13:40:25: 🔄 Using existing DB connection pool
+2025-08-11 13:40:25: 🔄 Using existing DB connection pool
+2025-08-11 13:40:25: item : {
+  rmfp_id: 33974,
+  tro_id: '0004',
+  batch_after: '0000000001',
+  mat: '.14L300000120',
+  mat_name: 'มันเทศสีส้ม(ปอกเปลือก)หันเต๋า ? 0.7x0.7x0.7 cm',
+  production: 'M152 (Cup1)',
+  level_eu: null,
+  remaining_time: '0.58',
+  standard_time: '1.00',
+  remaining_rework_time: null,
+  standard_rework_time: '2.00',
+  rm_status: 'QcCheck',
+  dest: 'เข้าห้องเย็น',
+  weight_RM: 500,
+  tray_count: 50,
+  cooked_date: '2025-08-08 06:56:00',
+  rmit_date: '2025-08-08 13:29:00',
+  qc_date: '2025-08-08 13:30:55',
+  out_cold_date: '2025-08-08 06:58:22',
+  out_cold_date_two: null,
+  out_cold_date_three: null
+}
+2025-08-11 13:40:29: 🔄 Using existing DB connection pool
+2025-08-11 13:40:33: 🔌 Connecting to MSSQL... (Attempt 1/1)
+2025-08-11 13:40:34: Worker 5904 started on port 3000
+2025-08-11 13:40:34: Accessible on:
+2025-08-11 13:40:34:   http://172.16.151.128:3000
+2025-08-11 13:40:34: ✅ Redis adapter connected
+2025-08-11 13:40:34: ✅ Database connection successful!
+2025-08-11 13:40:34: Database connection successful
+2025-08-11 13:40:34: Client connected: _SIKRACwj8FTQgu4AAAB
+2025-08-11 13:40:34: ✅ New connection: _SIKRACwj8FTQgu4AAAB
+2025-08-11 13:40:34: Client connected: YjdAOph-1G-C3RWKAAAE
+2025-08-11 13:40:34: ✅ New connection: YjdAOph-1G-C3RWKAAAE
+2025-08-11 13:40:34: Client connected: sQygULoGRO_fkt6vAAAH
+2025-08-11 13:40:34: ✅ New connection: sQygULoGRO_fkt6vAAAH
+2025-08-11 13:40:35: 🔄 Using existing DB connection pool
+2025-08-11 13:41:08: Client disconnected: YjdAOph-1G-C3RWKAAAE
+2025-08-11 13:41:08: ⚠️ Disconnected: YjdAOph-1G-C3RWKAAAE (client namespace disconnect)
+2025-08-11 13:41:08: ⚠️ YjdAOph-1G-C3RWKAAAE disconnected: client namespace disconnect
+2025-08-11 13:41:08: 🔄 Using existing DB connection pool
+2025-08-11 13:41:08: Client connected: thIa9snGZYkOewyeAAAK
+2025-08-11 13:41:08: ✅ New connection: thIa9snGZYkOewyeAAAK
+2025-08-11 13:41:08: Client connected: PPhv_e72RqB7dE2YAAAN
+2025-08-11 13:41:08: ✅ New connection: PPhv_e72RqB7dE2YAAAN
+2025-08-11 13:41:08: 🔄 Using existing DB connection pool
+2025-08-11 13:41:08: 🔄 Using existing DB connection pool
+2025-08-11 13:41:08: 🔄 Using existing DB connection pool
+2025-08-11 13:41:09: 🔄 Using existing DB connection pool
+2025-08-11 13:41:10: 🔄 Using existing DB connection pool
+2025-08-11 13:41:15: 🔄 Using existing DB connection pool
+2025-08-11 13:41:16: 🔄 Using existing DB connection pool
+2025-08-11 13:41:16: 🔄 Using existing DB connection pool
+2025-08-11 13:41:17: 🔄 Using existing DB connection pool
+2025-08-11 13:41:17: 🔄 Using existing DB connection pool
+2025-08-11 13:41:17: 🔄 Using existing DB connection pool
+2025-08-11 13:41:31: 🔄 Using existing DB connection pool
+2025-08-11 13:41:34: 🔄 Using existing DB connection pool
+2025-08-11 13:41:37: 🔄 Using existing DB connection pool
+2025-08-11 13:41:37: 🔄 Using existing DB connection pool
+2025-08-11 13:41:48: 🔄 Using existing DB connection pool
+2025-08-11 13:41:48: 🔄 Using existing DB connection pool
+2025-08-11 13:41:48: 🔄 Using existing DB connection pool
+2025-08-11 13:41:54: ♻️ Terminating stale connection: _SIKRACwj8FTQgu4AAAB
+2025-08-11 13:41:54: Client disconnected: _SIKRACwj8FTQgu4AAAB
+2025-08-11 13:41:54: ⚠️ Disconnected: _SIKRACwj8FTQgu4AAAB (server namespace disconnect)
+2025-08-11 13:41:54: ⚠️ _SIKRACwj8FTQgu4AAAB disconnected: server namespace disconnect
+2025-08-11 13:41:54: ♻️ Terminating stale connection: sQygULoGRO_fkt6vAAAH
+2025-08-11 13:41:54: Client disconnected: sQygULoGRO_fkt6vAAAH
+2025-08-11 13:41:54: ⚠️ Disconnected: sQygULoGRO_fkt6vAAAH (server namespace disconnect)
+2025-08-11 13:41:54: ⚠️ sQygULoGRO_fkt6vAAAH disconnected: server namespace disconnect
+2025-08-11 13:42:03: 🔄 Using existing DB connection pool
+2025-08-11 13:42:03: 🔄 Using existing DB connection pool
+2025-08-11 13:42:03: 🔄 Using existing DB connection pool
+2025-08-11 13:42:03: CookedDateTime : 11/08/2025 13:36
+2025-08-11 13:42:03: 🔄 Using existing DB connection pool
+2025-08-11 13:42:03: CookedDateTime : 11/08/2025 13:36
+2025-08-11 13:42:03: 🔄 Using existing DB connection pool
+2025-08-11 13:42:04: CookedDateTime : 11/08/2025 13:36
+2025-08-11 13:42:04: 🔄 Using existing DB connection pool
+2025-08-11 13:42:04: CookedDateTime : 11/08/2025 13:36
+2025-08-11 13:42:04: 🔄 Using existing DB connection pool
+2025-08-11 13:42:04: CookedDateTime : 11/08/2025 13:36
+2025-08-11 13:42:05: 🔄 Using existing DB connection pool
+2025-08-11 13:42:05: CookedDateTime : 11/08/2025 13:36
+2025-08-11 13:42:05: 🔄 Using existing DB connection pool
+2025-08-11 13:42:05: CookedDateTime : 11/08/2025 13:36
+2025-08-11 13:42:05: 🔄 Using existing DB connection pool
+2025-08-11 13:42:05: CookedDateTime : 11/08/2025 13:36
+2025-08-11 13:42:06: 🔄 Using existing DB connection pool
+2025-08-11 13:42:06: CookedDateTime : 11/08/2025 13:36
+2025-08-11 13:42:06: 🔄 Using existing DB connection pool
+2025-08-11 13:42:06: 🔄 Using existing DB connection pool
+2025-08-11 13:42:06: 🔄 Using existing DB connection pool
+2025-08-11 13:42:06: 🔄 Using existing DB connection pool
+2025-08-11 13:42:08: 🔄 Using existing DB connection pool
+2025-08-11 13:42:12: 🔄 Using existing DB connection pool
+2025-08-11 13:42:12: 🔄 Using existing DB connection pool
+2025-08-11 13:42:12: 🔄 Using existing DB connection pool
+2025-08-11 13:42:12: Client connected: ir6iGu3zQHZ7sb_yAAAR
+2025-08-11 13:42:12: ✅ New connection: ir6iGu3zQHZ7sb_yAAAR
+2025-08-11 13:42:12: 🔗 ir6iGu3zQHZ7sb_yAAAR joined room: saveRMForProdRoom
+2025-08-11 13:42:12: 🔄 Using existing DB connection pool
+2025-08-11 13:42:12: 🔄 Using existing DB connection pool
+2025-08-11 13:42:13: Client disconnected: ir6iGu3zQHZ7sb_yAAAR
+2025-08-11 13:42:13: ⚠️ Disconnected: ir6iGu3zQHZ7sb_yAAAR (client namespace disconnect)
+2025-08-11 13:42:13: ⚠️ ir6iGu3zQHZ7sb_yAAAR disconnected: client namespace disconnect
+2025-08-11 13:42:13: 🔄 Using existing DB connection pool
+2025-08-11 13:42:13: 🔄 Using existing DB connection pool
+2025-08-11 13:42:13: 🔄 Using existing DB connection pool
+2025-08-11 13:42:13: Client connected: PB83hEByH_78G2W3AAAV
+2025-08-11 13:42:13: ✅ New connection: PB83hEByH_78G2W3AAAV
+2025-08-11 13:42:13: 🔗 PB83hEByH_78G2W3AAAV joined room: QcCheckRoom
+2025-08-11 13:42:13: 🔄 Using existing DB connection pool
+2025-08-11 13:42:13: 🔄 Using existing DB connection pool
+2025-08-11 13:42:15: Client disconnected: PB83hEByH_78G2W3AAAV
+2025-08-11 13:42:15: ⚠️ Disconnected: PB83hEByH_78G2W3AAAV (client namespace disconnect)
+2025-08-11 13:42:15: ⚠️ PB83hEByH_78G2W3AAAV disconnected: client namespace disconnect
+2025-08-11 13:42:15: 🔄 Using existing DB connection pool
+2025-08-11 13:42:15: Client connected: 31pqm3nz997bOcz6AAAZ
+2025-08-11 13:42:15: ✅ New connection: 31pqm3nz997bOcz6AAAZ
+2025-08-11 13:42:15: 🔗 31pqm3nz997bOcz6AAAZ joined room: saveRMForProdRoom
+2025-08-11 13:42:15: CookedDateTime : 11/08/2025 13:36
+2025-08-11 13:42:15: 🔄 Using existing DB connection pool
+2025-08-11 13:42:15: CookedDateTime : 11/08/2025 13:36
+2025-08-11 13:42:15: 🔄 Using existing DB connection pool
+2025-08-11 13:42:15: CookedDateTime : 11/08/2025 13:36
+2025-08-11 13:42:15: 🔄 Using existing DB connection pool
+2025-08-11 13:42:15: CookedDateTime : 11/08/2025 13:36
+2025-08-11 13:42:15: Client disconnected: 31pqm3nz997bOcz6AAAZ
+2025-08-11 13:42:15: ⚠️ Disconnected: 31pqm3nz997bOcz6AAAZ (client namespace disconnect)
+2025-08-11 13:42:15: ⚠️ 31pqm3nz997bOcz6AAAZ disconnected: client namespace disconnect
+2025-08-11 13:42:15: 🔄 Using existing DB connection pool
+2025-08-11 13:42:15: Client connected: s573GOfcwLn2s1udAAAd
+2025-08-11 13:42:15: ✅ New connection: s573GOfcwLn2s1udAAAd
+2025-08-11 13:42:15: 🔄 Using existing DB connection pool
+2025-08-11 13:42:15: 🔗 s573GOfcwLn2s1udAAAd joined room: trolleyUpdateRoom
+2025-08-11 13:42:17: Client disconnected: s573GOfcwLn2s1udAAAd
+2025-08-11 13:42:17: ⚠️ Disconnected: s573GOfcwLn2s1udAAAd (transport close)
+2025-08-11 13:42:17: ⚠️ s573GOfcwLn2s1udAAAd disconnected: transport close
+2025-08-11 13:42:18: Client connected: RdjixuJa9UisciOEAAAi
+2025-08-11 13:42:18: ✅ New connection: RdjixuJa9UisciOEAAAi
+2025-08-11 13:42:18: Client connected: giqT_H8ebnx2MfOBAAAk
+2025-08-11 13:42:18: ✅ New connection: giqT_H8ebnx2MfOBAAAk
+2025-08-11 13:42:18: Client connected: WmVgpISuZhQVRFfTAAAm
+2025-08-11 13:42:18: ✅ New connection: WmVgpISuZhQVRFfTAAAm
+2025-08-11 13:42:18: 🔄 Using existing DB connection pool
+2025-08-11 13:42:18: Client connected: sOP9jUmeeB1e6myzAAAq
+2025-08-11 13:42:18: ✅ New connection: sOP9jUmeeB1e6myzAAAq
+2025-08-11 13:42:18: 🔗 sOP9jUmeeB1e6myzAAAq joined room: trolleyUpdateRoom
+2025-08-11 13:42:18: 🔄 Using existing DB connection pool
+2025-08-11 13:42:18: 🔄 Using existing DB connection pool
+2025-08-11 13:42:18: 🔄 Using existing DB connection pool
+2025-08-11 13:42:28: ♻️ Terminating stale connection: thIa9snGZYkOewyeAAAK
+2025-08-11 13:42:28: Client disconnected: thIa9snGZYkOewyeAAAK
+2025-08-11 13:42:28: ⚠️ Disconnected: thIa9snGZYkOewyeAAAK (server namespace disconnect)
+2025-08-11 13:42:28: ⚠️ thIa9snGZYkOewyeAAAK disconnected: server namespace disconnect
+2025-08-11 13:42:28: ♻️ Terminating stale connection: PPhv_e72RqB7dE2YAAAN
+2025-08-11 13:42:28: Client disconnected: PPhv_e72RqB7dE2YAAAN
+2025-08-11 13:42:28: ⚠️ Disconnected: PPhv_e72RqB7dE2YAAAN (server namespace disconnect)
+2025-08-11 13:42:28: ⚠️ PPhv_e72RqB7dE2YAAAN disconnected: server namespace disconnect
+2025-08-11 13:42:29: Client connected: c6r5ayCJbqTxPTpuAAAt
+2025-08-11 13:42:29: ✅ New connection: c6r5ayCJbqTxPTpuAAAt
+2025-08-11 13:42:29: Client connected: hEnUty9WcVKDELmrAAAw
+2025-08-11 13:42:29: ✅ New connection: hEnUty9WcVKDELmrAAAw
+2025-08-11 13:42:30: 🔄 Using existing DB connection pool
+2025-08-11 13:42:34: 🔄 Using existing DB connection pool
+2025-08-11 13:42:37: 🔄 Using existing DB connection pool
+2025-08-11 13:42:37: 🔄 Using existing DB connection pool
+2025-08-11 13:42:37: 🔄 Using existing DB connection pool
+2025-08-11 13:42:38: 🔄 Using existing DB connection pool
+2025-08-11 13:42:38: Client disconnected: hEnUty9WcVKDELmrAAAw
+2025-08-11 13:42:38: ⚠️ Disconnected: hEnUty9WcVKDELmrAAAw (client namespace disconnect)
+2025-08-11 13:42:38: ⚠️ hEnUty9WcVKDELmrAAAw disconnected: client namespace disconnect
+2025-08-11 13:42:38: Client disconnected: c6r5ayCJbqTxPTpuAAAt
+2025-08-11 13:42:38: ⚠️ Disconnected: c6r5ayCJbqTxPTpuAAAt (client namespace disconnect)
+2025-08-11 13:42:38: ⚠️ c6r5ayCJbqTxPTpuAAAt disconnected: client namespace disconnect
+2025-08-11 13:42:38: 🔄 Using existing DB connection pool
+2025-08-11 13:42:38: 🔄 Using existing DB connection pool
+2025-08-11 13:42:38: 🔄 Using existing DB connection pool
+2025-08-11 13:42:38: 🔄 Using existing DB connection pool
+2025-08-11 13:42:43: Client disconnected: sOP9jUmeeB1e6myzAAAq
+2025-08-11 13:42:43: ⚠️ Disconnected: sOP9jUmeeB1e6myzAAAq (transport close)
+2025-08-11 13:42:43: ⚠️ sOP9jUmeeB1e6myzAAAq disconnected: transport close
+2025-08-11 13:42:43: Client disconnected: RdjixuJa9UisciOEAAAi
+2025-08-11 13:42:43: ⚠️ Disconnected: RdjixuJa9UisciOEAAAi (transport error)
+2025-08-11 13:42:43: ⚠️ RdjixuJa9UisciOEAAAi disconnected: transport error
+2025-08-11 13:42:43: Client disconnected: giqT_H8ebnx2MfOBAAAk
+2025-08-11 13:42:43: ⚠️ Disconnected: giqT_H8ebnx2MfOBAAAk (transport error)
+2025-08-11 13:42:43: ⚠️ giqT_H8ebnx2MfOBAAAk disconnected: transport error
+2025-08-11 13:42:43: Client disconnected: WmVgpISuZhQVRFfTAAAm
+2025-08-11 13:42:43: ⚠️ Disconnected: WmVgpISuZhQVRFfTAAAm (transport error)
+2025-08-11 13:42:43: ⚠️ WmVgpISuZhQVRFfTAAAm disconnected: transport error
+2025-08-11 13:43:34: 🔄 Using existing DB connection pool
+2025-08-11 13:44:34: 🔄 Using existing DB connection pool
+2025-08-11 13:45:34: 🔄 Using existing DB connection pool
+2025-08-11 13:46:34: 🔄 Using existing DB connection pool
+2025-08-11 13:47:34: 🔄 Using existing DB connection pool
+2025-08-11 13:48:34: 🔄 Using existing DB connection pool
+2025-08-12 18:27:55: 🔄 Using existing DB connection pool
+2025-08-12 18:28:55: 🔄 Using existing DB connection pool
+2025-08-12 18:29:55: 🔄 Using existing DB connection pool
+2025-08-12 18:30:55: 🔄 Using existing DB connection pool
+2025-08-12 18:31:55: 🔄 Using existing DB connection pool
+2025-08-12 18:32:55: 🔄 Using existing DB connection pool
+2025-08-12 18:33:55: 🔄 Using existing DB connection pool
+2025-08-12 18:34:55: 🔄 Using existing DB connection pool
+2025-08-12 18:35:55: 🔄 Using existing DB connection pool
+2025-08-12 18:36:55: 🔄 Using existing DB connection pool
+2025-08-12 18:37:55: 🔄 Using existing DB connection pool
+2025-08-12 18:38:55: 🔄 Using existing DB connection pool
+2025-08-12 18:39:55: 🔄 Using existing DB connection pool
+2025-08-12 18:40:55: 🔄 Using existing DB connection pool
+2025-08-12 18:41:55: 🔄 Using existing DB connection pool
+2025-08-12 18:42:55: 🔄 Using existing DB connection pool
+2025-08-12 18:43:55: 🔄 Using existing DB connection pool
+2025-08-12 18:44:55: 🔄 Using existing DB connection pool
+2025-08-12 18:45:55: 🔄 Using existing DB connection pool
+2025-08-12 18:46:55: 🔄 Using existing DB connection pool
+2025-08-12 18:47:55: 🔄 Using existing DB connection pool
+2025-08-12 18:48:55: 🔄 Using existing DB connection pool
+2025-08-12 18:49:55: 🔄 Using existing DB connection pool
+2025-08-12 18:50:55: 🔄 Using existing DB connection pool
+2025-08-12 18:51:55: 🔄 Using existing DB connection pool
+2025-08-12 18:52:55: 🔄 Using existing DB connection pool
+2025-08-12 18:53:55: 🔄 Using existing DB connection pool
+2025-08-12 18:54:55: 🔄 Using existing DB connection pool
+2025-08-12 18:55:55: 🔄 Using existing DB connection pool
+2025-08-12 18:56:55: 🔄 Using existing DB connection pool
+2025-08-12 18:57:55: 🔄 Using existing DB connection pool
+2025-08-12 18:58:55: 🔄 Using existing DB connection pool
+2025-08-12 18:59:55: 🔄 Using existing DB connection pool
+2025-08-12 19:00:55: 🔄 Using existing DB connection pool
+2025-08-12 19:01:55: 🔄 Using existing DB connection pool
+2025-08-12 19:02:40: 🔌 Connecting to MSSQL... (Attempt 1/1)
+2025-08-12 19:02:42: Worker 9168 started on port 3000
+2025-08-12 19:02:42: Accessible on:
+2025-08-12 19:02:42:   http://172.16.151.128:3000
+2025-08-12 19:02:42: ✅ Redis adapter connected
+2025-08-12 19:02:43: ✅ Database connection successful!
+2025-08-12 19:02:43: Database connection successful
+2025-08-12 19:03:42: 🔄 Using existing DB connection pool
+2025-08-12 19:04:42: 🔄 Using existing DB connection pool
+2025-08-12 19:05:42: 🔄 Using existing DB connection pool
+2025-08-12 19:06:42: 🔄 Using existing DB connection pool
+2025-08-12 19:07:42: 🔄 Using existing DB connection pool
+2025-08-12 19:08:42: 🔄 Using existing DB connection pool
+2025-08-12 19:09:42: 🔄 Using existing DB connection pool
+2025-08-12 19:10:42: 🔄 Using existing DB connection pool
+2025-08-12 19:11:42: 🔄 Using existing DB connection pool
+2025-08-12 19:12:42: 🔄 Using existing DB connection pool
+2025-08-12 19:13:30: 🔌 Connecting to MSSQL... (Attempt 1/1)
+2025-08-12 19:13:40: 🔌 Connecting to MSSQL... (Attempt 1/1)
+2025-08-12 19:13:41: Worker 13556 started on port 3000
+2025-08-12 19:13:41: Accessible on:
+2025-08-12 19:13:41:   http://172.16.151.128:3000
+2025-08-12 19:13:41: ✅ Redis adapter connected
+2025-08-12 19:13:41: ✅ Database connection successful!
+2025-08-12 19:13:41: Database connection successful
+2025-08-12 19:13:48: 🔄 Using existing DB connection pool
+2025-08-12 19:13:48: Client connected: OeVMcMVxHNZBv_6sAAAC
+2025-08-12 19:13:48: ✅ New connection: OeVMcMVxHNZBv_6sAAAC
+2025-08-12 19:13:48: 🔗 OeVMcMVxHNZBv_6sAAAC joined room: saveRMForProdRoom
+2025-08-12 19:13:48: 🔗 OeVMcMVxHNZBv_6sAAAC joined room: trolleyUpdatesRoom
+2025-08-12 19:13:48: 🔗 OeVMcMVxHNZBv_6sAAAC joined room: QcCheckRoom
+2025-08-12 19:13:50: Client disconnected: OeVMcMVxHNZBv_6sAAAC
+2025-08-12 19:13:50: ⚠️ Disconnected: OeVMcMVxHNZBv_6sAAAC (client namespace disconnect)
+2025-08-12 19:13:50: ⚠️ OeVMcMVxHNZBv_6sAAAC disconnected: client namespace disconnect
+2025-08-12 19:14:41: 🔄 Using existing DB connection pool
+2025-08-12 19:15:41: 🔄 Using existing DB connection pool
+2025-08-12 19:16:41: 🔄 Using existing DB connection pool
+2025-08-12 19:17:41: 🔄 Using existing DB connection pool
+2025-08-12 19:18:41: 🔄 Using existing DB connection pool
+2025-08-12 19:19:41: 🔄 Using existing DB connection pool
+2025-08-12 19:20:41: 🔄 Using existing DB connection pool
+2025-08-12 19:21:41: 🔄 Using existing DB connection pool
+2025-08-12 19:22:41: 🔄 Using existing DB connection pool
+2025-08-12 19:23:41: 🔄 Using existing DB connection pool
+2025-08-12 19:24:41: 🔄 Using existing DB connection pool
+2025-08-12 19:25:41: 🔄 Using existing DB connection pool
+2025-08-12 19:26:41: 🔄 Using existing DB connection pool
+2025-08-12 19:27:41: 🔄 Using existing DB connection pool
+2025-08-12 19:28:41: 🔄 Using existing DB connection pool
+2025-08-12 19:29:41: 🔄 Using existing DB connection pool
+2025-08-12 19:30:41: 🔄 Using existing DB connection pool
+2025-08-12 19:31:41: 🔄 Using existing DB connection pool
+2025-08-12 19:32:41: 🔄 Using existing DB connection pool
+2025-08-12 19:33:41: 🔄 Using existing DB connection pool
+2025-08-12 19:34:41: 🔄 Using existing DB connection pool
+2025-08-12 19:35:41: 🔄 Using existing DB connection pool
+2025-08-12 19:35:58: 🔌 Connecting to MSSQL... (Attempt 1/1)
+2025-08-12 19:36:00: Worker 7880 started on port 3000
+2025-08-12 19:36:00: Accessible on:
+2025-08-12 19:36:00:   http://172.16.151.128:3000
+2025-08-12 19:36:00: ✅ Redis adapter connected
+2025-08-12 19:36:01: ✅ Database connection successful!
+2025-08-12 19:36:01: Database connection successful
+2025-08-12 19:36:01: 🔄 Using existing DB connection pool
+2025-08-12 19:36:01: Client connected: Y9iStof0BrMojzqUAAAB
+2025-08-12 19:36:01: ✅ New connection: Y9iStof0BrMojzqUAAAB
+2025-08-12 19:36:01: 🔄 Using existing DB connection pool
+2025-08-12 19:36:03: 🔄 Using existing DB connection pool
+2025-08-12 19:36:03: 🔄 Using existing DB connection pool
+2025-08-12 19:36:07: 🔄 Using existing DB connection pool
+2025-08-12 19:37:00: 🔄 Using existing DB connection pool
+2025-08-12 19:37:21: ♻️ Terminating stale connection: Y9iStof0BrMojzqUAAAB
+2025-08-12 19:37:21: Client disconnected: Y9iStof0BrMojzqUAAAB
+2025-08-12 19:37:21: ⚠️ Disconnected: Y9iStof0BrMojzqUAAAB (server namespace disconnect)
+2025-08-12 19:37:21: ⚠️ Y9iStof0BrMojzqUAAAB disconnected: server namespace disconnect
+2025-08-12 19:38:00: 🔄 Using existing DB connection pool
+2025-08-12 19:39:00: 🔄 Using existing DB connection pool
+2025-08-12 19:40:00: 🔄 Using existing DB connection pool
+2025-08-12 19:41:00: 🔄 Using existing DB connection pool
+2025-08-12 19:42:00: 🔄 Using existing DB connection pool
+2025-08-12 19:43:00: 🔄 Using existing DB connection pool
+2025-08-12 19:43:00: ล้าง Slot ที่หมดอายุแล้ว (1 รายการ)
+2025-08-12 19:44:00: 🔄 Using existing DB connection pool
+2025-08-12 19:45:00: 🔄 Using existing DB connection pool
+2025-08-12 19:46:00: 🔄 Using existing DB connection pool
+2025-08-12 19:47:00: 🔄 Using existing DB connection pool
+2025-08-12 19:48:00: 🔄 Using existing DB connection pool
+2025-08-12 19:48:51: 🔄 Using existing DB connection pool
+2025-08-12 19:48:57: 🔌 Connecting to MSSQL... (Attempt 1/1)
+2025-08-12 19:49:00: Worker 2420 started on port 3000
+2025-08-12 19:49:00: Accessible on:
+2025-08-12 19:49:00:   http://172.16.151.128:3000
+2025-08-12 19:49:00: ✅ Redis adapter connected
+2025-08-12 19:49:01: ✅ Database connection successful!
+2025-08-12 19:49:01: Database connection successful
+2025-08-12 19:49:07: 🔌 Connecting to MSSQL... (Attempt 1/1)
+2025-08-12 19:49:09: Worker 1572 started on port 3000
+2025-08-12 19:49:09: Accessible on:
+2025-08-12 19:49:09:   http://172.16.151.128:3000
+2025-08-12 19:49:09: ✅ Redis adapter connected
+2025-08-12 19:49:09: ✅ Database connection successful!
+2025-08-12 19:49:09: Database connection successful
+2025-08-12 19:50:08: 🔄 Using existing DB connection pool

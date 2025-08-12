@@ -773,6 +773,7 @@ const DataReviewSAP = ({ open, onClose, material, batch }) => {
                   }}
                   maxDateTime={dayjs()} // ห้ามเลือกเวลาในอนาคต
                   ampm={false} // ใช้รูปแบบ 24 ชั่วโมง (ไม่มี AM/PM)
+                  timeSteps={{ minutes: 1 }}
                   slotProps={{
                     textField: {
                       fullWidth: true,

@@ -11,7 +11,7 @@ async function resetRSRV() {
         UPDATE [dbo].[Trolley]
         SET tro_status = '1', rsrv_timestamp = NULL
         WHERE tro_status = 'rsrv'
-          AND DATEDIFF(MINUTE, rsrv_timestamp, GETDATE()) > 5;
+          AND DATEDIFF(MINUTE, rsrv_timestamp, GETDATE()) > 1;
       `);
 
     const rowsAffected = result.rowsAffected[0];
@@ -33,3 +33,4 @@ resetRSRV();
 
 // รันทุก 1 นาที
 cron.schedule("* * * * *", resetRSRV);
+

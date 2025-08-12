@@ -1,0 +1,738 @@
+2025-08-11 13:52:53: (node:11780) [DEP0123] DeprecationWarning: Setting the TLS ServerName to an IP address is not permitted by RFC 6066. This will be ignored in a future version.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+2025-08-11 13:55:17: (node:2016) [DEP0123] DeprecationWarning: Setting the TLS ServerName to an IP address is not permitted by RFC 6066. This will be ignored in a future version.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+2025-08-11 13:56:23: SQL error RequestError: Incorrect syntax near 'rmm'.
+    at handleError (C:\Code\PFCM\backend\node_modules\mssql\lib\tedious\request.js:384:15)
+    at Connection.emit (node:events:518:28)
+    at Connection.emit (C:\Code\PFCM\backend\node_modules\tedious\lib\connection.js:970:18)
+    at RequestTokenHandler.onErrorMessage (C:\Code\PFCM\backend\node_modules\tedious\lib\token\handler.js:284:21)
+    at Readable.<anonymous> (C:\Code\PFCM\backend\node_modules\tedious\lib\token\token-stream-parser.js:19:33)
+    at Readable.emit (node:events:518:28)
+    at addChunk (node:internal/streams/readable:561:12)
+    at readableAddChunkPushObjectMode (node:internal/streams/readable:538:3)
+    at Readable.push (node:internal/streams/readable:393:5)
+    at nextAsync (node:internal/streams/from:194:22) {
+  code: 'EREQUEST',
+  originalError: Error: Incorrect syntax near 'rmm'.
+      at handleError (C:\Code\PFCM\backend\node_modules\mssql\lib\tedious\request.js:382:19)
+      at Connection.emit (node:events:518:28)
+      at Connection.emit (C:\Code\PFCM\backend\node_modules\tedious\lib\connection.js:970:18)
+      at RequestTokenHandler.onErrorMessage (C:\Code\PFCM\backend\node_modules\tedious\lib\token\handler.js:284:21)
+      at Readable.<anonymous> (C:\Code\PFCM\backend\node_modules\tedious\lib\token\token-stream-parser.js:19:33)
+      at Readable.emit (node:events:518:28)
+      at addChunk (node:internal/streams/readable:561:12)
+      at readableAddChunkPushObjectMode (node:internal/streams/readable:538:3)
+      at Readable.push (node:internal/streams/readable:393:5)
+      at nextAsync (node:internal/streams/from:194:22) {
+    info: ErrorMessageToken {
+      name: 'ERROR',
+      handlerName: 'onErrorMessage',
+      number: 102,
+      state: 1,
+      class: 15,
+      message: "Incorrect syntax near 'rmm'.",
+      serverName: 'DESKTOP-P5JN901\\SQLEXPRESS',
+      procName: '',
+      lineNumber: 24
+    }
+  },
+  number: 102,
+  lineNumber: 24,
+  state: 1,
+  class: 15,
+  serverName: 'DESKTOP-P5JN901\\SQLEXPRESS',
+  procName: '',
+  precedingErrors: []
+}
+2025-08-11 14:11:07: (node:10660) [DEP0123] DeprecationWarning: Setting the TLS ServerName to an IP address is not permitted by RFC 6066. This will be ignored in a future version.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+2025-08-11 14:11:54: (node:2400) [DEP0123] DeprecationWarning: Setting the TLS ServerName to an IP address is not permitted by RFC 6066. This will be ignored in a future version.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+2025-08-11 14:14:03: (node:8132) [DEP0123] DeprecationWarning: Setting the TLS ServerName to an IP address is not permitted by RFC 6066. This will be ignored in a future version.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+2025-08-11 14:15:13: (node:11504) [DEP0123] DeprecationWarning: Setting the TLS ServerName to an IP address is not permitted by RFC 6066. This will be ignored in a future version.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+2025-08-11 14:15:53: (node:9052) [DEP0123] DeprecationWarning: Setting the TLS ServerName to an IP address is not permitted by RFC 6066. This will be ignored in a future version.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+2025-08-11 14:26:34: (node:7932) [DEP0123] DeprecationWarning: Setting the TLS ServerName to an IP address is not permitted by RFC 6066. This will be ignored in a future version.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+2025-08-11 14:26:55: (node:4116) [DEP0123] DeprecationWarning: Setting the TLS ServerName to an IP address is not permitted by RFC 6066. This will be ignored in a future version.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+2025-08-11 14:27:17: ❌ Redis connection error: ConnectionTimeoutError: Connection timeout
+    at Socket.onTimeout (C:\Code\PFCM\backend\node_modules\@redis\client\dist\lib\client\socket.js:180:46)
+    at Object.onceWrapper (node:events:632:28)
+    at Socket.emit (node:events:518:28)
+    at Socket._onTimeout (node:net:604:8)
+    at listOnTimeout (node:internal/timers:588:17)
+    at process.processTimers (node:internal/timers:523:7)
+2025-08-11 14:27:25: (node:2892) [DEP0123] DeprecationWarning: Setting the TLS ServerName to an IP address is not permitted by RFC 6066. This will be ignored in a future version.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+2025-08-11 14:35:14: (node:10716) [DEP0123] DeprecationWarning: Setting the TLS ServerName to an IP address is not permitted by RFC 6066. This will be ignored in a future version.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+2025-08-11 14:38:39: (node:1316) [DEP0123] DeprecationWarning: Setting the TLS ServerName to an IP address is not permitted by RFC 6066. This will be ignored in a future version.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+2025-08-11 14:38:40: Error saving materials: ReferenceError: sql is not defined
+    at C:\Code\PFCM\backend\routes\RawmatRoutes.js:1628:5
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+2025-08-11 14:40:26: (node:9820) [DEP0123] DeprecationWarning: Setting the TLS ServerName to an IP address is not permitted by RFC 6066. This will be ignored in a future version.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+2025-08-11 14:40:34: (node:12268) [DEP0123] DeprecationWarning: Setting the TLS ServerName to an IP address is not permitted by RFC 6066. This will be ignored in a future version.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+2025-08-11 14:40:35: Rollback failed: TransactionError: Transaction has been aborted.
+    at Transaction._rollback (C:\Code\PFCM\backend\node_modules\mssql\lib\base\transaction.js:241:37)
+    at Transaction._rollback (C:\Code\PFCM\backend\node_modules\mssql\lib\tedious\transaction.js:77:11)
+    at C:\Code\PFCM\backend\node_modules\mssql\lib\base\transaction.js:225:19
+    at new Promise (<anonymous>)
+    at Transaction.rollback (C:\Code\PFCM\backend\node_modules\mssql\lib\base\transaction.js:224:12)
+    at C:\Code\PFCM\backend\routes\RawmatRoutes.js:1715:27
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5) {
+  code: 'EABORT'
+}
+2025-08-11 14:40:35: Error saving materials: RequestError: The incoming tabular data stream (TDS) remote procedure call (RPC) protocol stream is incorrect. Table-valued parameter "@MatList", to a parameterized string has no table type defined.
+    at handleError (C:\Code\PFCM\backend\node_modules\mssql\lib\tedious\request.js:384:15)
+    at Connection.emit (node:events:518:28)
+    at Connection.emit (C:\Code\PFCM\backend\node_modules\tedious\lib\connection.js:970:18)
+    at RequestTokenHandler.onErrorMessage (C:\Code\PFCM\backend\node_modules\tedious\lib\token\handler.js:284:21)
+    at Readable.<anonymous> (C:\Code\PFCM\backend\node_modules\tedious\lib\token\token-stream-parser.js:19:33)
+    at Readable.emit (node:events:518:28)
+    at addChunk (node:internal/streams/readable:561:12)
+    at readableAddChunkPushObjectMode (node:internal/streams/readable:538:3)
+    at Readable.push (node:internal/streams/readable:393:5)
+    at nextAsync (node:internal/streams/from:194:22) {
+  code: 'EREQUEST',
+  originalError: Error: The incoming tabular data stream (TDS) remote procedure call (RPC) protocol stream is incorrect. Table-valued parameter "@MatList", to a parameterized string has no table type defined.
+      at handleError (C:\Code\PFCM\backend\node_modules\mssql\lib\tedious\request.js:382:19)
+      at Connection.emit (node:events:518:28)
+      at Connection.emit (C:\Code\PFCM\backend\node_modules\tedious\lib\connection.js:970:18)
+      at RequestTokenHandler.onErrorMessage (C:\Code\PFCM\backend\node_modules\tedious\lib\token\handler.js:284:21)
+      at Readable.<anonymous> (C:\Code\PFCM\backend\node_modules\tedious\lib\token\token-stream-parser.js:19:33)
+      at Readable.emit (node:events:518:28)
+      at addChunk (node:internal/streams/readable:561:12)
+      at readableAddChunkPushObjectMode (node:internal/streams/readable:538:3)
+      at Readable.push (node:internal/streams/readable:393:5)
+      at nextAsync (node:internal/streams/from:194:22) {
+    info: ErrorMessageToken {
+      name: 'ERROR',
+      handlerName: 'onErrorMessage',
+      number: 8059,
+      state: 1,
+      class: 16,
+      message: 'The incoming tabular data stream (TDS) remote procedure call (RPC) protocol stream is incorrect. Table-valued parameter "@MatList", to a parameterized string has no table type defined.',
+      serverName: 'DESKTOP-P5JN901\\SQLEXPRESS',
+      procName: '',
+      lineNumber: 1
+    }
+  },
+  number: 8059,
+  lineNumber: 1,
+  state: 1,
+  class: 16,
+  serverName: 'DESKTOP-P5JN901\\SQLEXPRESS',
+  procName: '',
+  precedingErrors: []
+}
+2025-08-11 14:51:54: ❌ Redis connection error: ConnectionTimeoutError: Connection timeout
+    at Socket.onTimeout (C:\Code\PFCM\backend\node_modules\@redis\client\dist\lib\client\socket.js:180:46)
+    at Object.onceWrapper (node:events:632:28)
+    at Socket.emit (node:events:518:28)
+    at Socket._onTimeout (node:net:604:8)
+    at listOnTimeout (node:internal/timers:588:17)
+    at process.processTimers (node:internal/timers:523:7)
+2025-08-11 14:52:03: (node:10816) [DEP0123] DeprecationWarning: Setting the TLS ServerName to an IP address is not permitted by RFC 6066. This will be ignored in a future version.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+2025-08-11 14:52:36: (node:6908) [DEP0123] DeprecationWarning: Setting the TLS ServerName to an IP address is not permitted by RFC 6066. This will be ignored in a future version.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+2025-08-11 13:35:29: (node:6112) [DEP0123] DeprecationWarning: Setting the TLS ServerName to an IP address is not permitted by RFC 6066. This will be ignored in a future version.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+2025-08-11 13:40:25: SQL error RequestError: Incorrect syntax near 'rmm'.
+    at handleError (C:\Code\PFCM\backend\node_modules\mssql\lib\tedious\request.js:384:15)
+    at Connection.emit (node:events:518:28)
+    at Connection.emit (C:\Code\PFCM\backend\node_modules\tedious\lib\connection.js:970:18)
+    at RequestTokenHandler.onErrorMessage (C:\Code\PFCM\backend\node_modules\tedious\lib\token\handler.js:284:21)
+    at Readable.<anonymous> (C:\Code\PFCM\backend\node_modules\tedious\lib\token\token-stream-parser.js:19:33)
+    at Readable.emit (node:events:518:28)
+    at addChunk (node:internal/streams/readable:561:12)
+    at readableAddChunkPushObjectMode (node:internal/streams/readable:538:3)
+    at Readable.push (node:internal/streams/readable:393:5)
+    at nextAsync (node:internal/streams/from:194:22) {
+  code: 'EREQUEST',
+  originalError: Error: Incorrect syntax near 'rmm'.
+      at handleError (C:\Code\PFCM\backend\node_modules\mssql\lib\tedious\request.js:382:19)
+      at Connection.emit (node:events:518:28)
+      at Connection.emit (C:\Code\PFCM\backend\node_modules\tedious\lib\connection.js:970:18)
+      at RequestTokenHandler.onErrorMessage (C:\Code\PFCM\backend\node_modules\tedious\lib\token\handler.js:284:21)
+      at Readable.<anonymous> (C:\Code\PFCM\backend\node_modules\tedious\lib\token\token-stream-parser.js:19:33)
+      at Readable.emit (node:events:518:28)
+      at addChunk (node:internal/streams/readable:561:12)
+      at readableAddChunkPushObjectMode (node:internal/streams/readable:538:3)
+      at Readable.push (node:internal/streams/readable:393:5)
+      at nextAsync (node:internal/streams/from:194:22) {
+    info: ErrorMessageToken {
+      name: 'ERROR',
+      handlerName: 'onErrorMessage',
+      number: 102,
+      state: 1,
+      class: 15,
+      message: "Incorrect syntax near 'rmm'.",
+      serverName: 'DESKTOP-P5JN901\\SQLEXPRESS',
+      procName: '',
+      lineNumber: 24
+    }
+  },
+  number: 102,
+  lineNumber: 24,
+  state: 1,
+  class: 15,
+  serverName: 'DESKTOP-P5JN901\\SQLEXPRESS',
+  procName: '',
+  precedingErrors: []
+}
+2025-08-11 13:40:25: SQL error RequestError: Incorrect syntax near 'rmm'.
+    at handleError (C:\Code\PFCM\backend\node_modules\mssql\lib\tedious\request.js:384:15)
+    at Connection.emit (node:events:518:28)
+    at Connection.emit (C:\Code\PFCM\backend\node_modules\tedious\lib\connection.js:970:18)
+    at RequestTokenHandler.onErrorMessage (C:\Code\PFCM\backend\node_modules\tedious\lib\token\handler.js:284:21)
+    at Readable.<anonymous> (C:\Code\PFCM\backend\node_modules\tedious\lib\token\token-stream-parser.js:19:33)
+    at Readable.emit (node:events:518:28)
+    at addChunk (node:internal/streams/readable:561:12)
+    at readableAddChunkPushObjectMode (node:internal/streams/readable:538:3)
+    at Readable.push (node:internal/streams/readable:393:5)
+    at nextAsync (node:internal/streams/from:194:22) {
+  code: 'EREQUEST',
+  originalError: Error: Incorrect syntax near 'rmm'.
+      at handleError (C:\Code\PFCM\backend\node_modules\mssql\lib\tedious\request.js:382:19)
+      at Connection.emit (node:events:518:28)
+      at Connection.emit (C:\Code\PFCM\backend\node_modules\tedious\lib\connection.js:970:18)
+      at RequestTokenHandler.onErrorMessage (C:\Code\PFCM\backend\node_modules\tedious\lib\token\handler.js:284:21)
+      at Readable.<anonymous> (C:\Code\PFCM\backend\node_modules\tedious\lib\token\token-stream-parser.js:19:33)
+      at Readable.emit (node:events:518:28)
+      at addChunk (node:internal/streams/readable:561:12)
+      at readableAddChunkPushObjectMode (node:internal/streams/readable:538:3)
+      at Readable.push (node:internal/streams/readable:393:5)
+      at nextAsync (node:internal/streams/from:194:22) {
+    info: ErrorMessageToken {
+      name: 'ERROR',
+      handlerName: 'onErrorMessage',
+      number: 102,
+      state: 1,
+      class: 15,
+      message: "Incorrect syntax near 'rmm'.",
+      serverName: 'DESKTOP-P5JN901\\SQLEXPRESS',
+      procName: '',
+      lineNumber: 24
+    }
+  },
+  number: 102,
+  lineNumber: 24,
+  state: 1,
+  class: 15,
+  serverName: 'DESKTOP-P5JN901\\SQLEXPRESS',
+  procName: '',
+  precedingErrors: []
+}
+2025-08-11 13:40:25: SQL error RequestError: Incorrect syntax near 'rmm'.
+    at handleError (C:\Code\PFCM\backend\node_modules\mssql\lib\tedious\request.js:384:15)
+    at Connection.emit (node:events:518:28)
+    at Connection.emit (C:\Code\PFCM\backend\node_modules\tedious\lib\connection.js:970:18)
+    at RequestTokenHandler.onErrorMessage (C:\Code\PFCM\backend\node_modules\tedious\lib\token\handler.js:284:21)
+    at Readable.<anonymous> (C:\Code\PFCM\backend\node_modules\tedious\lib\token\token-stream-parser.js:19:33)
+    at Readable.emit (node:events:518:28)
+    at addChunk (node:internal/streams/readable:561:12)
+    at readableAddChunkPushObjectMode (node:internal/streams/readable:538:3)
+    at Readable.push (node:internal/streams/readable:393:5)
+    at nextAsync (node:internal/streams/from:194:22) {
+  code: 'EREQUEST',
+  originalError: Error: Incorrect syntax near 'rmm'.
+      at handleError (C:\Code\PFCM\backend\node_modules\mssql\lib\tedious\request.js:382:19)
+      at Connection.emit (node:events:518:28)
+      at Connection.emit (C:\Code\PFCM\backend\node_modules\tedious\lib\connection.js:970:18)
+      at RequestTokenHandler.onErrorMessage (C:\Code\PFCM\backend\node_modules\tedious\lib\token\handler.js:284:21)
+      at Readable.<anonymous> (C:\Code\PFCM\backend\node_modules\tedious\lib\token\token-stream-parser.js:19:33)
+      at Readable.emit (node:events:518:28)
+      at addChunk (node:internal/streams/readable:561:12)
+      at readableAddChunkPushObjectMode (node:internal/streams/readable:538:3)
+      at Readable.push (node:internal/streams/readable:393:5)
+      at nextAsync (node:internal/streams/from:194:22) {
+    info: ErrorMessageToken {
+      name: 'ERROR',
+      handlerName: 'onErrorMessage',
+      number: 102,
+      state: 1,
+      class: 15,
+      message: "Incorrect syntax near 'rmm'.",
+      serverName: 'DESKTOP-P5JN901\\SQLEXPRESS',
+      procName: '',
+      lineNumber: 24
+    }
+  },
+  number: 102,
+  lineNumber: 24,
+  state: 1,
+  class: 15,
+  serverName: 'DESKTOP-P5JN901\\SQLEXPRESS',
+  procName: '',
+  precedingErrors: []
+}
+2025-08-11 13:40:34: (node:5904) [DEP0123] DeprecationWarning: Setting the TLS ServerName to an IP address is not permitted by RFC 6066. This will be ignored in a future version.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+2025-08-11 13:40:35: SQL error RequestError: Incorrect syntax near 'rmm'.
+    at handleError (C:\Code\PFCM\backend\node_modules\mssql\lib\tedious\request.js:384:15)
+    at Connection.emit (node:events:518:28)
+    at Connection.emit (C:\Code\PFCM\backend\node_modules\tedious\lib\connection.js:970:18)
+    at RequestTokenHandler.onErrorMessage (C:\Code\PFCM\backend\node_modules\tedious\lib\token\handler.js:284:21)
+    at Readable.<anonymous> (C:\Code\PFCM\backend\node_modules\tedious\lib\token\token-stream-parser.js:19:33)
+    at Readable.emit (node:events:518:28)
+    at addChunk (node:internal/streams/readable:561:12)
+    at readableAddChunkPushObjectMode (node:internal/streams/readable:538:3)
+    at Readable.push (node:internal/streams/readable:393:5)
+    at nextAsync (node:internal/streams/from:194:22) {
+  code: 'EREQUEST',
+  originalError: Error: Incorrect syntax near 'rmm'.
+      at handleError (C:\Code\PFCM\backend\node_modules\mssql\lib\tedious\request.js:382:19)
+      at Connection.emit (node:events:518:28)
+      at Connection.emit (C:\Code\PFCM\backend\node_modules\tedious\lib\connection.js:970:18)
+      at RequestTokenHandler.onErrorMessage (C:\Code\PFCM\backend\node_modules\tedious\lib\token\handler.js:284:21)
+      at Readable.<anonymous> (C:\Code\PFCM\backend\node_modules\tedious\lib\token\token-stream-parser.js:19:33)
+      at Readable.emit (node:events:518:28)
+      at addChunk (node:internal/streams/readable:561:12)
+      at readableAddChunkPushObjectMode (node:internal/streams/readable:538:3)
+      at Readable.push (node:internal/streams/readable:393:5)
+      at nextAsync (node:internal/streams/from:194:22) {
+    info: ErrorMessageToken {
+      name: 'ERROR',
+      handlerName: 'onErrorMessage',
+      number: 102,
+      state: 1,
+      class: 15,
+      message: "Incorrect syntax near 'rmm'.",
+      serverName: 'DESKTOP-P5JN901\\SQLEXPRESS',
+      procName: '',
+      lineNumber: 24
+    }
+  },
+  number: 102,
+  lineNumber: 24,
+  state: 1,
+  class: 15,
+  serverName: 'DESKTOP-P5JN901\\SQLEXPRESS',
+  procName: '',
+  precedingErrors: []
+}
+2025-08-11 13:41:09: reserveSlot error: Error: Slot ID and Room are required
+    at C:\Code\PFCM\backend\server.js:351:46
+    at Socket.<anonymous> (C:\Code\PFCM\backend\server.js:323:17)
+    at Socket.emit (node:events:530:35)
+    at Socket.emitUntyped (C:\Code\PFCM\backend\node_modules\socket.io\dist\typed-events.js:69:22)
+    at C:\Code\PFCM\backend\node_modules\socket.io\dist\socket.js:697:39
+    at process.processTicksAndRejections (node:internal/process/task_queues:85:11)
+2025-08-11 13:41:16: updateSlotToNULL error: Error: Slot ID and Room are required
+    at C:\Code\PFCM\backend\server.js:363:46
+    at Socket.<anonymous> (C:\Code\PFCM\backend\server.js:323:17)
+    at Socket.emit (node:events:518:28)
+    at Socket.emitUntyped (C:\Code\PFCM\backend\node_modules\socket.io\dist\typed-events.js:69:22)
+    at C:\Code\PFCM\backend\node_modules\socket.io\dist\socket.js:697:39
+    at process.processTicksAndRejections (node:internal/process/task_queues:85:11)
+2025-08-11 13:41:17: reserveSlot error: Error: Slot ID and Room are required
+    at C:\Code\PFCM\backend\server.js:351:46
+    at Socket.<anonymous> (C:\Code\PFCM\backend\server.js:323:17)
+    at Socket.emit (node:events:530:35)
+    at Socket.emitUntyped (C:\Code\PFCM\backend\node_modules\socket.io\dist\typed-events.js:69:22)
+    at C:\Code\PFCM\backend\node_modules\socket.io\dist\socket.js:697:39
+    at process.processTicksAndRejections (node:internal/process/task_queues:85:11)
+2025-08-11 13:42:06: SQL error RequestError: Conversion failed when converting the varchar value 'rsrv' to data type int.
+    at handleError (C:\Code\PFCM\backend\node_modules\mssql\lib\tedious\request.js:384:15)
+    at Connection.emit (node:events:518:28)
+    at Connection.emit (C:\Code\PFCM\backend\node_modules\tedious\lib\connection.js:970:18)
+    at RequestTokenHandler.onErrorMessage (C:\Code\PFCM\backend\node_modules\tedious\lib\token\handler.js:284:21)
+    at Readable.<anonymous> (C:\Code\PFCM\backend\node_modules\tedious\lib\token\token-stream-parser.js:19:33)
+    at Readable.emit (node:events:518:28)
+    at addChunk (node:internal/streams/readable:561:12)
+    at readableAddChunkPushObjectMode (node:internal/streams/readable:538:3)
+    at Readable.push (node:internal/streams/readable:393:5)
+    at nextAsync (node:internal/streams/from:194:22) {
+  code: 'EREQUEST',
+  originalError: Error: Conversion failed when converting the varchar value 'rsrv' to data type int.
+      at handleError (C:\Code\PFCM\backend\node_modules\mssql\lib\tedious\request.js:382:19)
+      at Connection.emit (node:events:518:28)
+      at Connection.emit (C:\Code\PFCM\backend\node_modules\tedious\lib\connection.js:970:18)
+      at RequestTokenHandler.onErrorMessage (C:\Code\PFCM\backend\node_modules\tedious\lib\token\handler.js:284:21)
+      at Readable.<anonymous> (C:\Code\PFCM\backend\node_modules\tedious\lib\token\token-stream-parser.js:19:33)
+      at Readable.emit (node:events:518:28)
+      at addChunk (node:internal/streams/readable:561:12)
+      at readableAddChunkPushObjectMode (node:internal/streams/readable:538:3)
+      at Readable.push (node:internal/streams/readable:393:5)
+      at nextAsync (node:internal/streams/from:194:22) {
+    info: ErrorMessageToken {
+      name: 'ERROR',
+      handlerName: 'onErrorMessage',
+      number: 245,
+      state: 1,
+      class: 16,
+      message: "Conversion failed when converting the varchar value 'rsrv' to data type int.",
+      serverName: 'DESKTOP-P5JN901\\SQLEXPRESS',
+      procName: '',
+      lineNumber: 2
+    }
+  },
+  number: 245,
+  lineNumber: 2,
+  state: 1,
+  class: 16,
+  serverName: 'DESKTOP-P5JN901\\SQLEXPRESS',
+  procName: '',
+  precedingErrors: []
+}
+2025-08-11 13:42:06: SQL error RequestError: Conversion failed when converting the varchar value 'rsrv' to data type int.
+    at handleError (C:\Code\PFCM\backend\node_modules\mssql\lib\tedious\request.js:384:15)
+    at Connection.emit (node:events:518:28)
+    at Connection.emit (C:\Code\PFCM\backend\node_modules\tedious\lib\connection.js:970:18)
+    at RequestTokenHandler.onErrorMessage (C:\Code\PFCM\backend\node_modules\tedious\lib\token\handler.js:284:21)
+    at Readable.<anonymous> (C:\Code\PFCM\backend\node_modules\tedious\lib\token\token-stream-parser.js:19:33)
+    at Readable.emit (node:events:518:28)
+    at addChunk (node:internal/streams/readable:561:12)
+    at readableAddChunkPushObjectMode (node:internal/streams/readable:538:3)
+    at Readable.push (node:internal/streams/readable:393:5)
+    at nextAsync (node:internal/streams/from:194:22) {
+  code: 'EREQUEST',
+  originalError: Error: Conversion failed when converting the varchar value 'rsrv' to data type int.
+      at handleError (C:\Code\PFCM\backend\node_modules\mssql\lib\tedious\request.js:382:19)
+      at Connection.emit (node:events:518:28)
+      at Connection.emit (C:\Code\PFCM\backend\node_modules\tedious\lib\connection.js:970:18)
+      at RequestTokenHandler.onErrorMessage (C:\Code\PFCM\backend\node_modules\tedious\lib\token\handler.js:284:21)
+      at Readable.<anonymous> (C:\Code\PFCM\backend\node_modules\tedious\lib\token\token-stream-parser.js:19:33)
+      at Readable.emit (node:events:518:28)
+      at addChunk (node:internal/streams/readable:561:12)
+      at readableAddChunkPushObjectMode (node:internal/streams/readable:538:3)
+      at Readable.push (node:internal/streams/readable:393:5)
+      at nextAsync (node:internal/streams/from:194:22) {
+    info: ErrorMessageToken {
+      name: 'ERROR',
+      handlerName: 'onErrorMessage',
+      number: 245,
+      state: 1,
+      class: 16,
+      message: "Conversion failed when converting the varchar value 'rsrv' to data type int.",
+      serverName: 'DESKTOP-P5JN901\\SQLEXPRESS',
+      procName: '',
+      lineNumber: 2
+    }
+  },
+  number: 245,
+  lineNumber: 2,
+  state: 1,
+  class: 16,
+  serverName: 'DESKTOP-P5JN901\\SQLEXPRESS',
+  procName: '',
+  precedingErrors: []
+}
+2025-08-11 13:42:18: SQL error RequestError: Conversion failed when converting the varchar value 'rsrv' to data type int.
+    at handleError (C:\Code\PFCM\backend\node_modules\mssql\lib\tedious\request.js:384:15)
+    at Connection.emit (node:events:518:28)
+    at Connection.emit (C:\Code\PFCM\backend\node_modules\tedious\lib\connection.js:970:18)
+    at RequestTokenHandler.onErrorMessage (C:\Code\PFCM\backend\node_modules\tedious\lib\token\handler.js:284:21)
+    at Readable.<anonymous> (C:\Code\PFCM\backend\node_modules\tedious\lib\token\token-stream-parser.js:19:33)
+    at Readable.emit (node:events:518:28)
+    at addChunk (node:internal/streams/readable:561:12)
+    at readableAddChunkPushObjectMode (node:internal/streams/readable:538:3)
+    at Readable.push (node:internal/streams/readable:393:5)
+    at nextAsync (node:internal/streams/from:194:22) {
+  code: 'EREQUEST',
+  originalError: Error: Conversion failed when converting the varchar value 'rsrv' to data type int.
+      at handleError (C:\Code\PFCM\backend\node_modules\mssql\lib\tedious\request.js:382:19)
+      at Connection.emit (node:events:518:28)
+      at Connection.emit (C:\Code\PFCM\backend\node_modules\tedious\lib\connection.js:970:18)
+      at RequestTokenHandler.onErrorMessage (C:\Code\PFCM\backend\node_modules\tedious\lib\token\handler.js:284:21)
+      at Readable.<anonymous> (C:\Code\PFCM\backend\node_modules\tedious\lib\token\token-stream-parser.js:19:33)
+      at Readable.emit (node:events:518:28)
+      at addChunk (node:internal/streams/readable:561:12)
+      at readableAddChunkPushObjectMode (node:internal/streams/readable:538:3)
+      at Readable.push (node:internal/streams/readable:393:5)
+      at nextAsync (node:internal/streams/from:194:22) {
+    info: ErrorMessageToken {
+      name: 'ERROR',
+      handlerName: 'onErrorMessage',
+      number: 245,
+      state: 1,
+      class: 16,
+      message: "Conversion failed when converting the varchar value 'rsrv' to data type int.",
+      serverName: 'DESKTOP-P5JN901\\SQLEXPRESS',
+      procName: '',
+      lineNumber: 2
+    }
+  },
+  number: 245,
+  lineNumber: 2,
+  state: 1,
+  class: 16,
+  serverName: 'DESKTOP-P5JN901\\SQLEXPRESS',
+  procName: '',
+  precedingErrors: []
+}
+2025-08-11 13:42:18: SQL error RequestError: Conversion failed when converting the varchar value 'rsrv' to data type int.
+    at handleError (C:\Code\PFCM\backend\node_modules\mssql\lib\tedious\request.js:384:15)
+    at Connection.emit (node:events:518:28)
+    at Connection.emit (C:\Code\PFCM\backend\node_modules\tedious\lib\connection.js:970:18)
+    at RequestTokenHandler.onErrorMessage (C:\Code\PFCM\backend\node_modules\tedious\lib\token\handler.js:284:21)
+    at Readable.<anonymous> (C:\Code\PFCM\backend\node_modules\tedious\lib\token\token-stream-parser.js:19:33)
+    at Readable.emit (node:events:518:28)
+    at addChunk (node:internal/streams/readable:561:12)
+    at readableAddChunkPushObjectMode (node:internal/streams/readable:538:3)
+    at Readable.push (node:internal/streams/readable:393:5)
+    at nextAsync (node:internal/streams/from:194:22) {
+  code: 'EREQUEST',
+  originalError: Error: Conversion failed when converting the varchar value 'rsrv' to data type int.
+      at handleError (C:\Code\PFCM\backend\node_modules\mssql\lib\tedious\request.js:382:19)
+      at Connection.emit (node:events:518:28)
+      at Connection.emit (C:\Code\PFCM\backend\node_modules\tedious\lib\connection.js:970:18)
+      at RequestTokenHandler.onErrorMessage (C:\Code\PFCM\backend\node_modules\tedious\lib\token\handler.js:284:21)
+      at Readable.<anonymous> (C:\Code\PFCM\backend\node_modules\tedious\lib\token\token-stream-parser.js:19:33)
+      at Readable.emit (node:events:518:28)
+      at addChunk (node:internal/streams/readable:561:12)
+      at readableAddChunkPushObjectMode (node:internal/streams/readable:538:3)
+      at Readable.push (node:internal/streams/readable:393:5)
+      at nextAsync (node:internal/streams/from:194:22) {
+    info: ErrorMessageToken {
+      name: 'ERROR',
+      handlerName: 'onErrorMessage',
+      number: 245,
+      state: 1,
+      class: 16,
+      message: "Conversion failed when converting the varchar value 'rsrv' to data type int.",
+      serverName: 'DESKTOP-P5JN901\\SQLEXPRESS',
+      procName: '',
+      lineNumber: 2
+    }
+  },
+  number: 245,
+  lineNumber: 2,
+  state: 1,
+  class: 16,
+  serverName: 'DESKTOP-P5JN901\\SQLEXPRESS',
+  procName: '',
+  precedingErrors: []
+}
+2025-08-11 13:42:18: SQL error RequestError: Conversion failed when converting the varchar value 'rsrv' to data type int.
+    at handleError (C:\Code\PFCM\backend\node_modules\mssql\lib\tedious\request.js:384:15)
+    at Connection.emit (node:events:518:28)
+    at Connection.emit (C:\Code\PFCM\backend\node_modules\tedious\lib\connection.js:970:18)
+    at RequestTokenHandler.onErrorMessage (C:\Code\PFCM\backend\node_modules\tedious\lib\token\handler.js:284:21)
+    at Readable.<anonymous> (C:\Code\PFCM\backend\node_modules\tedious\lib\token\token-stream-parser.js:19:33)
+    at Readable.emit (node:events:518:28)
+    at addChunk (node:internal/streams/readable:561:12)
+    at readableAddChunkPushObjectMode (node:internal/streams/readable:538:3)
+    at Readable.push (node:internal/streams/readable:393:5)
+    at nextAsync (node:internal/streams/from:194:22) {
+  code: 'EREQUEST',
+  originalError: Error: Conversion failed when converting the varchar value 'rsrv' to data type int.
+      at handleError (C:\Code\PFCM\backend\node_modules\mssql\lib\tedious\request.js:382:19)
+      at Connection.emit (node:events:518:28)
+      at Connection.emit (C:\Code\PFCM\backend\node_modules\tedious\lib\connection.js:970:18)
+      at RequestTokenHandler.onErrorMessage (C:\Code\PFCM\backend\node_modules\tedious\lib\token\handler.js:284:21)
+      at Readable.<anonymous> (C:\Code\PFCM\backend\node_modules\tedious\lib\token\token-stream-parser.js:19:33)
+      at Readable.emit (node:events:518:28)
+      at addChunk (node:internal/streams/readable:561:12)
+      at readableAddChunkPushObjectMode (node:internal/streams/readable:538:3)
+      at Readable.push (node:internal/streams/readable:393:5)
+      at nextAsync (node:internal/streams/from:194:22) {
+    info: ErrorMessageToken {
+      name: 'ERROR',
+      handlerName: 'onErrorMessage',
+      number: 245,
+      state: 1,
+      class: 16,
+      message: "Conversion failed when converting the varchar value 'rsrv' to data type int.",
+      serverName: 'DESKTOP-P5JN901\\SQLEXPRESS',
+      procName: '',
+      lineNumber: 2
+    }
+  },
+  number: 245,
+  lineNumber: 2,
+  state: 1,
+  class: 16,
+  serverName: 'DESKTOP-P5JN901\\SQLEXPRESS',
+  procName: '',
+  precedingErrors: []
+}
+2025-08-11 13:42:18: SQL error RequestError: Conversion failed when converting the varchar value 'rsrv' to data type int.
+    at handleError (C:\Code\PFCM\backend\node_modules\mssql\lib\tedious\request.js:384:15)
+    at Connection.emit (node:events:518:28)
+    at Connection.emit (C:\Code\PFCM\backend\node_modules\tedious\lib\connection.js:970:18)
+    at RequestTokenHandler.onErrorMessage (C:\Code\PFCM\backend\node_modules\tedious\lib\token\handler.js:284:21)
+    at Readable.<anonymous> (C:\Code\PFCM\backend\node_modules\tedious\lib\token\token-stream-parser.js:19:33)
+    at Readable.emit (node:events:518:28)
+    at addChunk (node:internal/streams/readable:561:12)
+    at readableAddChunkPushObjectMode (node:internal/streams/readable:538:3)
+    at Readable.push (node:internal/streams/readable:393:5)
+    at nextAsync (node:internal/streams/from:194:22) {
+  code: 'EREQUEST',
+  originalError: Error: Conversion failed when converting the varchar value 'rsrv' to data type int.
+      at handleError (C:\Code\PFCM\backend\node_modules\mssql\lib\tedious\request.js:382:19)
+      at Connection.emit (node:events:518:28)
+      at Connection.emit (C:\Code\PFCM\backend\node_modules\tedious\lib\connection.js:970:18)
+      at RequestTokenHandler.onErrorMessage (C:\Code\PFCM\backend\node_modules\tedious\lib\token\handler.js:284:21)
+      at Readable.<anonymous> (C:\Code\PFCM\backend\node_modules\tedious\lib\token\token-stream-parser.js:19:33)
+      at Readable.emit (node:events:518:28)
+      at addChunk (node:internal/streams/readable:561:12)
+      at readableAddChunkPushObjectMode (node:internal/streams/readable:538:3)
+      at Readable.push (node:internal/streams/readable:393:5)
+      at nextAsync (node:internal/streams/from:194:22) {
+    info: ErrorMessageToken {
+      name: 'ERROR',
+      handlerName: 'onErrorMessage',
+      number: 245,
+      state: 1,
+      class: 16,
+      message: "Conversion failed when converting the varchar value 'rsrv' to data type int.",
+      serverName: 'DESKTOP-P5JN901\\SQLEXPRESS',
+      procName: '',
+      lineNumber: 2
+    }
+  },
+  number: 245,
+  lineNumber: 2,
+  state: 1,
+  class: 16,
+  serverName: 'DESKTOP-P5JN901\\SQLEXPRESS',
+  procName: '',
+  precedingErrors: []
+}
+2025-08-11 13:42:37: updateSlotToNULL error: Error: Slot ID and Room are required
+    at C:\Code\PFCM\backend\server.js:363:46
+    at Socket.<anonymous> (C:\Code\PFCM\backend\server.js:323:17)
+    at Socket.emit (node:events:518:28)
+    at Socket.emitUntyped (C:\Code\PFCM\backend\node_modules\socket.io\dist\typed-events.js:69:22)
+    at C:\Code\PFCM\backend\node_modules\socket.io\dist\socket.js:697:39
+    at process.processTicksAndRejections (node:internal/process/task_queues:85:11)
+2025-08-11 13:42:38: SQL error RequestError: Incorrect syntax near 'rmm'.
+    at handleError (C:\Code\PFCM\backend\node_modules\mssql\lib\tedious\request.js:384:15)
+    at Connection.emit (node:events:518:28)
+    at Connection.emit (C:\Code\PFCM\backend\node_modules\tedious\lib\connection.js:970:18)
+    at RequestTokenHandler.onErrorMessage (C:\Code\PFCM\backend\node_modules\tedious\lib\token\handler.js:284:21)
+    at Readable.<anonymous> (C:\Code\PFCM\backend\node_modules\tedious\lib\token\token-stream-parser.js:19:33)
+    at Readable.emit (node:events:518:28)
+    at addChunk (node:internal/streams/readable:561:12)
+    at readableAddChunkPushObjectMode (node:internal/streams/readable:538:3)
+    at Readable.push (node:internal/streams/readable:393:5)
+    at nextAsync (node:internal/streams/from:194:22) {
+  code: 'EREQUEST',
+  originalError: Error: Incorrect syntax near 'rmm'.
+      at handleError (C:\Code\PFCM\backend\node_modules\mssql\lib\tedious\request.js:382:19)
+      at Connection.emit (node:events:518:28)
+      at Connection.emit (C:\Code\PFCM\backend\node_modules\tedious\lib\connection.js:970:18)
+      at RequestTokenHandler.onErrorMessage (C:\Code\PFCM\backend\node_modules\tedious\lib\token\handler.js:284:21)
+      at Readable.<anonymous> (C:\Code\PFCM\backend\node_modules\tedious\lib\token\token-stream-parser.js:19:33)
+      at Readable.emit (node:events:518:28)
+      at addChunk (node:internal/streams/readable:561:12)
+      at readableAddChunkPushObjectMode (node:internal/streams/readable:538:3)
+      at Readable.push (node:internal/streams/readable:393:5)
+      at nextAsync (node:internal/streams/from:194:22) {
+    info: ErrorMessageToken {
+      name: 'ERROR',
+      handlerName: 'onErrorMessage',
+      number: 102,
+      state: 1,
+      class: 15,
+      message: "Incorrect syntax near 'rmm'.",
+      serverName: 'DESKTOP-P5JN901\\SQLEXPRESS',
+      procName: '',
+      lineNumber: 24
+    }
+  },
+  number: 102,
+  lineNumber: 24,
+  state: 1,
+  class: 15,
+  serverName: 'DESKTOP-P5JN901\\SQLEXPRESS',
+  procName: '',
+  precedingErrors: []
+}
+2025-08-11 13:42:38: SQL error RequestError: Incorrect syntax near 'rmm'.
+    at handleError (C:\Code\PFCM\backend\node_modules\mssql\lib\tedious\request.js:384:15)
+    at Connection.emit (node:events:518:28)
+    at Connection.emit (C:\Code\PFCM\backend\node_modules\tedious\lib\connection.js:970:18)
+    at RequestTokenHandler.onErrorMessage (C:\Code\PFCM\backend\node_modules\tedious\lib\token\handler.js:284:21)
+    at Readable.<anonymous> (C:\Code\PFCM\backend\node_modules\tedious\lib\token\token-stream-parser.js:19:33)
+    at Readable.emit (node:events:518:28)
+    at addChunk (node:internal/streams/readable:561:12)
+    at readableAddChunkPushObjectMode (node:internal/streams/readable:538:3)
+    at Readable.push (node:internal/streams/readable:393:5)
+    at nextAsync (node:internal/streams/from:194:22) {
+  code: 'EREQUEST',
+  originalError: Error: Incorrect syntax near 'rmm'.
+      at handleError (C:\Code\PFCM\backend\node_modules\mssql\lib\tedious\request.js:382:19)
+      at Connection.emit (node:events:518:28)
+      at Connection.emit (C:\Code\PFCM\backend\node_modules\tedious\lib\connection.js:970:18)
+      at RequestTokenHandler.onErrorMessage (C:\Code\PFCM\backend\node_modules\tedious\lib\token\handler.js:284:21)
+      at Readable.<anonymous> (C:\Code\PFCM\backend\node_modules\tedious\lib\token\token-stream-parser.js:19:33)
+      at Readable.emit (node:events:518:28)
+      at addChunk (node:internal/streams/readable:561:12)
+      at readableAddChunkPushObjectMode (node:internal/streams/readable:538:3)
+      at Readable.push (node:internal/streams/readable:393:5)
+      at nextAsync (node:internal/streams/from:194:22) {
+    info: ErrorMessageToken {
+      name: 'ERROR',
+      handlerName: 'onErrorMessage',
+      number: 102,
+      state: 1,
+      class: 15,
+      message: "Incorrect syntax near 'rmm'.",
+      serverName: 'DESKTOP-P5JN901\\SQLEXPRESS',
+      procName: '',
+      lineNumber: 24
+    }
+  },
+  number: 102,
+  lineNumber: 24,
+  state: 1,
+  class: 15,
+  serverName: 'DESKTOP-P5JN901\\SQLEXPRESS',
+  procName: '',
+  precedingErrors: []
+}
+2025-08-12 19:02:43: (node:9168) [DEP0123] DeprecationWarning: Setting the TLS ServerName to an IP address is not permitted by RFC 6066. This will be ignored in a future version.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+2025-08-12 19:13:33: ❌ Redis connection error: ConnectionTimeoutError: Connection timeout
+    at Socket.onTimeout (C:\Code\PFCM\backend\node_modules\@redis\client\dist\lib\client\socket.js:180:46)
+    at Object.onceWrapper (node:events:632:28)
+    at Socket.emit (node:events:518:28)
+    at Socket._onTimeout (node:net:604:8)
+    at listOnTimeout (node:internal/timers:588:17)
+    at process.processTimers (node:internal/timers:523:7)
+2025-08-12 19:13:41: (node:13556) [DEP0123] DeprecationWarning: Setting the TLS ServerName to an IP address is not permitted by RFC 6066. This will be ignored in a future version.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+2025-08-12 19:36:00: (node:7880) [DEP0123] DeprecationWarning: Setting the TLS ServerName to an IP address is not permitted by RFC 6066. This will be ignored in a future version.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+2025-08-12 19:36:03: reserveSlot error: Error: Slot ID and Room are required
+    at C:\Code\PFCM\backend\server.js:351:46
+    at Socket.<anonymous> (C:\Code\PFCM\backend\server.js:323:17)
+    at Socket.emit (node:events:530:35)
+    at Socket.emitUntyped (C:\Code\PFCM\backend\node_modules\socket.io\dist\typed-events.js:69:22)
+    at C:\Code\PFCM\backend\node_modules\socket.io\dist\socket.js:697:39
+    at process.processTicksAndRejections (node:internal/process/task_queues:85:11)
+2025-08-12 19:36:21: updateSlotToNULL error: Error: Slot ID and Room are required
+    at C:\Code\PFCM\backend\server.js:363:46
+    at Socket.<anonymous> (C:\Code\PFCM\backend\server.js:323:17)
+    at Socket.emit (node:events:518:28)
+    at Socket.emitUntyped (C:\Code\PFCM\backend\node_modules\socket.io\dist\typed-events.js:69:22)
+    at C:\Code\PFCM\backend\node_modules\socket.io\dist\socket.js:697:39
+    at process.processTicksAndRejections (node:internal/process/task_queues:85:11)
+2025-08-12 19:36:24: reserveSlot error: Error: Slot ID and Room are required
+    at C:\Code\PFCM\backend\server.js:351:46
+    at Socket.<anonymous> (C:\Code\PFCM\backend\server.js:323:17)
+    at Socket.emit (node:events:530:35)
+    at Socket.emitUntyped (C:\Code\PFCM\backend\node_modules\socket.io\dist\typed-events.js:69:22)
+    at C:\Code\PFCM\backend\node_modules\socket.io\dist\socket.js:697:39
+    at process.processTicksAndRejections (node:internal/process/task_queues:85:11)
+2025-08-12 19:36:39: updateSlotToNULL error: Error: Slot ID and Room are required
+    at C:\Code\PFCM\backend\server.js:363:46
+    at Socket.<anonymous> (C:\Code\PFCM\backend\server.js:323:17)
+    at Socket.emit (node:events:518:28)
+    at Socket.emitUntyped (C:\Code\PFCM\backend\node_modules\socket.io\dist\typed-events.js:69:22)
+    at C:\Code\PFCM\backend\node_modules\socket.io\dist\socket.js:697:39
+    at process.processTicksAndRejections (node:internal/process/task_queues:85:11)
+2025-08-12 19:49:00: (node:2420) [DEP0123] DeprecationWarning: Setting the TLS ServerName to an IP address is not permitted by RFC 6066. This will be ignored in a future version.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+2025-08-12 19:49:09: (node:1572) [DEP0123] DeprecationWarning: Setting the TLS ServerName to an IP address is not permitted by RFC 6066. This will be ignored in a future version.
+(Use `node --trace-deprecation ...` to show where the warning was created)
