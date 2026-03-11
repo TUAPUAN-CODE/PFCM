@@ -159,6 +159,7 @@ const Slottrolley = ({ onClose }) => {
                 const transformedData = data.map(item => ({
                     mapping_id: item.mapping_id,
                     batch: item.batch_after,
+                    rmit_date: item.rmit_date,
                     weight_RM: item.weight_RM,
                     ntray: item.ntray,
                     mat_name: item.mat_name,
@@ -465,7 +466,8 @@ const Slottrolley = ({ onClose }) => {
                                             <TableCell>ลำดับ</TableCell>
                                             <TableCell>รหัสวัตถุดิบ</TableCell>
                                             <TableCell>ชื่อวัตถุดิบ</TableCell>
-                                            <TableCell>แบทช์</TableCell>
+                                            <TableCell>เวลาเตรียมเสร็จ</TableCell>
+                                            <TableCell>batch</TableCell>
                                             <TableCell align="right">น้ำหนัก (กก.)</TableCell>
                                         </TableRow>
                                     </TableHead>
@@ -475,6 +477,7 @@ const Slottrolley = ({ onClose }) => {
                                                 <TableCell style={{ textAlign: 'center' }}>{index + 1}</TableCell>
                                                 <TableCell style={{ textAlign: 'center' }}>{item.mapping_id}</TableCell>
                                                 <TableCell>{item.mat_name}</TableCell>
+                                                <TableCell>{item.rmit_date}</TableCell>
                                                 <TableCell>{item.batch}</TableCell>
                                                 <TableCell align="right">{weights[item.mapping_id].toFixed(2)}</TableCell>
                                             </TableRow>

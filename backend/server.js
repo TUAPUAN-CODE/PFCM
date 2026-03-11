@@ -106,9 +106,9 @@ if (process.env.NODE_ENV === "production" && cluster.isPrimary) {
     cors: {
       origin: [
         `http://${process.env.DB_SERVER}:5173`,
-        "http://192.168.1.103:5173",
         "http://172.48.0.114:5173",
-        "http://172.16.151.128:5173",
+        // "http://172.48.0.114:5173",
+        "http://172.48.0.114:5173",
         "http://localhost:5173",
       ],
       credentials: true,
@@ -137,7 +137,7 @@ if (process.env.NODE_ENV === "production" && cluster.isPrimary) {
   // Enhanced Redis configuration
   const pubClient = createClient({
     socket: {
-      host: '172.16.151.128',
+      host: '172.48.0.114',
       port: 6379,
       reconnectStrategy: retries => {
         // กำหนด retry connection ให้ถี่ขึ้น (เร็วขึ้น)
@@ -179,7 +179,7 @@ if (process.env.NODE_ENV === "production" && cluster.isPrimary) {
         "http://localhost:5173",
         // "http://127.0.0.1:5173",
         // "http://172.48.0.114:5173",
-        "http://172.16.151.128:5173",
+        "http://172.48.0.114:5173",
         `http://${process.env.DB_SERVER}:5173`
       ];
 
@@ -225,6 +225,12 @@ if (process.env.NODE_ENV === "production" && cluster.isPrimary) {
   const HeaderRoutes = require("./routes/HeaderRoutes");
   const Routes = require("./routes/Rotes")(io);
   const QualityControlRoutes = require("./routes/QualityControlRoutes")(io);
+  // RFID coldroom (starts TCP connection to reader)
+  // IMPORTANT: with cluster, only enable in a single worker to avoid duplicate reads/events.
+  const shouldEnableRfid =
+    process.env.ENABLE_RFID === "true" &&
+    (!cluster.isWorker || (cluster.worker && cluster.worker.id === 1));
+  const RFIDc1Routes = shouldEnableRfid ? require("./RFIDc1")(io) : null;
 
   // Route registration
   app.use("/api", [
@@ -240,7 +246,8 @@ if (process.env.NODE_ENV === "production" && cluster.isPrimary) {
     ColdStorageRoutes,
     HeaderRoutes,
     Routes,
-    QualityControlRoutes
+    QualityControlRoutes,
+    ...(RFIDc1Routes ? [RFIDc1Routes] : [])
   ]);
 
   // Health check endpoint

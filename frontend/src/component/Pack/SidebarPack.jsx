@@ -7,19 +7,33 @@ const pos_id = localStorage.getItem("pos_id");
 const allowedPositions = ["3", "4", "5", "6"];
 const showWorkplaceSelector = allowedPositions.includes(pos_id);
 
+const canSeeDelayRM = allowedPositions.includes(pos_id);
+
 const SIDEBAR_ITEMS = [
-	{ name: "หน้าหลัก", icon: BarChart2, href: "/packaging" },
-	{ name: "จัดการ (วัตถุดิบไม่ผสม)", icon: BarChart2, href: "/packaging/manage/ManagePage" },
-	{ name: "จัดการ (วัตถุดิบผสม)", icon: BarChart2, href: "/packaging/Mixed/Trolley" },
+	{ name: "ติดตามรถเข็น", icon: BarChart2, href: "/packaging/TrackTrolley" },
+	// { name: "จัดการ (วัตถุดิบไม่ผสม)", icon: BarChart2, href: "/packaging/manage/ManagePage" },
+	// { name: "จัดการ (วัตถุดิบผสม)", icon: BarChart2, href: "/packaging/Mixed/Trolley" },
+	{ name: "ดึงข้อมูลวัตถุดิบ", icon: BarChart2, href: "/packaging/CheckOut" },
+	{ name: "Check In", icon: BarChart2, href: "/packaging/CheckInPagePack" },
+	{ name: "ผสมวัตถุดิบ", icon: BarChart2, href: "/packaging/IncludeRawmatPagePack" },
 	{ name: "จัดการรถเข็น", icon: BarChart2, href: "/packaging/PackTro/PackTroPage" },
-	{ name: "ขอวัตถุดิบ", icon: BarChart2, href: "/packaging/Request/Rawmat" },
-	{ name: "รายการส่งคำขอ", icon: BarChart2, href: "/packaging/Order/Request/Rawmat" },
-	{ name: "รายการคำขอ", icon: BarChart2, href: "/packaging/manage/Order/Request/Rawmat" },
+	{ name: "รายงาน Delay", icon: BarChart2, href: "/packaging/ManageRawmatPack" },
+
+	  ...(canSeeDelayRM
+    ? [{ name: "รายงาน Delay +RM", icon: BarChart2, href: "/packaging/managedelaymaster" }]
+    : []),
+
+	{ name: "Report", icon: BarChart2, href: "/packaging/ReportRawmatPack" },
+	{ name: "PDF Archive", icon: BarChart2, href: "/packaging/PDFArchive" },
+	// { name: "ขอวัตถุดิบ", icon: BarChart2, href: "/packaging/Request/Rawmat" },
+	// { name: "รายการส่งคำขอ", icon: BarChart2, href: "/packaging/Order/Request/Rawmat" },
+	// { name: "รายการคำขอ", icon: BarChart2, href: "/packaging/manage/Order/Request/Rawmat" },
 	{ name: "เปลี่ยนสถานที่ทำงาน", icon: BarChart2, href: "/packaging/User/LineSelectWP" },
 	{ name: "ประวัติ", icon: BarChart2, href: "/packaging/History/HistoryPage" },
-	 ...(showWorkplaceSelector
-		? [{ name: "เปลี่ยนที่ทำงาน", icon: FaPeopleCarry, href: "/packaging/WorkplaceSelector" }]
-		: []),
+	// { name: "หน้าหลัก", icon: BarChart2, href: "/packaging" },
+	//  ...(showWorkplaceSelector
+	// 	? [{ name: "เปลี่ยนที่ทำงาน", icon: FaPeopleCarry, href: "/packaging/WorkplaceSelector" }]
+	// 	: []),
 	
 	{ name: "ออกจากระบบ", icon: BarChart2, href: "/logout" },
 ];
@@ -236,3 +250,4 @@ const SidebarPack = () => {
 };
 
 export default SidebarPack;
+//test

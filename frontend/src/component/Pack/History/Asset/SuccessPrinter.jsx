@@ -280,7 +280,7 @@ const SuccessPrinter = ({ open, onClose, data }) => {
             };
 
             // แปลงเป็นรูปแบบของประเทศไทย
-            return new Intl.DateTimeFormat('th-TH', options).format(date);
+            return new Intl.DateTimeFormat('en-TH', options).format(date);
         } catch (error) {
             console.error("Error formatting date:", error, "for input:", dateString);
             return dateString; // ส่งค่าเดิมกลับไปเพื่อไม่ให้ข้อมูลหายไป
@@ -982,7 +982,7 @@ const SuccessPrinter = ({ open, onClose, data }) => {
                     }}>
                         ข้อมูลเพิ่มเติม
                     </Typography>
-                    <InfoRow label="พิมพ์เมื่อ" value={new Date().toLocaleString('th-TH')} />
+                    <InfoRow label="พิมพ์เมื่อ" value={new Date().toLocaleString('en-TH')} />
                 </Box>
 
             </Box>

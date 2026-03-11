@@ -998,7 +998,7 @@ const SendColdPrinter = ({ open, onClose, data, status }) => {
                     }}>
                         ข้อมูลเพิ่มเติม
                     </Typography>
-                    <InfoRow label="พิมพ์เมื่อ" value={new Date().toLocaleString('th-TH')} />
+                    <InfoRow label="พิมพ์เมื่อ" value={new Date().toLocaleString('en-TH')} />
                     {data.remark && <InfoRow label="หมายเหตุ" value={data.remark} />}
                 </Box>
 

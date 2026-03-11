@@ -59,14 +59,16 @@ const Modal1 = ({ open, onClose, onNext, mat, mat_name, batch, production, rmfp_
       videoRef.current.play();
 
       const qrScanner = new QrScanner(videoRef.current, async (result) => {
-        if (result?.data) {
-          setScannedValue(result.data);
-          await checkTrolleyStatus(result.data);
-        }
-      }, {
-        highlightScanRegion: true,
-        highlightCodeOutline: true
-      });
+              if (result?.data) {
+                setScannedValue(result.data);
+                // ดึงค่า QR Code มาแดสงใน input field
+                setInputValue(result.data);
+                await checkTrolleyStatus(result.data);
+              }
+            }, {
+              highlightScanRegion: true,
+              highlightCodeOutline: true
+            });
 
       qrScannerRef.current = qrScanner;
       qrScanner.start();

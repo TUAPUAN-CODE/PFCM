@@ -14,10 +14,12 @@ const dbConfig = {
     trustServerCertificate: true, // สำหรับ local dev
   },
   pool: {
-    max: 2000,
-    min: 20,
+    max: 20,              // ลดเหลือประมาณนี้ก่อน
+    min: 0,
     idleTimeoutMillis: 30000,
   },
+  requestTimeout: 60000,   // รอ query ได้ 60 วินาที
+  connectionTimeout: 30000 // รอ connect ได้ 30 วินาที
 };
 
 let pool = null;

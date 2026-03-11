@@ -85,7 +85,7 @@ router.get("/fetchProduction", async (req, res) => {
     const productionResult = await pool.request()
       .input("mat", mat)
       .query(`
-        SELECT p.prod_id, p.doc_no, p.code, p.line_type_id
+        SELECT p.prod_id, p.doc_no, p.code, p.line_type_id,pr.prod_rm_id
         FROM Production p
         JOIN ProdRawMat pr ON p.prod_id = pr.prod_id
         WHERE pr.mat = @mat

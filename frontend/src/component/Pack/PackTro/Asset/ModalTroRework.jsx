@@ -120,7 +120,7 @@ const TrolleyReworkModal = ({ open, onClose, onNext, data, rmfp_id, mapping_id, 
 
     try {
       // Using the backend endpoint
-      const response = await axios.put(`${API_URL}/api/pack/rework/trolley`, {
+      const response = await axios.put(`${API_URL}/api/pack/export/to/rework/Trolley`, {
         dest: deliveryLocation,
         tro_id: data.tro_id,
         receiver_pack_edit: operator,

@@ -165,8 +165,8 @@ const TableList = ({
         <Table>
           <TableHead>
             <TableRow sx={{ backgroundColor: '#f5f5f5' }}>
-              <TableCell sx={{ textAlign: 'center' }}>หมายเลขวัตถุดิบ</TableCell>
               <TableCell sx={{ textAlign: 'center' }}>ชื่อวัตถุดิบ</TableCell>
+              <TableCell sx={{ textAlign: 'center' }}>เวลาเตรียมเสร็จ</TableCell>
               <TableCell sx={{ textAlign: 'center' }}>Batch</TableCell>
               <TableCell sx={{ textAlign: 'center' }}>น้ำหนักวัตถุดิบ (กก.)</TableCell>
               <TableCell sx={{ textAlign: 'center' }}>น้ำหนักที่ใช้ (กก.)</TableCell>
@@ -177,8 +177,8 @@ const TableList = ({
           <TableBody>
             {basketItems.map((trolley) => (
               <TableRow key={`basket-${trolley.mapping_id}`}>
-                <TableCell sx={{ textAlign: 'center' }}>{trolley.mapping_id}</TableCell>
                 <TableCell sx={{ textAlign: 'center' }}>{trolley.mat_name}</TableCell>
+                <TableCell sx={{ textAlign: 'center' }}>{trolley.rmit_date}</TableCell>
                 <TableCell sx={{ textAlign: 'center' }}>{trolley.batch}</TableCell>
                 <TableCell sx={{ textAlign: 'center' }}>{trolley.weight_RM}</TableCell>
                 <TableCell sx={{ textAlign: 'center' }}>
@@ -251,6 +251,7 @@ const TableList = ({
               </TableCell>
               <TableCell sx={{ textAlign: 'center' }}>หมายเลขวัตถุดิบ</TableCell>
               <TableCell sx={{ textAlign: 'center' }}>ชื่อวัตถุดิบ</TableCell>
+              <TableCell sx={{ textAlign: 'center' }}>เวลาเตรียมเสร็จ</TableCell>
               <TableCell sx={{ textAlign: 'center' }}>Batch</TableCell>
               <TableCell sx={{ textAlign: 'center' }}>น้ำหนักวัตถุดิบ (กก.)</TableCell>
               <TableCell sx={{ textAlign: 'center' }}>เอกสาร</TableCell>
@@ -308,6 +309,7 @@ const TableList = ({
           </TableCell>
           <TableCell sx={{ textAlign: 'center' }}>{trolley.mapping_id}</TableCell>
           <TableCell sx={{ textAlign: 'center' }}>{trolley.mat_name}</TableCell>
+          <TableCell sx={{ textAlign: 'center' }}>{trolley.rmit_date}</TableCell>
           <TableCell sx={{ textAlign: 'center' }}>{trolley.batch}</TableCell>
           <TableCell sx={{ textAlign: 'center' }}>{trolley.weight_RM}</TableCell>
           <TableCell sx={{ textAlign: 'center' }}>{trolley.doc_no}</TableCell>
@@ -347,6 +349,9 @@ const TableList = ({
             </Typography>
             <Typography variant="subtitle1">
               ชื่อวัตถุดิบ: {currentEditTrolley.mat_name}
+            </Typography>
+            <Typography variant="subtitle1">
+              เวลาเตรียมเสร็จ: {currentEditTrolley.rmit_date}
             </Typography>
             <Typography variant="subtitle1">
               น้ำหนักทั้งหมด: {currentEditTrolley.weight_RM} กก.

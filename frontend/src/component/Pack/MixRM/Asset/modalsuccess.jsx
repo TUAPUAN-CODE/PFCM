@@ -8,7 +8,7 @@ const ModalSuccess = ({ mapping_id, weights, tro_production_id, onClose }) => {
     error: "",
     loading: true
   });
-  
+
   // ใช้ useRef เพื่อติดตามว่าได้ส่งข้อมูลไปแล้วหรือยัง
   const hasSubmitted = useRef(false);
 
@@ -21,11 +21,11 @@ const ModalSuccess = ({ mapping_id, weights, tro_production_id, onClose }) => {
       if (!mapping_id?.length || !weights?.length || !tro_production_id) {
         return "ข้อมูลไม่ครบถ้วน";
       }
-      
+
       if (mapping_id.length !== weights.length) {
         return "จำนวนรายการรถเข็นและน้ำหนักไม่ตรงกัน";
       }
-      
+
       return null;
     };
 
@@ -36,7 +36,7 @@ const ModalSuccess = ({ mapping_id, weights, tro_production_id, onClose }) => {
       }
 
       const validationError = validateInput();
-      
+
       if (validationError) {
         if (isMounted) {
           setStatus({
@@ -49,24 +49,29 @@ const ModalSuccess = ({ mapping_id, weights, tro_production_id, onClose }) => {
       }
 
       try {
-        // กำหนดให้ได้ส่งข้อมูลไปแล้ว ก่อนที่จะเริ่มส่ง request จริงๆ
         hasSubmitted.current = true;
-        
+
+        const payload = {
+          mapping_id,
+          weights,
+          tro_production_id
+        };
+
+        // แสดงข้อมูลใน console
+        console.log("Payload ที่ส่งไป API:", payload);
+
         const response = await fetch(`${API_URL}/api/pack/mixed/trolley`, {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            mapping_id,
-            weights,
-            tro_production_id
-          }),
+          body: JSON.stringify(payload),
           signal: controller.signal
         });
 
+
         if (!isMounted) return;
-        
+
         const data = await response.json();
-        
+
         if (!response.ok) {
           throw new Error(data.message || `เกิดข้อผิดพลาด: ${response.status}`);
         }
@@ -77,7 +82,7 @@ const ModalSuccess = ({ mapping_id, weights, tro_production_id, onClose }) => {
             error: "",
             loading: false
           });
-          
+
           // Auto-close on success after delay
           if (onClose) {
             setTimeout(onClose, 1500);
@@ -87,7 +92,7 @@ const ModalSuccess = ({ mapping_id, weights, tro_production_id, onClose }) => {
         if (isMounted && err.name !== 'AbortError') {
           // กรณีมี error ให้รีเซ็ต hasSubmitted เพื่อให้สามารถลองส่งใหม่ได้
           hasSubmitted.current = false;
-          
+
           setStatus({
             message: "",
             error: err.message || "ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ได้",
@@ -99,7 +104,7 @@ const ModalSuccess = ({ mapping_id, weights, tro_production_id, onClose }) => {
 
     // เริ่มส่งข้อมูลด้วย setTimeout เล็กน้อย
     const timeout = setTimeout(sendDataToServer, 50);
-    
+
     return () => {
       isMounted = false;
       controller.abort();
@@ -116,7 +121,7 @@ const ModalSuccess = ({ mapping_id, weights, tro_production_id, onClose }) => {
         <div className="bg-blue-600 text-white px-6 py-4 rounded-t-lg">
           <h2 className="text-xl font-seminone">สถานะการผสมวัตถุดิบ</h2>
         </div>
-        
+
         {/* Content */}
         <div className="px-6 py-6">
           {loading && (
@@ -125,7 +130,7 @@ const ModalSuccess = ({ mapping_id, weights, tro_production_id, onClose }) => {
               <p className="text-gray-600 font-medium">กำลังประมวลผลข้อมูล...</p>
             </div>
           )}
-          
+
           {message && (
             <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4">
               <div className="flex items-center">
@@ -136,7 +141,7 @@ const ModalSuccess = ({ mapping_id, weights, tro_production_id, onClose }) => {
               </div>
             </div>
           )}
-          
+
           {error && (
             <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4">
               <div className="flex items-center">
@@ -148,15 +153,14 @@ const ModalSuccess = ({ mapping_id, weights, tro_production_id, onClose }) => {
             </div>
           )}
         </div>
-        
+
         {/* Footer */}
         <div className="bg-gray-100 px-6 py-4 rounded-b-lg flex justify-end">
-          <button 
-            className={`px-4 py-2 rounded font-medium focus:outline-none transition-colors ${
-              loading 
-                ? 'bg-gray-300 text-gray-500 cursor-not-allowed' 
+          <button
+            className={`px-4 py-2 rounded font-medium focus:outline-none transition-colors ${loading
+                ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
                 : 'bg-blue-600 text-white hover:bg-blue-700 active:bg-blue-800'
-            }`}
+              }`}
             onClick={onClose}
             disabled={loading}
           >

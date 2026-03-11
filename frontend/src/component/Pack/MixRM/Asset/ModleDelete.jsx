@@ -6,14 +6,26 @@ import {
   Typography,
   Divider,
   Button,
-  Stack
+  Stack,
+  TextField
 } from "@mui/material";
 import CancelIcon from "@mui/icons-material/CancelOutlined";
 import CheckCircleIcon from "@mui/icons-material/CheckCircleOutlined";
 import axios from "axios";
-axios.defaults.withCredentials = true; 
+axios.defaults.withCredentials = true;
+
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
+
 import ModalAlert from "../../../../Popup/AlertSuccess";
-import SuccessPrinter from "../../History/Asset/SuccessPrinter"; 
+import SuccessPrinter from "../../History/Asset/SuccessPrinter";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -22,85 +34,109 @@ const ModalDelete = ({ open, onClose, data, onSuccess, dataPrinter }) => {
   const [showAlert, setShowAlert] = useState(false);
   const [showPrinter, setShowPrinter] = useState(false);
   const [processedData, setProcessedData] = useState(null);
+  const [selectedDateTime, setSelectedDateTime] = useState(dayjs().tz("Asia/Bangkok"));
 
   useEffect(() => {
-    console.log(data);
-    console.log(dataPrinter);
-    
-    if (confirm && data) {
-      console.log("mixed_code :" ,data.mix_code);
-
+    if (confirm && data && selectedDateTime) {
       const handleConfirm = async () => {
         try {
-          const response = await axios.post(`${API_URL}/api/pack/mixed/delay-time`, {
+
+          const payload = {
             mixed_code: data.mix_code,
-            mapping_id: data.mapping_ids
-          });
+            mapping_id: data.mapping_ids,
+            selectedDateTime: selectedDateTime.format("YYYY-MM-DD HH:mm:ss"),
+          };
+
+          console.log("📦 Payload:", payload);
+
+          const response = await axios.post(`${API_URL}/api/pack/mixed/delay-time`, payload);
 
           if (response.data.success || response.status === 200) {
-            console.log("Successfully updated production status:", response.data.message);
-            
-            // ตรวจสอบว่า dataPrinter มีค่าหรือไม่
+            console.log("✅ Successfully updated:", response.data.message);
+
             if (dataPrinter) {
               setProcessedData(dataPrinter);
               setShowPrinter(true);
-              // ย้าย onClose และ onSuccess ไปที่ handlePrinterClose แทน
             } else {
-              console.warn("No printer data available");
               setShowAlert(true);
-              // ถ้าไม่มี printer data ให้ปิด modal ทันที
               onClose();
               onSuccess();
             }
-            
           } else {
-            console.error("Error:", response.data.message);
+            console.error("❌ Error:", response.data.message);
             setShowAlert(true);
           }
-          
         } catch (error) {
-          console.error("API request failed:", error);
+          console.error("⚠️ API request failed:", error);
           setShowAlert(true);
         }
         setConfirm(false);
       };
       handleConfirm();
     }
-  }, [confirm, data, onClose, onSuccess, dataPrinter]);
+  }, [confirm, data, onClose, onSuccess, dataPrinter, selectedDateTime]);
 
-  const handleAlertClose = () => {
-    setShowAlert(false);
-  };
-
+  const handleAlertClose = () => setShowAlert(false);
   const handlePrinterClose = () => {
     setShowPrinter(false);
-    // เรียก onClose และ onSuccess หลังจากปิดหน้า printer
     onClose();
     onSuccess();
   };
 
   if (!data) return null;
 
+  // ✅ ฟังก์ชันตรวจสอบเวลาให้อยู่ระหว่าง 00:00–23:00
+  const handleDateTimeChange = (newValue) => {
+    if (!newValue) return;
+    const hour = newValue.hour();
+    if (hour >= 0 && hour <= 23) {
+      setSelectedDateTime(newValue);
+    } else {
+      alert("กรุณาเลือกเวลาในช่วง 00:00 - 23:00 เท่านั้น");
+    }
+  };
+
   return (
     <>
       <Dialog
         open={open}
         onClose={(e, reason) => {
-          if (reason === 'backdropClick') return;
+          if (reason === "backdropClick") return;
           onClose();
         }}
         fullWidth
         maxWidth="xs"
       >
         <DialogContent>
-          <Typography variant="h6" style={{ fontSize: "18px", color: "#787878" }} mb={2}>
+          <Typography variant="h6" sx={{ fontSize: "18px", color: "#787878" }} mb={2}>
             กรุณาตรวจสอบข้อมูลก่อนยืนยันการบรรจุสำเร็จ
           </Typography>
           <Divider sx={{ mb: 2 }} />
 
+          {/* ℹ️ ข้อมูลรหัสการผสม */}
           <Stack spacing={1}>
-            <Typography color="rgba(0, 0, 0, 0.6)">รหัสการผสม: {data.mix_code}</Typography>
+            <Typography color="rgba(0, 0, 0, 0.6)">
+              รหัสการผสม: {data.mix_code}
+            </Typography>
           </Stack>
+
+          {/* 🕒 ช่องเลือกวันที่และเวลา */}
+          <Box sx={{ mt: 2, mb: 2 }}>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DateTimePicker
+                label="เลือกวันที่และเวลา"
+                value={selectedDateTime}
+                onChange={handleDateTimeChange} // ✅ ใช้ฟังก์ชันตรวจสอบช่วงเวลา
+                ampm={false} // ใช้รูปแบบ 24 ชั่วโมง
+                minutesStep={1}
+                disableFuture={false}
+                disablePast={false}
+                slotProps={{
+                  textField: { fullWidth: true, size: "small" }
+                }}
+              />
+            </LocalizationProvider>
+          </Box>
 
           <Divider sx={{ my: 2 }} />
 
@@ -108,7 +144,7 @@ const ModalDelete = ({ open, onClose, data, onSuccess, dataPrinter }) => {
             <Button
               variant="contained"
               startIcon={<CancelIcon />}
-              style={{ backgroundColor: "#E74A3B", color: "#fff" }}
+              sx={{ backgroundColor: "#E74A3B", color: "#fff" }}
               onClick={onClose}
             >
               ยกเลิก
@@ -116,7 +152,8 @@ const ModalDelete = ({ open, onClose, data, onSuccess, dataPrinter }) => {
             <Button
               variant="contained"
               startIcon={<CheckCircleIcon />}
-              style={{ backgroundColor: "#41a2e6", color: "#fff" }}
+              sx={{ backgroundColor: selectedDateTime ? "#41a2e6" : "#b0bec5", color: "#fff" }}
+              disabled={!selectedDateTime}
               onClick={() => setConfirm(true)}
             >
               ยืนยัน
@@ -124,16 +161,16 @@ const ModalDelete = ({ open, onClose, data, onSuccess, dataPrinter }) => {
           </Box>
         </DialogContent>
       </Dialog>
-      
-      {/* Success alert for errors */}
+
+      {/* แจ้งเตือนเมื่อเกิดข้อผิดพลาด */}
       <ModalAlert open={showAlert} onClose={handleAlertClose} />
-      
-      {/* Success printer dialog */}
+
+      {/* หน้าพิมพ์สำเร็จ */}
       {showPrinter && processedData && (
-        <SuccessPrinter 
-          open={showPrinter} 
-          onClose={handlePrinterClose} 
-          data={processedData} 
+        <SuccessPrinter
+          open={showPrinter}
+          onClose={handlePrinterClose}
+          data={processedData}
         />
       )}
     </>

@@ -267,6 +267,7 @@ const HistoryTablePage = ({ data = [], onPrint = () => { }, onViewDetails = () =
                 <StyledTableCell sx={{ textAlign: 'center' }}>สถานะ</StyledTableCell>
                 <StyledTableCell sx={{ textAlign: 'center' }}>เวลาเบิกวัตถุดิบจากห้องเย็นใหญ่</StyledTableCell>
                 <StyledTableCell sx={{ textAlign: 'center' }}>เวลาเตรียม</StyledTableCell>
+                <StyledTableCell sx={{ textAlign: 'center' }}>วันที่บรรจุเสร็จ</StyledTableCell>
                 <StyledTableCell sx={{ textAlign: 'center' }}>Actions</StyledTableCell>
               </TableRow>
             </TableHead>
@@ -402,6 +403,17 @@ const HistoryTablePage = ({ data = [], onPrint = () => { }, onViewDetails = () =
                           </Tooltip>
                         ) : '-'}
                       </TableCell>
+
+                      <TableCell sx={{ textAlign: 'center' }}>
+                        {row.sc_pack_date ? (
+                          <Tooltip title={formatFullDateTime(row.sc_pack_date)}>
+                            <Typography variant="body2">{formatDate(row.sc_pack_date)}</Typography>
+                          </Tooltip>
+                        ) : (
+                          '-'
+                        )}
+                      </TableCell>
+
                       <TableCell sx={{ textAlign: 'center' }}>
                         <Box sx={{ display: 'flex', justifyContent: 'center' }}>
                           {hasDetails && (

@@ -159,7 +159,9 @@ const ModalSuccess = ({ open, onClose, tro_id, tableData, onSuccess, delayTime, 
       let url = '';
       if (selectedAction === 'cold') {
         url = `${API_URL}/api/pack/export/Trolley`;
-      } else if (selectedAction === 'line') {
+      } else if (selectedAction === 'rework') {
+        url = `${API_URL}/api/pack/export/to/rework/Trolley`;
+       } else if (selectedAction === 'line') {
         url = `${API_URL}/api/pack/export/topack/Trolley`;
       } else {
         console.error("Invalid action:", selectedAction);
@@ -362,14 +364,14 @@ const ModalSuccess = ({ open, onClose, tro_id, tableData, onSuccess, delayTime, 
               >
                 แก้ไขวัตถุดิบ
               </Button>
-              <Button
+              {/* <Button
                 variant={selectedAction === 'line' ? "contained" : "outlined"}
                 startIcon={<LocalShippingIcon />}
                 onClick={() => setSelectedAction('line')}
                 sx={{ flex: 1 }}
               >
                 ส่งให้ไลน์บรรจุอื่น
-              </Button>
+              </Button> */}
             </Stack>
           </Box>
 

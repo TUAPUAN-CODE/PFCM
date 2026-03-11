@@ -233,7 +233,8 @@ const ParentComponent = () => {
                 (typeof item.rmfp_id === 'string' && item.rmfp_id.toLowerCase().includes(query)) ||
                 (typeof item.rmfp_id === 'number' && item.rmfp_id.toString().includes(query)) ||
                 (typeof item.mat === 'string' && item.mat.toLowerCase().includes(query)) ||
-                (typeof item.mat_name === 'string' && item.mat_name.toLowerCase().includes(query))
+                (typeof item.mat_name === 'string' && item.mat_name.toLowerCase().includes(query)) ||
+                (typeof item.rmit_date === 'string' && item.rmit_date.toLowerCase().includes(query))
             );
         });
 

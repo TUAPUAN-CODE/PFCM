@@ -214,7 +214,7 @@ const DetailModal = ({ item, onClose, onSuccess, dataPrinter }) => {
                 hour12: false
             };
 
-            return new Intl.DateTimeFormat('th-TH', options).format(date);
+            return new Intl.DateTimeFormat('en-TH', options).format(date);
         } catch (error) {
             return dateString;
         }

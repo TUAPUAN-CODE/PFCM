@@ -532,14 +532,7 @@ router.delete("/delete/rawmat/type/:id", async (req, res) => {
 router.post("/add/rawmat", async (req, res) => {
   const { mat, mat_name, rm_type_id, rm_group_ids } = req.body;
 
-  // ตรวจสอบข้อมูลที่ได้รับ
-  if (
-    !mat ||
-    !mat_name ||
-    !rm_type_id ||
-    !Array.isArray(rm_group_ids) ||
-    rm_group_ids.length === 0
-  ) {
+  if (!mat || !mat_name || !rm_type_id || !Array.isArray(rm_group_ids) || rm_group_ids.length === 0) {
     return res.status(400).json({
       success: false,
       error: "กรุณาระบุ mat, mat_name, rm_type_id และ rm_group_ids (อย่างน้อย 1 ค่า) !!",
@@ -549,64 +542,53 @@ router.post("/add/rawmat", async (req, res) => {
   try {
     const pool = await getPool();
     if (!pool) {
-      return res.status(500).json({
-        success: false,
-        error: "Database connection failed",
-      });
+      return res.status(500).json({ success: false, error: "Database connection failed" });
     }
 
-    // 🔍 **ตรวจสอบว่า mat มีอยู่ในฐานข้อมูลหรือไม่**
+    // ตรวจสอบ mat ซ้ำ
     const checkMat = await pool
       .request()
       .input("mat", mat)
       .query(`SELECT COUNT(*) AS count FROM RawMat WHERE mat = @mat`);
 
     if (checkMat.recordset[0].count > 0) {
-      return res.status(400).json({
-        success: false,
-        error: " !! Matซ้ำ มีรหัสวัตถุดิบนี้อยู่แล้ว",
-      });
+      return res.status(400).json({ success: false, error: "Mat ซ้ำ มีรหัสวัตถุดิบนี้อยู่แล้ว" });
     }
 
-    // เริ่ม transaction
-    const transaction = pool.transaction();
+    const transaction = new sql.Transaction(pool);
     await transaction.begin();
 
-    // **เพิ่มวัตถุดิบใหม่**
-    await transaction
-      .request()
-      .input("mat", mat)
-      .input("mat_name", mat_name)
-      .query(`INSERT INTO RawMat (mat, mat_name) VALUES (@mat, @mat_name)`);
-
-    // **เพิ่มข้อมูลกลุ่มวัตถุดิบที่เกี่ยวข้อง**
-    for (const groupId of rm_group_ids) {
-      await transaction
-        .request()
+    try {
+      // เพิ่ม RawMat
+      let request = new sql.Request(transaction);
+      await request
         .input("mat", mat)
-        .input("rm_group_id", groupId)
-        .input("rm_type_id", rm_type_id)
-        .query(
-          `INSERT INTO RawMatCookedGroup (mat, rm_group_id,rm_type_id) VALUES (@mat, @rm_group_id,@rm_type_id)`
-        );
+        .input("mat_name", mat_name)
+        .query(`INSERT INTO RawMat (mat, mat_name) VALUES (@mat, @mat_name)`);
+
+      // เพิ่ม RawMatCookedGroup
+      for (const groupId of rm_group_ids) {
+        request = new sql.Request(transaction);
+        await request
+          .input("mat", mat)
+          .input("rm_group_id", groupId)
+          .input("rm_type_id", rm_type_id)
+          .query(`INSERT INTO RawMatCookedGroup (mat, rm_group_id, rm_type_id) VALUES (@mat, @rm_group_id, @rm_type_id)`);
+      }
+
+      await transaction.commit();
+      res.status(201).json({ success: true, message: "เพิ่มวัตถุดิบใหม่พร้อมกลุ่มสำเร็จ" });
+    } catch (txError) {
+      await transaction.rollback();
+      console.error("Transaction error:", txError);
+      res.status(500).json({ success: false, error: "Transaction failed", details: txError.message });
     }
-
-    // ✅ **ยืนยันการทำงาน**
-    await transaction.commit();
-
-    res.status(201).json({
-      success: true,
-      message: "เพิ่มวัตถุดิบใหม่พร้อมกลุ่มสำเร็จ",
-    });
   } catch (error) {
     console.error("Error inserting data:", error);
-    res.status(500).json({
-      success: false,
-      error: "Internal Server Error",
-      details: error.message,
-    });
+    res.status(500).json({ success: false, error: "Internal Server Error", details: error.message });
   }
 });
+
 
 /**
  * @swagger
